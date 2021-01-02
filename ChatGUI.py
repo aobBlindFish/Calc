@@ -1,5 +1,6 @@
 import sys
 import Calc
+import random
 
 '''
 Todo:
@@ -33,17 +34,18 @@ object_full_list = [object_point, object_line, object_plane, object_vector]
 
 def stage_1_dis():
     print("Abstände? Da weiß ich bescheid!")
-
+    chosen_object1 = 0
+    chosen_object2 = 0
     user_object1_understand = False
     while not user_object1_understand:
         user_dis_obj1 = input("Zwischen welchen Objekten brauchst du den Abstand(Objekt 1)?\n").upper()
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj1 == single_object:
+                if user_dis_obj1 == single_object and not (object_list == object_vector):
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
-            print("Das habe ich nicht verstanden.")
+            print(misunderstand[random.randint(0, len(misunderstand)-1)])
 
     print("Okay verstehe.")
     user_object2_understand = False
@@ -51,11 +53,42 @@ def stage_1_dis():
         user_dis_obj2 = input("Was ist denn das zweite Objekt(Objekt 2)?\n").upper()
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj2 == single_object:
+                if user_dis_obj2 == single_object and not (object_list == object_vector):
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
-            print("Ich weiß nicht genau, was du meinst.")
+            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+
+    chosen_objects = [chosen_object1, chosen_object2]
+    return chosen_objects
+
+
+def stage_1_cross():
+    print("Schnittmengen? Da kann ich dir helfen!")
+    chosen_object1 = 0
+    chosen_object2 = 0
+    user_object1_understand = False
+    while not user_object1_understand:
+        user_dis_obj1 = input("Zwischen welchen zwei Objekten brauchst du die Schnittmenge(Objekt 1)?\n").upper()
+        for object_list in object_full_list:
+            for single_object in object_list:
+                if user_dis_obj1 == single_object and (object_list == object_line or object_list == object_plane):
+                    user_object1_understand = True
+                    chosen_object1 = object_full_list.index(object_list)
+        if not user_object1_understand:
+            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+
+    print("Okay gut.")
+    user_object2_understand = False
+    while not user_object2_understand:
+        user_dis_obj2 = input("Was ist denn das zweite Objekt(Objekt 2)?\n")
+        for object_list in object_full_list:
+            for single_object in object_list:
+                if user_dis_obj2.upper() == single_object and (object_list == object_line or object_list == object_plane):
+                    user_object2_understand = True
+                    chosen_object2 = object_full_list.index(object_list)
+        if not user_object2_understand:
+            print(misunderstand[random.randint(0, len(misunderstand)-1)])
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -66,7 +99,7 @@ def stage_0():
     print(
         "Von mir aus können wir gerne stundenlang über Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
     user_topic = input("Zu was hast du denn deine Frage?\n").upper()
-
+    chosen_topic = 0
     user_topic_understand = False
     for answer_list in topic:
         for answer in answer_list:
@@ -92,6 +125,8 @@ def stage_1(chosen_topic):
         print("hi")
     elif chosen_topic == 1:
         return stage_1_dis()
+    elif chosen_topic == 2:
+        return stage_1_cross()
 
 
 def stage_2(chosen_topic, object1, object2):
@@ -99,12 +134,16 @@ def stage_2(chosen_topic, object1, object2):
         print("hi")
     elif chosen_topic == 1:
         print("hi")
+    elif chosen_topic == 2:
+        print("hi")
     return [chosen_topic, object1, object2]
 
 
 # Chat Start
 print("Hallo, ich bin " + program_name + ". Wie heißt du?")
 username = input()
+misunderstand = [username + ", ich weiß nicht genau, was du meinst.", "Was meinst du damit?", "Das verstehe ich nicht.",
+                 "Das habe ich nicht verstanden."]
 print("Schön von dir zu hören, " + username + "!")
 user_chosen_topic = stage_0()
 user_chosen_objects = stage_1(user_chosen_topic)
