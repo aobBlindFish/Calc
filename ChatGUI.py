@@ -8,12 +8,14 @@ Todo:
 '''
 '''
 Stages:
-0 == Introduction - Topic Asks
+0 == Introduction - Topic chosen
+1 == Objects asked - Objects chosen
+2 == Objects sent - Answer prepared
 '''
 # Meta Var
 program_name = "Siri"
 stage = 0
-max_stage = 6
+max_stage = 2
 
 # Choice Arrays
 topic_basic = ["BASISRECHNUNGEN", "GRUNDRECHNUNGEN", "GRUNDSACHEN"]
@@ -22,9 +24,41 @@ topic_cross = ["SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN
 topic_contain = ["LAGEBEZIEHUNG", "LAGEBEZIEHUNGEN", "LAGEVERHÄLTNIS"]
 topic = [topic_basic, topic_dis, topic_cross, topic_contain]
 
+object_point = ["PUNKT"]
+object_line = ["GERADE", "LINIE"]
+object_plane = ["EBENE", "FLÄCHE", "OBERFLÄCHE"]
+object_vector = ["VEKTOR", "RICHTUNG"]
+object_full_list = [object_point, object_line, object_plane, object_vector]
+
 
 def stage_1_dis():
-    print("hi")
+    print("Abstände? Da weiß ich bescheid!")
+
+    user_object1_understand = False
+    while not user_object1_understand:
+        user_dis_obj1 = input("Zwischen welchen Objekten brauchst du den Abstand(Objekt 1)?\n").upper()
+        for object_list in object_full_list:
+            for single_object in object_list:
+                if user_dis_obj1 == single_object:
+                    user_object1_understand = True
+                    chosen_object1 = object_full_list.index(object_list)
+        if not user_object1_understand:
+            print("Das habe ich nicht verstanden.")
+
+    print("Okay verstehe.")
+    user_object2_understand = False
+    while not user_object2_understand:
+        user_dis_obj2 = input("Was ist denn das zweite Objekt(Objekt 2)?\n").upper()
+        for object_list in object_full_list:
+            for single_object in object_list:
+                if user_dis_obj2 == single_object:
+                    user_object2_understand = True
+                    chosen_object2 = object_full_list.index(object_list)
+        if not user_object2_understand:
+            print("Ich weiß nicht genau, was du meinst.")
+
+    chosen_objects = [chosen_object1, chosen_object2]
+    return chosen_objects
 
 
 def stage_0():
@@ -42,7 +76,7 @@ def stage_0():
 
     while not user_topic_understand:
         print("Ich weiß nicht was du meinst. Vielleicht weißt du auch nicht, was ich meine.")
-        print("Ich kann dir gerne helfen, sobald es um Abstände, Schnittmengen, Lagebeziehungen oder allgemeine "
+        print("Ich kann dir gerne helfen, wenn es um Abstände, Schnittmengen, Lagebeziehungen oder allgemeine "
               "Grundsachen geht.")
         user_topic = input("In welchem Bereich brauchst du Hilfe?\n").upper()
         for answer_list in topic:
@@ -54,18 +88,24 @@ def stage_0():
 
 
 def stage_1(chosen_topic):
-    print("hi")
+    if chosen_topic == 0:
+        print("hi")
+    elif chosen_topic == 1:
+        return stage_1_dis()
 
 
-def story(lvl):
-    if lvl == 0:
-        stage_0()
-    elif lvl == 1:
-        stage_1()
+def stage_2(chosen_topic, object1, object2):
+    if chosen_topic == 0:
+        print("hi")
+    elif chosen_topic == 1:
+        print("hi")
+    return [chosen_topic, object1, object2]
 
 
 # Chat Start
 print("Hallo, ich bin " + program_name + ". Wie heißt du?")
 username = input()
 print("Schön von dir zu hören, " + username + "!")
-stage_1(stage_0())
+user_chosen_topic = stage_0()
+user_chosen_objects = stage_1(user_chosen_topic)
+stage_2(user_chosen_topic, user_chosen_objects[0], user_chosen_objects[1])
