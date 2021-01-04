@@ -136,7 +136,7 @@ class Basic:
             Outz = aa.x * bb.y - aa.y * bb.x
             Output = Vector(Outx,Outy,Outz)
             return Output
-        def spatproduct(aa,bb,cc):
+        def sparproduct(aa,bb,cc):
             Output = Basic.Vc.sproduct(Basic.Vc.vproduct(aa,bb),cc)
             return Output
         def unit(aa):
