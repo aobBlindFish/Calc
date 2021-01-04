@@ -24,9 +24,9 @@ max_stage = 2
 
 # Choice Arrays
 topic_basic = ["BASISRECHNUNGEN", "GRUNDRECHNUNGEN", "GRUNDSACHEN"]
-topic_dis = ["ABSTÄNDE", "ABSTAND"]
+topic_dis = ["ABSTÄNDE", "ABSTAND", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE", "SCHNITTMENGEN"]
-topic_contain = ["LAGEBEZIEHUNG", "LAGEBEZIEHUNGEN", "LAGEVERHÄLTNIS"]
+topic_contain = ["LAGEBEZIEHUNG", "LAGEBEZIEHUNGEN", "LAGEVERHÄLTNIS", "LAGE"]
 topic = [topic_basic, topic_dis, topic_cross, topic_contain]
 
 object_point = ["PUNKT"]
@@ -88,7 +88,39 @@ def stage_1_cross():
         user_dis_obj2 = input("Was ist denn das zweite Objekt(Objekt 2)?\n")
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj2.upper() == single_object and (object_list == object_line or object_list == object_plane):
+                if user_dis_obj2.upper() == single_object and \
+                        (object_list == object_line or object_list == object_plane):
+                    user_object2_understand = True
+                    chosen_object2 = object_full_list.index(object_list)
+        if not user_object2_understand:
+            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+
+    chosen_objects = [chosen_object1, chosen_object2]
+    return chosen_objects
+
+
+def stage_1_contain():
+    print("Lagebeziehungen? Da helfe ich dir!")
+    chosen_object1 = 0
+    chosen_object2 = 0
+    user_object1_understand = False
+    while not user_object1_understand:
+        user_dis_obj1 = input("Zwischen welchen zwei Objekten brauchst du die Lagebeziehung(Objekt 1)?\n").upper()
+        for object_list in object_full_list:
+            for single_object in object_list:
+                if user_dis_obj1 == single_object and not (object_list == object_vector):
+                    user_object1_understand = True
+                    chosen_object1 = object_full_list.index(object_list)
+        if not user_object1_understand:
+            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+
+    print("Passt.")
+    user_object2_understand = False
+    while not user_object2_understand:
+        user_dis_obj2 = input("Was ist denn das zweite Objekt(Objekt 2)?\n")
+        for object_list in object_full_list:
+            for single_object in object_list:
+                if user_dis_obj2.upper() == single_object and not (object_list == object_vector):
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
@@ -131,6 +163,8 @@ def stage_1(chosen_topic):
         return stage_1_dis()
     elif chosen_topic == 2:
         return stage_1_cross()
+    elif chosen_topic == 3:
+        return stage_1_contain()
 
 
 def stage_2(chosen_topic, object1, object2):
@@ -151,4 +185,4 @@ misunderstand = [username + ", ich weiß nicht genau, was du meinst.", "Was mein
 print("Schön von dir zu hören, " + username + "!")
 user_chosen_topic = stage_0()
 user_chosen_objects = stage_1(user_chosen_topic)
-stage_2(user_chosen_topic, user_chosen_objects[0], user_chosen_objects[1])
+print(stage_2(user_chosen_topic, user_chosen_objects[0], user_chosen_objects[1]))
