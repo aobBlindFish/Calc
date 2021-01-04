@@ -11,7 +11,11 @@ Todo:
 Stages:
 0 == Introduction - Topic chosen
 1 == Objects asked - Objects chosen
-2 == Objects sent - Answer prepared
+2 == Chosen objects defined as Calc.py-objects
+3 == Solution calculated
+4 == Calc.py-solution defined into words
+5 == Solution returned
+6 == Repeat or End
 '''
 # Meta Var
 program_name = "Siri"

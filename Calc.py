@@ -115,7 +115,7 @@ class Conv:
     def vc2pt(aa):
         Output = Point(aa.x,aa.y,aa.z)
         return Output
-### Basics
+# Basics
 class Basic:
     class Vc:
         def plus(aa,bb):
@@ -135,6 +135,9 @@ class Basic:
             Outy = aa.z*bb.x - aa.x*bb.z
             Outz = aa.x * bb.y - aa.y * bb.x
             Output = Vector(Outx,Outy,Outz)
+            return Output
+        def spatproduct(aa,bb,cc):
+            Output = Basic.Vc.sproduct(Basic.Vc.vproduct(aa,bb),cc)
             return Output
         def unit(aa):
             Output = Basic.Vc.smulti(aa,1/aa.l)
@@ -220,7 +223,7 @@ class Basic:
             oz = round(1000000000000*(Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)))/1000000000000 #Auf 9. Nachkommastelle genau
             Output = Vector(ox,oy,oz)
             return Output
-### Objects
+# Objects
 class Vector:
     def __init__(self,x,y,z):
         self.x = x
@@ -336,7 +339,7 @@ class LGS:
         self.b1 = Vec.x
         self.b2 = Vec.y
         self.b3 = Vec.z
-### Containment
+# Containment
 class Con:
     def point2(aa,bb):
         Output = True
@@ -403,7 +406,7 @@ class Con:
         help = Basic.Vc.minus(pt.ov,ln.support)
         Output = Basic.Vc.lindep(help,ln.dr)
         return Output
-### Distance
+# Distance
 class Dis:
     def point2(aa,bb):
         Output = Basic.Vc.minus(aa,bb).l
@@ -449,7 +452,7 @@ class Dis:
         Root = Cross.lineplane(ln,Help)
         Output = abs(Dis.point2(pt,Root))
         return Output
-#Crossarea
+# Crossarea
 class Cross:
     def line2(aa,bb):
         Output = Point(0,0,0)
@@ -499,4 +502,3 @@ class Cross:
             Out2 = Conv.vc2pt(Basic.LGS.solve(lgs6))
             Output = Line(Conv.Ln.Pt.par(Out1, Out2)[0], Conv.Ln.Pt.par(Out1, Out2)[1])
             return Output
-
