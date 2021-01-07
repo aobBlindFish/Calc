@@ -1,5 +1,6 @@
 import sys
 import Calc
+from math import *
 import random
 
 '''
@@ -23,6 +24,8 @@ stage = 0
 max_stage = 2
 
 # Choice Arrays
+task_list = []
+
 topic_basic = ["BASISRECHNUNGEN", "GRUNDRECHNUNGEN", "GRUNDSACHEN"]
 topic_dis = ["ABSTÄNDE", "ABSTAND", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE", "SCHNITTMENGEN"]
@@ -34,6 +37,15 @@ object_line = ["GERADE", "LINIE"]
 object_plane = ["EBENE", "FLÄCHE", "OBERFLÄCHE"]
 object_vector = ["VEKTOR", "RICHTUNG"]
 object_full_list = [object_point, object_line, object_plane, object_vector]
+
+
+# Task Object
+class Task:
+    def __init__(self, chosen_method, obj_type1, obj_type2):
+        self.complete = False
+        self.chosen_method = chosen_method
+        self.obj_type1 = obj_type1
+        self.obj_type2 = obj_type2
 
 
 def stage_1_dis():
@@ -130,11 +142,8 @@ def stage_1_contain():
     return chosen_objects
 
 
-def stage_0():
-    print("Du bist hier, um über Mathe zu reden? Freut mich!")
-    print(
-        "Von mir aus können wir gerne stundenlang über Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
-    user_topic = input("Zu was hast du denn deine Frage?\n").upper()
+def stage_0(iteration):
+    user_topic = input("Zu was hast du denn deine " + str(iteration) + ". Frage?\n").upper()
     chosen_topic = 0
     user_topic_understand = False
     for answer_list in topic:
@@ -160,29 +169,38 @@ def stage_1(chosen_topic):
     if chosen_topic == 0:
         print("hi")
     elif chosen_topic == 1:
-        return stage_1_dis()
+        stage1 = stage_1_dis()
+        chosen_task = Task(chosen_topic, stage1[0], stage1[1])
+        task_list.append(chosen_task)
     elif chosen_topic == 2:
-        return stage_1_cross()
+        stage1 = stage_1_cross()
+        chosen_task = Task(chosen_topic, stage1[0], stage1[1])
+        task_list.append(chosen_task)
     elif chosen_topic == 3:
-        return stage_1_contain()
-
-
-def stage_2(chosen_topic, object1, object2):
-    if chosen_topic == 0:
-        print("hi")
-    elif chosen_topic == 1:
-        print("hi")
-    elif chosen_topic == 2:
-        print("hi")
-    return [chosen_topic, object1, object2]
+        stage1 = stage_1_contain()
+        chosen_task = Task(chosen_topic, stage1[0], stage1[1])
+        task_list.append(chosen_task)
 
 
 # Chat Start
 print("Hallo, ich bin " + program_name + ". Wie heißt du?")
 username = input()
 misunderstand = [username + ", ich weiß nicht genau, was du meinst.", "Was meinst du damit?", "Das verstehe ich nicht.",
-                 "Das habe ich nicht verstanden."]
+                 "Das habe ich nicht verstanden.", "Wie meinst du das?"]
 print("Schön von dir zu hören, " + username + "!")
-user_chosen_topic = stage_0()
-user_chosen_objects = stage_1(user_chosen_topic)
-print(stage_2(user_chosen_topic, user_chosen_objects[0], user_chosen_objects[1]))
+print("Du bist hier, um über Mathe zu reden? Freut mich!")
+print("Von mir aus können wir gerne stundenlang über Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+iterate_understand = False
+iterate = 0
+while not iterate_understand:
+    try:
+        iterate = int(input("Wie viele Fragen hast du für mich?\n"))
+        iterate_understand = True
+    except ValueError:
+        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+
+
+for i in range(iterate):
+    user_chosen_topic = stage_0(i+1)
+    stage_1(user_chosen_topic)
+print(task_list)

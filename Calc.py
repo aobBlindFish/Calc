@@ -1,8 +1,8 @@
 from math import *
 import sys
+
+
 # Converter
-
-
 class Conv:
     class Pl:
         class Par:
@@ -125,6 +125,10 @@ class Basic:
             Output = Vector(aa.x - bb.x, aa.y - bb.y, aa.z - bb.z)
             return Output
         def smulti(aa,c):
+            if (type(aa) == int or type(type(aa) == float)) and type(c) == Vector:
+                temp = aa
+                aa = c
+                c = temp
             Output = Vector(aa.x*c, aa.y*c, aa.z*c)
             return Output
         def sproduct(aa,bb):
@@ -218,9 +222,9 @@ class Basic:
             help1 = Matrix(aa.b1, aa.a12, aa.a13, aa.b2, aa.a22, aa.a23, aa.b3, aa.a32, aa.a33)
             help2 = Matrix(aa.a11, aa.b1, aa.a13, aa.a21, aa.b2, aa.a23, aa.a31, aa.b3, aa.a33)
             help3 = Matrix(aa.a11, aa.a12, aa.b1, aa.a21, aa.a22, aa.b2, aa.a31, aa.a32, aa.b3)
-            ox = round(1000000000000*(Basic.LGS.det(help1) / Basic.LGS.det(aa.Mtx)))/1000000000000 #Auf 9. Nachkommastelle genau
-            oy = round(1000000000000*(Basic.LGS.det(help2) / Basic.LGS.det(aa.Mtx)))/1000000000000 #Auf 9. Nachkommastelle genau
-            oz = round(1000000000000*(Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)))/1000000000000 #Auf 9. Nachkommastelle genau
+            ox = round(1000000000*(Basic.LGS.det(help1) / Basic.LGS.det(aa.Mtx)))/1000000000 #Auf 9. Nachkommastelle genau
+            oy = round(1000000000*(Basic.LGS.det(help2) / Basic.LGS.det(aa.Mtx)))/1000000000 #Auf 9. Nachkommastelle genau
+            oz = round(1000000000*(Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)))/1000000000 #Auf 9. Nachkommastelle genau
             Output = Vector(ox,oy,oz)
             return Output
 # Objects
@@ -301,10 +305,10 @@ class Plane:
         normal = Conv.Pl.Par.norm(support,dr1,dr2)[1]
         self.normal = normal
         coord = Conv.Pl.Par.coord(support,dr1,dr2)
-        a = coord[0]; self.a = a
-        b = coord[1]; self.b = b
-        c = coord[2]; self.c = c
-        d = coord[3]; self.d = d
+        a = coord[0]; self.a = round(1000000000000*a)/1000000000000
+        b = coord[1]; self.b = round(1000000000000*b)/1000000000000
+        c = coord[2]; self.c = round(1000000000000*c)/1000000000000
+        d = coord[3]; self.d = round(1000000000000*d)/1000000000000
         fxy = [0,0,0,0]
         if c != 0:
             fxy[0] = 1;
@@ -383,6 +387,10 @@ class Con:
             Output = 3
             return Output
     def lineplane(ln,pl):#0 = error, 1 = identical, 2 = parallel, 3 = crosspoint
+        if type(ln) == Plane and type(pl) == Line:
+            temp = ln
+            ln = pl
+            pl = temp
         Output = 0
         if Basic.Vc.sproduct(ln.dr,pl.normal) == 0:
             if Con.pointplane(ln.sPoint,pl) == True:
@@ -395,6 +403,10 @@ class Con:
             Output = 3
             return Output
     def pointplane(pt,pl):
+        if type(pt) == Plane and type(pl) == Point:
+            temp = pt
+            pt = pl
+            pl = temp
         Output = True
         if (round(1000000000000*(pt.x * pl.a + pt.y * pl.b + pt.z * pl.c)) == round(1000000000000*pl.d)):#Auf 9. Nachkommastelle genau
             Output = True
@@ -403,6 +415,10 @@ class Con:
             Output = False
             return Output
     def pointline(pt,ln):
+        if type(pt) == Line and type(ln) == Point:
+            temp = pt
+            pt = ln
+            ln = temp
         help = Basic.Vc.minus(pt.ov,ln.support)
         Output = Basic.Vc.lindep(help,ln.dr)
         return Output
@@ -436,6 +452,10 @@ class Dis:
             Output = abs(Dis.pointplane(aa.sPoint,bb))
             return Output
     def lineplane(ln,pl):
+        if type(ln) == Plane and type(pl) == Line:
+            temp = ln
+            ln = pl
+            pl = temp
         Output = 0
         if Con.lineplane(ln,pl) == 1 or Con.lineplane(ln,pl) == 3:
             Output = 0
@@ -444,9 +464,17 @@ class Dis:
             Output = abs(Dis.pointplane(ln.sPoint,pl))
             return Output
     def pointplane(pt,pl):
+        if type(pt) == Plane and type(pl) == Point:
+            temp = pt
+            pt = pl
+            pl = temp
         Output = abs(round(1000000000000*(pt.x * pl.a + pt.y * pl.b + pt.z * pl.c - pl.d))/1000000000000) #Auf 9. Nachkommastelle genau
         return Output
     def pointline(pt,ln):
+        if type(pt) == Line and type(ln) == Point:
+            temp = pt
+            pt = ln
+            ln = temp
         hh = Conv.Pl.Norm.par(pt.ov,ln.dr)
         Help = Plane(hh[0],hh[1],hh[2])
         Root = Cross.lineplane(ln,Help)
@@ -467,6 +495,10 @@ class Cross:
         Output = Conv.vc2pt(Basic.LGS.solve(Out))
         return Output
     def lineplane(ln,pl):
+        if type(ln) == Plane and type(pl) == Line:
+            temp = ln
+            ln = pl
+            pl = temp
         if Con.lineplane(ln,pl) != 3:
             sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen der Gerade und der Ebene.")
         help = LGS(Conv.LGS.Pl.mtx(ln.plane1, ln.plane2, pl)[0], Conv.LGS.Pl.mtx(ln.plane1, ln.plane2, pl)[1])
