@@ -17,11 +17,14 @@ Stages:
 6 == Repeat or End
 '''
 # Meta Var
-program_name = "Marvin"
-max_stage = 2
+program_name = "Siri"
 
 # Choice Arrays
 task_list = []
+
+user_true = ["JA", "KLAR", "JUP", "JAP", "GENAU", "RICHTIG", "KORREKT"]
+user_false = ["NEIN", "NE", "NICHT", "FALSCH", "UNGENAU"]
+user_boolean = [user_true, user_false]
 
 topic_dis = ["Abstand", "ABSTAND", "ABSTÄNDE", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["Schnittmenge", "SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE",
@@ -46,9 +49,10 @@ object_type_pl_par = ["PARAMETER", "PARAMETERFORM", "VEKTOR", "VEKTOREN", "RICHT
                       "SPANNVEKTOR", "SPANNVEKTOREN"]
 object_type_pl_norm = ["NORMAL", "NORMALE", "NORMALENFORM"]
 object_type_pl_coord = ["KOORDINATE", "KOORDINATEN", "KOORDINATENFORM"]
-object_type_pl_pt = ["PUNKT", "PUNKTE"]
+object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE PUNKTE", "."]
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
+
 
 # Task 2
 
@@ -109,8 +113,8 @@ def stage_2_plane():
                     pl_type = object_type_pl.index(ii)
         if not pl_understand:
             print(misunderstand[random.randint(0, len(misunderstand) - 1)] +
-                  "\nIn welcher Form kennst du diese Ebene? Als Gruppe von drei Punkten, Parameterform, "
-                  "Normalenform oder Koordinatenform?")
+                  "\nIn welcher Form kennst du diese Ebene? In der Parameterform, "
+                  "Normalenform, Koordinatenform oder als Gruppe von mehreren Punkten?")
     return pl_type
 
 
@@ -126,96 +130,500 @@ class Task:
     def obj_define(self):
         print("\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic][0] + " zwischen " +
               object_full_list[self.obj_types[0]][0] + " und " + object_full_list[self.obj_types[1]][0] + "):")
-        print("Das erste Objekt..")
-        if self.obj_types[0] == 2:
-            obj_pl_type = stage_2_plane()
-            if obj_pl_type == 0:
-                print("Okay gut.")
-                pl_par_sp_x = 0
-                pl_par_sp_y = 0
-                pl_par_sp_z = 0
-                pl_par_dr1_x = 0
-                pl_par_dr1_y = 0
-                pl_par_dr1_z = 0
-                pl_par_dr2_x = 0
-                pl_par_dr2_y = 0
-                pl_par_dr2_z = 0
-                # Support
-                pl_par_sp_x_understand = False
-                while not pl_par_sp_x_understand:
-                    try:
-                        pl_par_sp_x = float(input("Wie lautet dein Stützvektor(x-Koordinate): "))
-                        pl_par_sp_x_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                pl_par_sp_y_understand = False
-                while not pl_par_sp_y_understand:
-                    try:
-                        pl_par_sp_y = float(input("Wie lautet dein Stützvektor(y-Koordinate): "))
-                        pl_par_sp_y_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                pl_par_sp_z_understand = False
-                while not pl_par_sp_z_understand:
-                    try:
-                        pl_par_sp_z = float(input("Wie lautet dein Stützvektor(z-Koordinate): "))
-                        pl_par_sp_z_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                # Direction 1
-                pl_par_dr1_x_understand = False
-                while not pl_par_dr1_x_understand:
-                    try:
-                        pl_par_dr1_x = float(input("Wie lautet dein erster Richtungsvektor(x-Koordinate): "))
-                        pl_par_dr1_x_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                pl_par_dr1_y_understand = False
-                while not pl_par_dr1_y_understand:
-                    try:
-                        pl_par_dr1_y = float(input("Wie lautet dein erster Richtungsvektor(y-Koordinate): "))
-                        pl_par_dr1_y_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                pl_par_dr1_z_understand = False
-                while not pl_par_dr1_z_understand:
-                    try:
-                        pl_par_dr1_z = float(input("Wie lautet dein erster Richtungsvektor(z-Koordinate): "))
-                        pl_par_dr1_z_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                # Direction 2
-                pl_par_dr2_x_understand = False
-                while not pl_par_dr2_x_understand:
-                    try:
-                        pl_par_dr2_x = float(input("Wie lautet dein zweiter Richtungsvektor(x-Koordinate): "))
-                        pl_par_dr2_x_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                pl_par_dr2_y_understand = False
-                while not pl_par_dr2_y_understand:
-                    try:
-                        pl_par_dr2_y = float(input("Wie lautet dein zweiter Richtungsvektor(y-Koordinate): "))
-                        pl_par_dr2_y_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                pl_par_dr2_z_understand = False
-                while not pl_par_dr2_z_understand:
-                    try:
-                        pl_par_dr2_z = float(input("Wie lautet dein zweiter Richtungsvektor(z-Koordinate): "))
-                        pl_par_dr2_z_understand = True
-                    except ValueError:
-                        print(misunderstand[random.randint(0, len(misunderstand) - 1)])
-                object_1 = stage_2_pl_par(Calc.Vector(pl_par_sp_x, pl_par_sp_y, pl_par_sp_z),
-                                          Calc.Vector(pl_par_dr1_x, pl_par_dr1_y, pl_par_dr1_z),
-                                          Calc.Vector(pl_par_dr2_x, pl_par_dr2_y, pl_par_dr2_z))
-                self.obj_calc.append(object_1)
-            elif obj_pl_type == 1:
-                stage_2_pl_norm()
-            elif obj_pl_type == 2:
-                stage_2_pl_coord()
-            elif obj_pl_type == 3:
-                stage_2_pl_pt()
+        name_i = 1
+        while name_i <= len(self.obj_types):
+            print("Das " + str(name_i) + ". Objekt..")
+            if self.obj_types[0] == 2:
+                obj_pl_type = stage_2_plane()
+                if obj_pl_type == 0:
+                    print("Okay gut.")
+                    pl_par_sp_x = 0
+                    pl_par_sp_y = 0
+                    pl_par_sp_z = 0
+                    pl_par_dr1_x = 0
+                    pl_par_dr1_y = 0
+                    pl_par_dr1_z = 0
+                    pl_par_dr2_x = 0
+                    pl_par_dr2_y = 0
+                    pl_par_dr2_z = 0
+                    pl_par_correct = False
+                    while not pl_par_correct:
+                        # Support
+                        pl_par_sp_confirm = False
+                        pl_par_sp_confirm_no = False
+                        while not pl_par_sp_confirm:
+                            pl_par_sp_x_understand = False
+                            while not pl_par_sp_x_understand:
+                                try:
+                                    pl_par_sp_x = float(input("Wie lautet dein Stützvektor(x-Koordinate): "))
+                                    pl_par_sp_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_par_sp_y_understand = False
+                            while not pl_par_sp_y_understand:
+                                try:
+                                    pl_par_sp_y = float(input("Wie lautet dein Stützvektor(y-Koordinate): "))
+                                    pl_par_sp_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_par_sp_z_understand = False
+                            while not pl_par_sp_z_understand:
+                                try:
+                                    pl_par_sp_z = float(input("Wie lautet dein Stützvektor(z-Koordinate): "))
+                                    pl_par_sp_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # sp_confirm
+                            print("Also Stützvektor s = (" + str(pl_par_sp_x) + "|" + str(pl_par_sp_y) + "|" +
+                                  str(pl_par_sp_z) + ")?")
+                            while not pl_par_sp_confirm:
+                                user_pl_sp_confirm = input().upper()
+                                for ii in user_boolean:
+                                    for jj in ii:
+                                        if user_pl_sp_confirm == jj:
+                                            if user_boolean.index(ii) == 0:
+                                                pl_par_sp_confirm = True
+                                                print("Gut.")
+                                            elif user_boolean.index(ii) == 1:
+                                                pl_par_sp_confirm_no = True
+                                                print("Okay, versuchen wir das nochmal.")
+                                if not (pl_par_sp_confirm_no or pl_par_sp_confirm):
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                                if pl_par_sp_confirm_no:
+                                    break
+                        # Direction 1
+                        pl_par_dr1_confirm = False
+                        pl_par_dr1_confirm_no = False
+                        while not pl_par_dr1_confirm:
+                            pl_par_dr1_x_understand = False
+                            while not pl_par_dr1_x_understand:
+                                try:
+                                    pl_par_dr1_x = float(input("Wie lautet dein erster "
+                                                               "Richtungsvektor(x-Koordinate): "))
+                                    pl_par_dr1_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_par_dr1_y_understand = False
+                            while not pl_par_dr1_y_understand:
+                                try:
+                                    pl_par_dr1_y = float(input("Wie lautet dein erster "
+                                                               "Richtungsvektor(y-Koordinate): "))
+                                    pl_par_dr1_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_par_dr1_z_understand = False
+                            while not pl_par_dr1_z_understand:
+                                try:
+                                    pl_par_dr1_z = float(input("Wie lautet dein erster "
+                                                               "Richtungsvektor(z-Koordinate): "))
+                                    pl_par_dr1_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # dr1_confirm
+                            print("Also Spannvektor d1 = (" + str(pl_par_dr1_x) + "|" + str(pl_par_dr1_y) + "|" +
+                                  str(pl_par_dr1_z) + ")?")
+                            while not pl_par_dr1_confirm:
+                                user_pl_dr1_confirm = input().upper()
+                                for ii in user_boolean:
+                                    for jj in ii:
+                                        if user_pl_dr1_confirm == jj:
+                                            if user_boolean.index(ii) == 0:
+                                                pl_par_dr1_confirm = True
+                                                print("Gut.")
+                                            elif user_boolean.index(ii) == 1:
+                                                pl_par_dr1_confirm_no = True
+                                                print("Okay, versuchen wir das nochmal.")
+                                if not (pl_par_dr1_confirm_no or pl_par_dr1_confirm):
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                                if pl_par_dr1_confirm_no:
+                                    break
+
+                        # Direction 2
+                        pl_par_dr2_confirm = False
+                        pl_par_dr2_confirm_no = False
+                        while not pl_par_dr2_confirm:
+                            pl_par_dr2_x_understand = False
+                            while not pl_par_dr2_x_understand:
+                                try:
+                                    pl_par_dr2_x = float(input("Wie lautet dein zweiter "
+                                                               "Richtungsvektor(x-Koordinate): "))
+                                    pl_par_dr2_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_par_dr2_y_understand = False
+                            while not pl_par_dr2_y_understand:
+                                try:
+                                    pl_par_dr2_y = float(input("Wie lautet dein zweiter "
+                                                               "Richtungsvektor(y-Koordinate): "))
+                                    pl_par_dr2_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_par_dr2_z_understand = False
+                            while not pl_par_dr2_z_understand:
+                                try:
+                                    pl_par_dr2_z = float(input("Wie lautet dein zweiter "
+                                                               "Richtungsvektor(z-Koordinate): "))
+                                    pl_par_dr2_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # dr2_confirm
+                            print(
+                                "Also Spannvektor d2 = (" + str(pl_par_dr2_x) + "|" + str(pl_par_dr2_y) + "|" +
+                                str(pl_par_dr2_z) + ")?")
+                            while not pl_par_dr2_confirm:
+                                user_pl_dr2_confirm = input().upper()
+                                for ii in user_boolean:
+                                    for jj in ii:
+                                        if user_pl_dr2_confirm == jj:
+                                            if user_boolean.index(ii) == 0:
+                                                pl_par_dr2_confirm = True
+                                            elif user_boolean.index(ii) == 1:
+                                                pl_par_dr2_confirm_no = True
+                                                print("Okay, versuchen wir das nochmal.")
+                                if not (pl_par_dr2_confirm_no or pl_par_dr2_confirm):
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                                if pl_par_dr2_confirm_no:
+                                    break
+                        try:
+                            object_1 = stage_2_pl_par(Calc.Vector(pl_par_sp_x, pl_par_sp_y, pl_par_sp_z),
+                                                      Calc.Vector(pl_par_dr1_x, pl_par_dr1_y, pl_par_dr1_z),
+                                                      Calc.Vector(pl_par_dr2_x, pl_par_dr2_y, pl_par_dr2_z))
+                            self.obj_calc.append(object_1)
+                            pl_par_correct = True
+                            print("Perfekt.")
+                        except SystemExit:
+                            print("Diese Vektoren beschreiben keine eindeutige Ebene.\nVersuchen wir das nochmal.")
+                elif obj_pl_type == 1:
+                    print("Verstanden.")
+                    pl_norm_sp_x = 0
+                    pl_norm_sp_y = 0
+                    pl_norm_sp_z = 0
+                    pl_norm_norm_x = 0
+                    pl_norm_norm_y = 0
+                    pl_norm_norm_z = 0
+                    # Support
+                    pl_norm_sp_confirm = False
+                    pl_norm_sp_confirm_no = False
+                    while not pl_norm_sp_confirm:
+                        pl_norm_sp_x_understand = False
+                        while not pl_norm_sp_x_understand:
+                            try:
+                                pl_norm_sp_x = float(input("Wie lautet dein Stützvektor(x-Koordinate): "))
+                                pl_norm_sp_x_understand = True
+                            except ValueError:
+                                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                        pl_norm_sp_y_understand = False
+                        while not pl_norm_sp_y_understand:
+                            try:
+                                pl_norm_sp_y = float(input("Wie lautet dein Stützvektor(y-Koordinate): "))
+                                pl_norm_sp_y_understand = True
+                            except ValueError:
+                                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                        pl_norm_sp_z_understand = False
+                        while not pl_norm_sp_z_understand:
+                            try:
+                                pl_norm_sp_z = float(input("Wie lautet dein Stützvektor(z-Koordinate): "))
+                                pl_norm_sp_z_understand = True
+                            except ValueError:
+                                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                        # sp_confirm
+                        print("Also Stützvektor s = (" + str(pl_norm_sp_x) + "|" + str(pl_norm_sp_y) + "|" +
+                              str(pl_norm_sp_z) + ")?")
+                        while not pl_norm_sp_confirm:
+                            user_pl_sp_confirm = input().upper()
+                            for ii in user_boolean:
+                                for jj in ii:
+                                    if user_pl_sp_confirm == jj:
+                                        if user_boolean.index(ii) == 0:
+                                            pl_norm_sp_confirm = True
+                                            print("Gut.")
+                                        elif user_boolean.index(ii) == 1:
+                                            pl_norm_sp_confirm_no = True
+                                            print("Okay, versuchen wir das nochmal.")
+                            if not (pl_norm_sp_confirm_no or pl_norm_sp_confirm):
+                                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            if pl_norm_sp_confirm_no:
+                                break
+                    # Normal
+                    pl_norm_norm_correct = False
+                    pl_norm_norm_confirm = False
+                    pl_norm_norm_confirm_no = False
+                    while not pl_norm_norm_confirm:
+                        while (not pl_norm_norm_correct) or pl_norm_norm_confirm_no:
+                            pl_norm_norm_confirm_no = False
+                            pl_norm_norm_x_understand = False
+                            while not pl_norm_norm_x_understand:
+                                try:
+                                    pl_norm_norm_x = float(input("Wie lautet dein Normalvektor(x-Koordinate): "))
+                                    pl_norm_norm_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_norm_norm_y_understand = False
+                            while not pl_norm_norm_y_understand:
+                                try:
+                                    pl_norm_norm_y = float(input("Wie lautet dein Normalvektor(y-Koordinate): "))
+                                    pl_norm_norm_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_norm_norm_z_understand = False
+                            while not pl_norm_norm_z_understand:
+                                try:
+                                    pl_norm_norm_z = float(input("Wie lautet dein Normalvektor(z-Koordinate): "))
+                                    pl_norm_norm_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            if Calc.Vector(pl_norm_norm_x, pl_norm_norm_y, pl_norm_norm_z).fullzero:
+                                print("Diese Normale hat eine Länge von 0 und deswegen keine Richtung."
+                                      "\nVersuchen wir das nochmal.")
+                                pl_norm_norm_correct = False
+                            else:
+                                pl_norm_norm_correct = True
+                        # norm_confirm
+                        print("Also Normalenvektor n = (" + str(pl_norm_norm_x) + "|" + str(pl_norm_norm_y) + "|" +
+                              str(pl_norm_norm_z) + ")?")
+                        while not pl_norm_norm_confirm:
+                            user_pl_norm_confirm = input().upper()
+                            for ii in user_boolean:
+                                for jj in ii:
+                                    if user_pl_norm_confirm == jj:
+                                        if user_boolean.index(ii) == 0:
+                                            pl_norm_norm_confirm = True
+                                            pl_norm_norm_correct = True
+                                            print("Verstanden.")
+                                        elif user_boolean.index(ii) == 1:
+                                            pl_norm_norm_confirm_no = True
+                                            pl_norm_norm_correct = False
+                                            print("Okay, versuchen wir das nochmal.")
+                            if not (pl_norm_norm_confirm_no or pl_norm_norm_confirm):
+                                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            elif pl_norm_norm_confirm_no:
+                                break
+
+                    object_1 = stage_2_pl_norm(Calc.Vector(pl_norm_sp_x, pl_norm_sp_y, pl_norm_sp_z),
+                                               Calc.Vector(pl_norm_norm_x, pl_norm_norm_y, pl_norm_norm_z))
+                    self.obj_calc.append(object_1)
+                elif obj_pl_type == 2:
+                    print("Okay gut.\nFür die Ebenengleichung der Form: ax + by + cz = d")
+                    pl_coord_a = 0
+                    pl_coord_b = 0
+                    pl_coord_c = 0
+                    pl_coord_d = 0
+                    pl_coord_correct = False
+                    pl_coord_confirm = False
+                    pl_coord_confirm_no = False
+                    while not pl_coord_confirm:
+                        while (not pl_coord_correct) or pl_coord_confirm:
+                            # a
+                            pl_coord_a_understand = False
+                            while not pl_coord_a_understand:
+                                try:
+                                    pl_coord_a = float(input("Was ist a: "))
+                                    pl_coord_a_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # b
+                            pl_coord_b_understand = False
+                            while not pl_coord_b_understand:
+                                try:
+                                    pl_coord_b = float(input("Was ist b: "))
+                                    pl_coord_b_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # c
+                            pl_coord_c_understand = False
+                            while not pl_coord_c_understand:
+                                try:
+                                    pl_coord_c = float(input("Was ist c: "))
+                                    pl_coord_c_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # d
+                            pl_coord_d_understand = False
+                            while not pl_coord_d_understand:
+                                try:
+                                    pl_coord_d = float(input("Was ist d: "))
+                                    pl_coord_d_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            if Calc.Vector(pl_coord_a, pl_coord_b, pl_coord_c).fullzero:
+                                print("Diese Gleichung beschreibt keine Ebene."
+                                      "\nVersuchen wir das nochmal.")
+                                pl_coord_correct = False
+                            else:
+                                pl_coord_correct = True
+                        # confirm
+                        print("Also die Ebene:\n(" + str(pl_coord_a) + ")x + (" + str(pl_coord_b) + ")y + (" +
+                              str(pl_coord_c) + ")z = " + str(pl_coord_d) + " ?")
+                        while not pl_coord_confirm:
+                            user_pl_coord_confirm = input().upper()
+                            for ii in user_boolean:
+                                for jj in ii:
+                                    if user_pl_coord_confirm == jj:
+                                        if user_boolean.index(ii) == 0:
+                                            pl_coord_confirm = True
+                                        elif user_boolean.index(ii) == 1:
+                                            pl_coord_confirm_no = True
+                                            pl_coord_correct = False
+                                            print("Okay, versuchen wir das nochmal.")
+                            if not (pl_coord_confirm_no or pl_coord_confirm):
+                                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            if pl_coord_confirm_no:
+                                break
+                    object_1 = stage_2_pl_coord(pl_coord_a, pl_coord_b, pl_coord_c, pl_coord_d)
+                    self.obj_calc.append(object_1)
+                elif obj_pl_type == 3:
+                    print("Verstehe.")
+                    pl_pt_aa_x = 0
+                    pl_pt_aa_y = 0
+                    pl_pt_aa_z = 0
+                    pl_pt_bb_x = 0
+                    pl_pt_bb_y = 0
+                    pl_pt_bb_z = 0
+                    pl_pt_cc_x = 0
+                    pl_pt_cc_y = 0
+                    pl_pt_cc_z = 0
+                    pl_pt_correct = False
+                    while not pl_pt_correct:
+                        # aa
+                        pl_pt_aa_confirm = False
+                        pl_pt_aa_confirm_no = False
+                        while not pl_pt_aa_confirm:
+                            pl_pt_aa_x_understand = False
+                            while not pl_pt_aa_x_understand:
+                                try:
+                                    pl_pt_aa_x = float(input("Wie lautet dein erster Punkt(x-Koordinate): "))
+                                    pl_pt_aa_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_pt_aa_y_understand = False
+                            while not pl_pt_aa_y_understand:
+                                try:
+                                    pl_pt_aa_y = float(input("Wie lautet dein erster Punkt(y-Koordinate): "))
+                                    pl_pt_aa_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_pt_aa_z_understand = False
+                            while not pl_pt_aa_z_understand:
+                                try:
+                                    pl_pt_aa_z = float(input("Wie lautet dein erster Punkt(z-Koordinate): "))
+                                    pl_pt_aa_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # aa_confirm
+                            print("Also Punkt A(" + str(pl_pt_aa_x) + "|" + str(pl_pt_aa_y) + "|" +
+                                  str(pl_pt_aa_z) + ")?")
+                            while not pl_pt_aa_confirm:
+                                user_pl_aa_confirm = input().upper()
+                                for ii in user_boolean:
+                                    for jj in ii:
+                                        if user_pl_aa_confirm == jj:
+                                            if user_boolean.index(ii) == 0:
+                                                pl_pt_aa_confirm = True
+                                                print("Gut.")
+                                            elif user_boolean.index(ii) == 1:
+                                                pl_pt_aa_confirm_no = True
+                                                print("Okay, versuchen wir das nochmal.")
+                                if not (pl_pt_aa_confirm_no or pl_pt_aa_confirm):
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                                if pl_pt_aa_confirm_no:
+                                    break
+                        # bb
+                        pl_pt_bb_confirm = False
+                        pl_pt_bb_confirm_no = False
+                        while not pl_pt_bb_confirm:
+                            pl_pt_bb_x_understand = False
+                            while not pl_pt_bb_x_understand:
+                                try:
+                                    pl_pt_bb_x = float(input("Wie lautet dein zweiter Punkt(x-Koordinate): "))
+                                    pl_pt_bb_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_pt_bb_y_understand = False
+                            while not pl_pt_bb_y_understand:
+                                try:
+                                    pl_pt_bb_y = float(input("Wie lautet dein zweiter Punkt(y-Koordinate): "))
+                                    pl_pt_bb_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_pt_bb_z_understand = False
+                            while not pl_pt_bb_z_understand:
+                                try:
+                                    pl_pt_bb_z = float(input("Wie lautet dein zweiter Punkt(z-Koordinate): "))
+                                    pl_pt_bb_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # bb_confirm
+                            print("Also Punkt B(" + str(pl_pt_bb_x) + "|" + str(pl_pt_bb_y) + "|" +
+                                  str(pl_pt_bb_z) + ")?")
+                            while not pl_pt_bb_confirm:
+                                user_pl_bb_confirm = input().upper()
+                                for ii in user_boolean:
+                                    for jj in ii:
+                                        if user_pl_bb_confirm == jj:
+                                            if user_boolean.index(ii) == 0:
+                                                print("Gut.")
+                                                pl_pt_bb_confirm = True
+                                            elif user_boolean.index(ii) == 1:
+                                                pl_pt_bb_confirm_no = True
+                                                print("Okay, versuchen wir das nochmal.")
+                                if not (pl_pt_bb_confirm_no or pl_pt_bb_confirm):
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                                if pl_pt_bb_confirm_no:
+                                    break
+                        # cc
+                        pl_pt_cc_confirm = False
+                        pl_pt_cc_confirm_no = False
+                        while not pl_pt_cc_confirm:
+                            pl_pt_cc_x_understand = False
+                            while not pl_pt_cc_x_understand:
+                                try:
+                                    pl_pt_cc_x = float(input("Wie lautet dein dritter Punkt(x-Koordinate): "))
+                                    pl_pt_cc_x_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_pt_cc_y_understand = False
+                            while not pl_pt_cc_y_understand:
+                                try:
+                                    pl_pt_cc_y = float(input("Wie lautet dein dritter Punkt(y-Koordinate): "))
+                                    pl_pt_cc_y_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            pl_pt_cc_z_understand = False
+                            while not pl_pt_cc_z_understand:
+                                try:
+                                    pl_pt_cc_z = float(input("Wie lautet dein dritter Punkt(z-Koordinate): "))
+                                    pl_pt_cc_z_understand = True
+                                except ValueError:
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                            # cc_confirm
+                            print("Also Punkt C(" + str(pl_pt_cc_x) + "|" + str(pl_pt_cc_y) + "|" +
+                                  str(pl_pt_cc_z) + ")?")
+                            while not pl_pt_cc_confirm:
+                                user_pl_cc_confirm = input().upper()
+                                for ii in user_boolean:
+                                    for jj in ii:
+                                        if user_pl_cc_confirm == jj:
+                                            if user_boolean.index(ii) == 0:
+                                                pl_pt_cc_confirm = True
+                                            elif user_boolean.index(ii) == 1:
+                                                pl_pt_cc_confirm_no = True
+                                                print("Okay, versuchen wir das nochmal.")
+                                if not (pl_pt_cc_confirm_no or pl_pt_cc_confirm):
+                                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+                                if pl_pt_cc_confirm_no:
+                                    break
+                        try:
+                            object_1 = stage_2_pl_pt(Calc.Point(pl_pt_aa_x, pl_pt_aa_y, pl_pt_aa_z),
+                                                     Calc.Point(pl_pt_bb_x, pl_pt_bb_y, pl_pt_bb_z),
+                                                     Calc.Point(pl_pt_cc_x, pl_pt_cc_y, pl_pt_cc_z))
+                            self.obj_calc.append(object_1)
+                            pl_pt_correct = True
+                            print("Perfekt.")
+                        except SystemExit:
+                            print("Diese Punkte beschreiben keine eindeutige Ebene\nVersuchen wir das nochmal.")
+            name_i += 1
+
+
 # Stage 0 & 1
 
 
@@ -232,7 +640,7 @@ def stage_1_dis():
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
-            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     print("Okay verstehe.")
     user_object2_understand = False
@@ -244,7 +652,7 @@ def stage_1_dis():
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
-            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -263,7 +671,7 @@ def stage_1_cross():
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
-            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     print("Okay gut.")
     user_object2_understand = False
@@ -276,7 +684,7 @@ def stage_1_cross():
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
-            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -295,7 +703,7 @@ def stage_1_contain():
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
-            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     print("Passt.")
     user_object2_understand = False
@@ -307,7 +715,7 @@ def stage_1_contain():
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
-            print(misunderstand[random.randint(0, len(misunderstand)-1)])
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -368,8 +776,20 @@ while not iterate_understand:
     except ValueError:
         print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
-
 for i in range(iterate):
-    user_chosen_topic = stage_0(i+1)
-    name = "Frage " + str(i+1)
+    user_chosen_topic = stage_0(i + 1)
+    name = "Frage " + str(i + 1)
     stage_1(user_chosen_topic, name)
+
+'''
+Testing:
+
+for j in task_list:
+    j.obj_define()
+    for k in j.obj_calc:
+        print("\n" + j.task_name)
+        print(k.a)
+        print(k.b)
+        print(k.c)
+        print(k.d)
+'''
