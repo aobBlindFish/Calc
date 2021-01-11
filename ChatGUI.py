@@ -6,6 +6,7 @@ import random
 Todo:
 - Proper Machine Name
 - Task.task_define()
+- prevent empty inputs
 '''
 '''
 Stages:
@@ -27,15 +28,29 @@ task_list = []
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
                  "Wie meinst du das?"]
 
-user_true = ["JA", "KLAR", "JUP", "JAP", "GENAU", "RICHTIG", "KORREKT"]
+user_true = ["JA", "KLAR", "JUP", "JAP", "GENAU", "RICHTIG", "KORREKT", "PASST", "CHECK", "SURE"]
 user_false = ["NEIN", "NE", "NICHT", "FALSCH", "UNGENAU"]
 user_boolean = [user_true, user_false]
 
+basic_plus = []
+basic_minus = []
+
+basic_method = []
+
+topic_basic = ["Grundrechnungen", "GRUNDRECHNUNGEN", "GRUNDRECHNUNG", "BASISSACHEN", "BASISSACHE",
+               "PLUS", "ADDITION", "ADDIEREN", "SUMME",
+               "MINUS", "DIFFERENZ",
+               "SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG",
+               "SKALARPRODUKT",
+               "VEKTORPRODUKT", "KREUZPRODUKT",
+               "SPATPRODUKT",
+               "EINHEITSVEKTOR", "BASISVEKTOR",
+               "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT"]
 topic_dis = ["Abstand", "ABSTAND", "ABSTÄNDE", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["Schnittmenge", "SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE",
                "SCHNITTMENGEN"]
 topic_contain = ["Lagebeziehung", "LAGEBEZIEHUNG", "LAGEBEZIEHUNGEN", "LAGEVERHÄLTNIS", "LAGE"]
-topic = [topic_dis, topic_cross, topic_contain]
+topic = [topic_dis, topic_cross, topic_contain, topic_basic]
 
 object_point = ["Punkt", "PUNKT", "."]
 object_line = ["Gerade", "GERADE", "LINIE"]
@@ -53,7 +68,7 @@ object_type_ln = [object_type_ln_par, object_type_ln_pt]
 object_type_pl_par = ["PARAMETER", "PARAMETERFORM", "VEKTOR", "VEKTOREN", "RICHTUNGSVEKTOR", "RICHTUNGSVEKTOREN",
                       "SPANNVEKTOR", "SPANNVEKTOREN"]
 object_type_pl_norm = ["NORMAL", "NORMALE", "NORMALENFORM"]
-object_type_pl_coord = ["KOORDINATE", "KOORDINATEN", "KOORDINATENFORM"]
+object_type_pl_coord = ["KOORDINATE", "KOORDINATEN", "KOORDINATENFORM", "COORDS", "COORD"]
 object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE PUNKTE", "DREI PUNKTE", "3 PUNKTE", "."]
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
@@ -527,7 +542,6 @@ class Task:
                                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
                                 if pl_par_dr1_confirm_no:
                                     break
-
                         # Direction 2
                         pl_par_dr2_confirm = False
                         pl_par_dr2_confirm_no = False
@@ -912,7 +926,7 @@ class Task:
                             print("Perfekt.")
                         except SystemExit:
                             print("Diese Punkte beschreiben keine eindeutige Ebene\nVersuchen wir das nochmal.")
-            if self.obj_types[name_i - 1] == 4:
+            if self.obj_types[name_i - 1] == 3:
                 vc_x = 0
                 vc_y = 0
                 vc_z = 0
@@ -1124,6 +1138,10 @@ def start_chat():
         stage_1(user_chosen_topic, name)
 
 
+start_chat()
+
+
+'''
 # Testing
 start_chat()
 for cc in task_list:
@@ -1140,3 +1158,4 @@ for aa in task_list:
             print("Line:")
             print("Support: (" + str(bb.support.x) + "|" + str(bb.support.y) + "|" + str(bb.support.z) + ")")
             print("Direction: (" + str(bb.dr.x) + "|" + str(bb.dr.y) + "|" + str(bb.dr.z) + ")")
+'''
