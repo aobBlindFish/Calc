@@ -37,7 +37,7 @@ basic_minus = ["MINUS", "MINUSRECHNEN", "MINUS RECHNEN", "DIFFERENZ", "DIFFERENZ
 basic_scalar_multi = ["SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG"]
 basic_scalar_product = ["SKALARPRODUKT"]
 basic_vector_product = ["VEKTORPRODUKT", "KREUZPRODUKT"]
-basic_spar_product = ["SPATPRODUKT"]
+basic_spar_product = ["SPATPRODUKT", "SPAT"]
 basic_unit = ["EINHEITSVEKTOR", "BASISVEKTOR"]
 basic_ld = ["LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT"]
 
@@ -50,9 +50,10 @@ topic_basic = ["Grundrechnung", "GRUNDRECHNUNGEN", "GRUNDRECHNUNG", "BASISSACHEN
                "SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG",
                "SKALARPRODUKT",
                "VEKTORPRODUKT", "KREUZPRODUKT",
-               "SPATPRODUKT",
+               "SPATPRODUKT", "SPAT",
                "EINHEITSVEKTOR", "BASISVEKTOR",
-               "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT"]
+               "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT",
+               "SKALAR"]
 topic_dis = ["Abstand", "ABSTAND", "ABSTÄNDE", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["Schnittmenge", "SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE",
                "SCHNITTMENGEN"]
@@ -79,6 +80,14 @@ object_type_pl_coord = ["KOORDINATE", "KOORDINATEN", "KOORDINATENFORM", "COORDS"
 object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE PUNKTE", "DREI PUNKTE", "3 PUNKTE", "."]
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
+
+# Name
+username = input("Hallo, ich bin " + program_name + ". Wie heißt du?\n")
+username_help = username + " "
+if username_help.isspace():
+    print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
+    username = "User"
+misunderstand.append(username + ", ich weiß nicht genau, was du meinst.")
 
 
 # Task 2
@@ -163,6 +172,37 @@ def stage_2_pt(x, y, z):
     return output
 
 
+def stage_2_def_c():
+    c = 0
+    c_confirm = False
+    while not c_confirm:
+        c_confirm_no = False
+        c_understand = False
+        while not c_understand:
+            c_understand = False
+            try:
+                c = float(input("Was ist deine Konstante: "))
+                c_understand = True
+            except ValueError:
+                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+        print("Also die Konstante " + str(c) + "?")
+        while not c_confirm:
+            user_c_confirm = input().upper()
+            for ii in user_boolean:
+                for jj in ii:
+                    if user_c_confirm == jj:
+                        if user_boolean.index(ii) == 0:
+                            c_confirm = True
+                        elif user_boolean.index(ii) == 1:
+                            c_confirm_no = True
+                            print("Okay, versuchen wir das nochmal.")
+            if not (c_confirm_no or c_confirm):
+                print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+            if c_confirm_no:
+                break
+    return c
+
+
 def stage_2_def_vc():
     vc_x = 0
     vc_y = 0
@@ -193,10 +233,10 @@ def stage_2_def_vc():
             except ValueError:
                 print(misunderstand[random.randint(0, len(misunderstand) - 1)])
         # vc_confirm
-        print("Also Vektor v = (" + str(vc_x) + "|" + str(vc_y) + "|" +
+        print("Also ein Vektor mit diesen Koordinaten (" + str(vc_x) + "|" + str(vc_y) + "|" +
               str(vc_z) + ")?")
         if Calc.Vector(vc_x, vc_y, vc_z).fullzero:
-            print("Achtung: Vektor v hat eine Länge von 0 Längeneinheiten.")
+            print("Achtung: Dieser Vektor hat eine Länge von 0 Längeneinheiten.")
         while not vc_confirm:
             user_vc_confirm = input().upper()
             for ii in user_boolean:
@@ -244,7 +284,7 @@ def stage_2_def_pt():
             except ValueError:
                 print(misunderstand[random.randint(0, len(misunderstand) - 1)])
         # pt_confirm
-        print("Also Punkt P(" + str(pt_x) + "|" + str(pt_y) + "|" +
+        print("Also ein Punkt mit diesen Koordinaten (" + str(pt_x) + "|" + str(pt_y) + "|" +
               str(pt_z) + ")?")
         while not pt_confirm:
             user_pt_confirm = input().upper()
@@ -971,72 +1011,168 @@ class Task:
         self.obj_calc = []
         self.method_calc = [0.1, False]  # [index in topic / basic_method , if in basic_method]
 
-# basic_define = Stage 2 & 3 for method == basic
+# basic_define = Stage 2 & 3 for method == basic, else Stage 3(blank)
     def basic_define(self):  # Stage 3, return method as self.method_calc
         if self.chosen_topic != 3:
-            return [self.chosen_topic, False]
+            self.method_calc.clear()
+            self.method_calc.append(self.chosen_topic)
+            self.method_calc.append(False)
         if self.chosen_topic == 3:
+            # Stage 3
+            self.method_calc.clear()
             print("\nOkay, zu " + self.task_name + ", da ging es um Grundrechnungen.\n"
                   "Um was für eine Berechnung ging es nochmal?")
+            bm_type = 0.1
+            bm_understand = False
+            while not bm_understand:
+                user_bm_answer = input().upper()
+                for bm in basic_method:
+                    for method_answer in bm:
+                        if user_bm_answer == method_answer:
+                            bm_understand = True
+                            bm_type = basic_method.index(bm)
+                if not bm_understand:
+                    print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+            self.method_calc.append(bm_type)
+            self.method_calc.append(True)
+            # Stage 2
+            if self.method_calc[1]:
+                if self.method_calc[0] == 0:  # method plus
+                    print("Ah, Addition von zwei Vektoren, warum auch nicht?\nDer erste Vektor, Vektor a:")
+                    bm_plus_vc1 = stage_2_def_vc()
+                    print("Okay gut, zum zweiten Vektor, Vektor b:")
+                    bm_plus_vc2 = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_plus_vc1[0], bm_plus_vc1[1], bm_plus_vc1[2]))
+                    self.obj_calc.append(stage_2_vc(bm_plus_vc2[0], bm_plus_vc2[1], bm_plus_vc2[2]))
+                    print("Verstanden")
+                elif self.method_calc[0] == 1:  # method minus
+                    print("Also Subtraktion von zwei Vektoren? Gerne!\nDer erste Vektor, Vektor a:")
+                    bm_minus_vc1 = stage_2_def_vc()
+                    print("Verstehe, zum zweiten Vektor, Vektor b:")
+                    bm_minus_vc2 = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_minus_vc1[0], bm_minus_vc1[1], bm_minus_vc1[2]))
+                    self.obj_calc.append(stage_2_vc(bm_minus_vc2[0], bm_minus_vc2[1], bm_minus_vc2[2]))
+                    print("Verstanden")
+                elif self.method_calc[0] == 2:  # method scalar_multi
+                    print("Skalarmultiplikation eines Vektors? Bin dabei!\n")
+                    bm_scalar_multi_vc = stage_2_def_vc()
+                    print("Okay gut.")
+                    bm_scalar_multi_c = stage_2_def_c()
+                    self.obj_calc.append(stage_2_vc(bm_scalar_multi_vc[0], bm_scalar_multi_vc[1],
+                                                    bm_scalar_multi_vc[2]))
+                    self.obj_calc.append(bm_scalar_multi_c)
+                    print("Verstanden")
+                elif self.method_calc[0] == 3:  # method scalar_product
+                    print("Du brauchst das Skalarprodukt von zwei Vektoren? Bin dabei!\nDer erste Vektor, Vektor a:")
+                    bm_scalar_product_vc1 = stage_2_def_vc()
+                    print("Okay, zum zweiten Vektor, Vektor b:")
+                    bm_scalar_product_vc2 = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_scalar_product_vc1[0], bm_scalar_product_vc1[1],
+                                                    bm_scalar_product_vc1[2]))
+                    self.obj_calc.append(stage_2_vc(bm_scalar_product_vc2[0], bm_scalar_product_vc2[1],
+                                                    bm_scalar_product_vc2[2]))
+                    print("Verstanden")
+                elif self.method_calc[0] == 4:  # method vector_product
+                    print("Aha, du brauchst das Kreuzprodukt von zwei Vektoren? Für dich doch gerne, " + username + ".")
+                    print("Der erste Vektor, Vektor a:")
+                    bm_vector_product_vc1 = stage_2_def_vc()
+                    print("Gut, zum zweiten Vektor, Vektor b:")
+                    bm_vector_product_vc2 = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_vector_product_vc1[0], bm_vector_product_vc1[1],
+                                                    bm_vector_product_vc1[2]))
+                    self.obj_calc.append(stage_2_vc(bm_vector_product_vc2[0], bm_vector_product_vc2[1],
+                                                    bm_vector_product_vc2[2]))
+                    print("Verstanden")
+                elif self.method_calc[0] == 5:  # method spar_product
+                    print("Oh, du brauchst das Spatprodukt von drei Vektoren? Für dich doch gerne, " + username + ".")
+                    print("Also, der erste Vektor, Vektor a:")
+                    bm_spar_product_vc1 = stage_2_def_vc()
+                    print("Okay, zum zweiten Vektor, Vektor b:")
+                    bm_spar_product_vc2 = stage_2_def_vc()
+                    print("Verstehe, zum dritten Vektor, Vektor c:")
+                    bm_spar_product_vc3 = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_spar_product_vc1[0], bm_spar_product_vc1[1],
+                                                    bm_spar_product_vc1[2]))
+                    self.obj_calc.append(stage_2_vc(bm_spar_product_vc2[0], bm_spar_product_vc2[1],
+                                                    bm_spar_product_vc2[2]))
+                    self.obj_calc.append(stage_2_vc(bm_spar_product_vc3[0], bm_spar_product_vc3[1],
+                                                    bm_spar_product_vc3[2]))
+                    print("Verstanden")
+                elif self.method_calc[0] == 6:  # method unit
+                    print("Ein bestimmter Einheitsvektor ist gesucht? Gerne doch!")
+                    bm_unit_vc = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_unit_vc[0], bm_unit_vc[1], bm_unit_vc[2]))
+                    print("Verstanden")
+                elif self.method_calc[0] == 7:  # method ld
+                    print("Ich wusste es! Du wolltest also zwischen zwei Vektoren nach linearer Abhängigkeit prüfen?"
+                          " Schon dabei!\nZuerst Vektor a:")
+                    bm_ld_vc1 = stage_2_def_vc()
+                    print("Verstehe, zum zweiten Vektor, Vektor b:")
+                    bm_ld_vc2 = stage_2_def_vc()
+                    self.obj_calc.append(stage_2_vc(bm_ld_vc1[0], bm_ld_vc1[1], bm_ld_vc1[2]))
+                    self.obj_calc.append(stage_2_vc(bm_ld_vc2[0], bm_ld_vc2[1], bm_ld_vc2[2]))
+                    print("Verstanden")
 
+# obj_define = Stage 2 for method != basic, else blank
     def obj_define(self):  # Stage 2
-        print("\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic][0] + " zwischen " +
-              object_full_list[self.obj_types[0]][0] + " und " + object_full_list[self.obj_types[1]][0] + "):")
-        name_i = 1
-        while name_i <= len(self.obj_types):
-            print("Das " + str(name_i) + ". Objekt..")
-            if self.obj_types[name_i - 1] == 0:
-                pt = stage_2_def_pt()
-                task_object = stage_2_pt(pt[0], pt[1], pt[2])
-                self.obj_calc.append(task_object)
-                print("Perfekt.")
-            if self.obj_types[name_i - 1] == 1:
-                obj_ln_type = stage_2_line()
-                if obj_ln_type == 0:
-                    print("Okay gut.")
-                    ln = stage_2_def_ln_par()
-                    self.obj_calc.append(stage_2_ln_par(Calc.Vector(ln[0], ln[1], ln[2]),
-                                                        Calc.Vector(ln[3], ln[4], ln[5])))
+        if self.chosen_topic != 3:
+            print("\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic][0] + " zwischen " +
+                  object_full_list[self.obj_types[0]][0] + " und " + object_full_list[self.obj_types[1]][0] + "):")
+            name_i = 1
+            while name_i <= len(self.obj_types):
+                print("Das " + str(name_i) + ". Objekt..")
+                if self.obj_types[name_i - 1] == 0:
+                    pt = stage_2_def_pt()
+                    task_object = stage_2_pt(pt[0], pt[1], pt[2])
+                    self.obj_calc.append(task_object)
                     print("Perfekt.")
-                if obj_ln_type == 1:
-                    print("Verstanden.")
-                    ln = stage_2_def_ln_pt()
-                    self.obj_calc.append(stage_2_ln_pt(Calc.Point(ln[0], ln[1], ln[2]),
-                                                       Calc.Point(ln[3], ln[4], ln[5])))
+                if self.obj_types[name_i - 1] == 1:
+                    obj_ln_type = stage_2_line()
+                    if obj_ln_type == 0:
+                        print("Okay gut.")
+                        ln = stage_2_def_ln_par()
+                        self.obj_calc.append(stage_2_ln_par(Calc.Vector(ln[0], ln[1], ln[2]),
+                                                            Calc.Vector(ln[3], ln[4], ln[5])))
+                        print("Perfekt.")
+                    if obj_ln_type == 1:
+                        print("Verstanden.")
+                        ln = stage_2_def_ln_pt()
+                        self.obj_calc.append(stage_2_ln_pt(Calc.Point(ln[0], ln[1], ln[2]),
+                                                           Calc.Point(ln[3], ln[4], ln[5])))
+                        print("Perfekt.")
+                if self.obj_types[name_i - 1] == 2:
+                    obj_pl_type = stage_2_plane()
+                    if obj_pl_type == 0:
+                        print("Okay gut.")
+                        pl = stage_2_def_pl_par()
+                        self.obj_calc.append(stage_2_pl_par(Calc.Vector(pl[0], pl[1], pl[2]),
+                                                            Calc.Vector(pl[3], pl[4], pl[5]),
+                                                            Calc.Vector(pl[6], pl[7], pl[8])))
+                        print("Perfekt.")
+                    elif obj_pl_type == 1:
+                        print("Verstanden.")
+                        pl = stage_2_def_pl_norm()
+                        self.obj_calc.append(stage_2_pl_norm(Calc.Vector(pl[0], pl[1], pl[2]),
+                                                             Calc.Vector(pl[3], pl[4], pl[5])))
+                        print("Perfekt.")
+                    elif obj_pl_type == 2:
+                        print("Okay gut.")
+                        pl = stage_2_def_pl_coord()
+                        self.obj_calc.append(stage_2_pl_coord(pl[0], pl[1], pl[2], pl[3]))
+                        print("Perfekt.")
+                    elif obj_pl_type == 3:
+                        print("Verstehe.")
+                        pl = stage_2_def_pl_pt()
+                        self.obj_calc.append(stage_2_pl_pt(Calc.Point(pl[0], pl[1], pl[2]),
+                                                           Calc.Point(pl[3], pl[4], pl[5]),
+                                                           Calc.Point(pl[6], pl[7], pl[8])))
+                        print("Perfekt.")
+                if self.obj_types[name_i - 1] == 3:
+                    vc = stage_2_def_vc()
+                    task_object = stage_2_vc(vc[0], vc[1], vc[2])
+                    self.obj_calc.append(task_object)
                     print("Perfekt.")
-            if self.obj_types[name_i - 1] == 2:
-                obj_pl_type = stage_2_plane()
-                if obj_pl_type == 0:
-                    print("Okay gut.")
-                    pl = stage_2_def_ln_par()
-                    self.obj_calc.append(stage_2_pl_par(Calc.Vector(pl[0], pl[1], pl[2]),
-                                                        Calc.Vector(pl[3], pl[4], pl[5]),
-                                                        Calc.Vector(pl[6], pl[7], pl[8])))
-                    print("Perfekt.")
-                elif obj_pl_type == 1:
-                    print("Verstanden.")
-                    pl = stage_2_def_pl_norm()
-                    self.obj_calc.append(stage_2_pl_norm(Calc.Vector(pl[0], pl[1], pl[2]),
-                                                         Calc.Vector(pl[3], pl[4], pl[5])))
-                    print("Perfekt.")
-                elif obj_pl_type == 2:
-                    print("Okay gut.")
-                    pl = stage_2_def_pl_coord()
-                    self.obj_calc.append(stage_2_pl_coord(pl[0], pl[1], pl[2], pl[3]))
-                    print("Perfekt.")
-                elif obj_pl_type == 3:
-                    print("Verstehe.")
-                    pl = stage_2_def_pl_pt()
-                    self.obj_calc.append(stage_2_pl_pt(Calc.Point(pl[0], pl[1], pl[2]),
-                                                       Calc.Point(pl[3], pl[4], pl[5]),
-                                                       Calc.Point(pl[6], pl[7], pl[8])))
-                    print("Perfekt.")
-            if self.obj_types[name_i - 1] == 3:
-                vc = stage_2_def_vc()
-                task_object = stage_2_vc(vc[0], vc[1], vc[2])
-                self.obj_calc.append(task_object)
-                print("Perfekt.")
-            name_i += 1
+                name_i += 1
 
 
 # Stage 0 & 1
@@ -1185,8 +1321,6 @@ def stage_1(chosen_topic, task_name):
 
 # Chat Start
 def start_chat():
-    username = input("Hallo, ich bin " + program_name + ". Wie heißt du?\n")
-    misunderstand.append(username + ", ich weiß nicht genau, was du meinst.")
     print("Schön von dir zu hören, " + username + "!")
     print("Du bist hier, um über Mathe zu reden? Freut mich!")
     print("Von mir aus können wir gerne stundenlang über "
@@ -1209,10 +1343,12 @@ def start_chat():
 # Testing
 start_chat()
 for cc in task_list:
+    cc.basic_define()
     cc.obj_define()
+    print("")
 for aa in task_list:
+    print("\n" + str(aa.method_calc) + "\n")
     for bb in aa.obj_calc:
-        print("")
         if type(bb) == Calc.Plane:
             print("Plane:")
             print(bb.a)
@@ -1227,4 +1363,6 @@ for aa in task_list:
             print("Point: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
         elif type(bb) == Calc.Vector:
             print("Vector: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
+        elif type(bb) == int or type(bb) == float:
+            print("Constant: " + str(bb))
         print("")
