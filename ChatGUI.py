@@ -1212,6 +1212,7 @@ for cc in task_list:
     cc.obj_define()
 for aa in task_list:
     for bb in aa.obj_calc:
+        print("")
         if type(bb) == Calc.Plane:
             print("Plane:")
             print(bb.a)
@@ -1224,3 +1225,6 @@ for aa in task_list:
             print("Direction: (" + str(bb.dr.x) + "|" + str(bb.dr.y) + "|" + str(bb.dr.z) + ")")
         elif type(bb) == Calc.Point:
             print("Point: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
+        elif type(bb) == Calc.Vector:
+            print("Vector: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
+        print("")
