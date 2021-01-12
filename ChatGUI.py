@@ -1206,7 +1206,6 @@ def start_chat():
         stage_1(user_chosen_topic, name)
 
 
-'''
 # Testing
 start_chat()
 for cc in task_list:
@@ -1225,4 +1224,3 @@ for aa in task_list:
             print("Direction: (" + str(bb.dr.x) + "|" + str(bb.dr.y) + "|" + str(bb.dr.z) + ")")
         elif type(bb) == Calc.Point:
             print("Point: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
-'''
