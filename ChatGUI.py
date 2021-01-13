@@ -1010,6 +1010,7 @@ class Task:
         self.obj_types = []
         self.obj_calc = []
         self.method_calc = [0.1, False]  # [index in topic / basic_method , if in basic_method]
+        self.sol = []
 
 # basic_define = Stage 2 & 3 for method == basic, else Stage 3(blank)
     def basic_define(self):  # Stage 3, return method as self.method_calc
@@ -1046,7 +1047,7 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_plus_vc2[0], bm_plus_vc2[1], bm_plus_vc2[2]))
                     print("Verstanden")
                 elif self.method_calc[0] == 1:  # method minus
-                    print("Also Subtraktion von zwei Vektoren? Gerne!\nDer erste Vektor, Vektor a:")
+                    print("Also Subtraktion von zwei Vektoren, z.B. a - b? Gerne!\nDer erste Vektor, Vektor a:")
                     bm_minus_vc1 = stage_2_def_vc()
                     print("Verstehe, zum zweiten Vektor, Vektor b:")
                     bm_minus_vc2 = stage_2_def_vc()
@@ -1173,6 +1174,123 @@ class Task:
                     self.obj_calc.append(task_object)
                     print("Perfekt.")
                 name_i += 1
+
+# Stage 4
+    def solve(self):  # sol == -1: error
+        if self.method_calc[1]:
+            sol_basic = -1
+            if self.method_calc[0] == 0:  # Plus
+                sol_basic = Calc.Basic.Vc.plus(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 1:  # Minus
+                sol_basic = Calc.Basic.Vc.minus(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 2:  # scalar_multi
+                sol_basic = Calc.Basic.Vc.smulti(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 3:  # scalar_product
+                sol_basic = Calc.Basic.Vc.sproduct(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 4:  # vector_product
+                sol_basic = Calc.Basic.Vc.vproduct(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 5:  # spar_product
+                sol_basic = Calc.Basic.Vc.sparproduct(self.obj_calc[0], self.obj_calc[1], self.obj_calc[2])
+            elif self.method_calc[0] == 6:  # unit
+                sol_basic = Calc.Basic.Vc.unit(self.obj_calc[0])
+            elif self.method_calc[0] == 7:  # ld
+                sol_basic = Calc.Basic.Vc.lindep(self.obj_calc[0], self.obj_calc[1])
+            self.sol.append(sol_basic)
+        else:
+            if self.method_calc[0] == 0:  # Distance
+                sol_dis = -1
+                if type(self.obj_calc[0]) == Calc.Point:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        sol_dis = Calc.Dis.point2(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        sol_dis = Calc.Dis.pointline(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        sol_dis = Calc.Dis.pointplane(self.obj_calc[0], self.obj_calc[1])
+                elif type(self.obj_calc[0]) == Calc.Line:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        sol_dis = Calc.Dis.pointline(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        sol_dis = Calc.Dis.line2(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        sol_dis = Calc.Dis.lineplane(self.obj_calc[0], self.obj_calc[1])
+                elif type(self.obj_calc[0]) == Calc.Plane:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        sol_dis = Calc.Dis.pointplane(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        sol_dis = Calc.Dis.lineplane(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        sol_dis = Calc.Dis.plane2(self.obj_calc[0], self.obj_calc[1])
+                self.sol.append(sol_dis)
+            if self.method_calc[0] == 1:  # Cross
+                sol_cross = -1
+                if type(self.obj_calc[0]) == Calc.Line:
+                    if type(self.obj_calc[1]) == Calc.Line:
+                        try:
+                            sol_cross = Calc.Cross.line2(self.obj_calc[0], self.obj_calc[1])
+                        except SystemExit:
+                            sol_cross = -1
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        try:
+                            sol_cross = Calc.Cross.lineplane(self.obj_calc[0], self.obj_calc[1])
+                        except SystemExit:
+                            sol_cross = -1
+                elif type(self.obj_calc[0]) == Calc.Plane:
+                    if type(self.obj_calc[1]) == Calc.Line:
+                        try:
+                            sol_cross = Calc.Cross.lineplane(self.obj_calc[0], self.obj_calc[1])
+                        except SystemExit:
+                            sol_cross = -1
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        try:
+                            sol_cross = Calc.Cross.plane2(self.obj_calc[0], self.obj_calc[1])
+                        except SystemExit:
+                            sol_cross = -1
+                self.sol.append(sol_cross)
+            if self.method_calc[0] == 2:  # Contain
+                sol_con = -1
+                # 0 = error, 1 = identical, 2 = parallel, 3 = cross point, 4 = skewed, 5 = outside
+                if type(self.obj_calc[0]) == Calc.Point:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        sol_con = Calc.Con.point2(self.obj_calc[0], self.obj_calc[1])
+                        if sol_con:
+                            sol_con = 1
+                        elif not sol_con:
+                            sol_con = 5
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        sol_con = Calc.Con.pointline(self.obj_calc[0], self.obj_calc[1])
+                        if sol_con:
+                            sol_con = 1
+                        elif not sol_con:
+                            sol_con = 5
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        sol_con = Calc.Con.pointplane(self.obj_calc[0], self.obj_calc[1])
+                        if sol_con:
+                            sol_con = 1
+                        elif not sol_con:
+                            sol_con = 5
+                elif type(self.obj_calc[0]) == Calc.Line:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        sol_con = Calc.Con.pointline(self.obj_calc[0], self.obj_calc[1])
+                        if sol_con:
+                            sol_con = 1
+                        elif not sol_con:
+                            sol_con = 5
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        sol_con = Calc.Con.line2(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        sol_con = Calc.Con.lineplane(self.obj_calc[0], self.obj_calc[1])
+                elif type(self.obj_calc[0]) == Calc.Plane:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        sol_con = Calc.Con.pointplane(self.obj_calc[0], self.obj_calc[1])
+                        if sol_con:
+                            sol_con = 1
+                        elif not sol_con:
+                            sol_con = 5
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        sol_con = Calc.Con.lineplane(self.obj_calc[0], self.obj_calc[1])
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        sol_con = Calc.Con.plane2(self.obj_calc[0], self.obj_calc[1])
+                self.sol.append(sol_con)
 
 
 # Stage 0 & 1
@@ -1345,24 +1463,24 @@ start_chat()
 for cc in task_list:
     cc.basic_define()
     cc.obj_define()
-    print("")
+    cc.solve()
 for aa in task_list:
-    print("\n" + str(aa.method_calc) + "\n")
-    for bb in aa.obj_calc:
-        if type(bb) == Calc.Plane:
-            print("Plane:")
-            print(bb.a)
-            print(bb.b)
-            print(bb.c)
-            print(bb.d)
-        elif type(bb) == Calc.Line:
-            print("Line:")
-            print("Support: (" + str(bb.support.x) + "|" + str(bb.support.y) + "|" + str(bb.support.z) + ")")
-            print("Direction: (" + str(bb.dr.x) + "|" + str(bb.dr.y) + "|" + str(bb.dr.z) + ")")
-        elif type(bb) == Calc.Point:
-            print("Point: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
-        elif type(bb) == Calc.Vector:
-            print("Vector: (" + str(bb.x) + "|" + str(bb.y) + "|" + str(bb.z) + ")")
-        elif type(bb) == int or type(bb) == float:
-            print("Constant: " + str(bb))
-        print("")
+    print("\nTesting Area:\n")
+    print("Solve (" + aa.task_name + "):")
+    if type(aa.sol[0]) == int or type(aa.sol[0]) == float:
+        print(aa.sol[0])
+    elif type(aa.sol[0]) == Calc.Point:
+        print("P(" + str(aa.sol[0].x) + "|" + str(aa.sol[0].y) + "|" + str(aa.sol[0].z) + ")")
+    elif type(aa.sol[0]) == Calc.Vector:
+        print("v = (" + str(aa.sol[0].x) + "|" + str(aa.sol[0].y) + "|" + str(aa.sol[0].z) + ")")
+    elif type(aa.sol[0]) == Calc.Line:
+        print("Support = (" + str(aa.sol[0].support.x) + "|" + str(aa.sol[0].support.y) +
+              "|" + str(aa.sol[0].support.z) + ")")
+        print("Direction = (" + str(aa.sol[0].dr.x) + "|" + str(aa.sol[0].dr.y) + "|" + str(aa.sol[0].dr.z) + ")")
+    elif type(aa.sol[0]) == Calc.Plane:
+        print("Plane: (" + str(aa.sol[0].a) + ")x + (" + str(aa.sol[0].b) + ")y + ("
+              + str(aa.sol[0].c) + ")z = " + str(aa.sol[0].d))
+    elif type(aa.sol[0]) == str:
+        print(aa.sol[0])
+    elif type(aa.sol[0]) == bool:
+        print(aa.sol[0])
