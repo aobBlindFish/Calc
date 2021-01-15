@@ -1,12 +1,12 @@
 import sys
 import Calc
 import random
+from math import *
 
 '''
 Todo:
 - Proper Machine Name
-- Task.task_define()
-- prevent empty inputs
+- Obj converter as basic task
 '''
 '''
 Stages:
@@ -21,6 +21,7 @@ Stages:
 '''
 # Meta Var
 program_name = "Siri"
+programmer_name = "Blind Fish"
 
 # Choice Arrays
 task_list = []
@@ -53,7 +54,7 @@ topic_basic = ["Grundrechnung", "GRUNDRECHNUNGEN", "GRUNDRECHNUNG", "BASISSACHEN
                "SPATPRODUKT", "SPAT",
                "EINHEITSVEKTOR", "BASISVEKTOR",
                "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT",
-               "SKALAR"]
+               "SKALAR", "MAL"]
 topic_dis = ["Abstand", "ABSTAND", "ABSTÄNDE", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["Schnittmenge", "SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE",
                "SCHNITTMENGEN"]
@@ -83,11 +84,11 @@ object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_
 
 # Name
 username = input("Hallo, ich bin " + program_name + ". Wie heißt du?\n")
-username_help = username + " "
+username_help = str(username) + " "
 if username_help.isspace():
     print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
-    username = "User"
-misunderstand.append(username + ", ich weiß nicht genau, was du meinst.")
+    username = "Mathematik-Fan"
+misunderstand.append(username + ", ich weiß nicht genau was du meinst.")
 
 
 # Task 2
@@ -581,24 +582,21 @@ def stage_2_def_pl_par():
             pl_par_dr1_x_understand = False
             while not pl_par_dr1_x_understand:
                 try:
-                    pl_par_dr1_x = float(input("Wie lautet dein erster "
-                                               "Richtungsvektor(x-Koordinate): "))
+                    pl_par_dr1_x = float(input("Wie lautet dein erster Richtungsvektor(x-Koordinate): "))
                     pl_par_dr1_x_understand = True
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
             pl_par_dr1_y_understand = False
             while not pl_par_dr1_y_understand:
                 try:
-                    pl_par_dr1_y = float(input("Wie lautet dein erster "
-                                               "Richtungsvektor(y-Koordinate): "))
+                    pl_par_dr1_y = float(input("Wie lautet dein erster Richtungsvektor(y-Koordinate): "))
                     pl_par_dr1_y_understand = True
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
             pl_par_dr1_z_understand = False
             while not pl_par_dr1_z_understand:
                 try:
-                    pl_par_dr1_z = float(input("Wie lautet dein erster "
-                                               "Richtungsvektor(z-Koordinate): "))
+                    pl_par_dr1_z = float(input("Wie lautet dein erster Richtungsvektor(z-Koordinate): "))
                     pl_par_dr1_z_understand = True
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
@@ -627,24 +625,21 @@ def stage_2_def_pl_par():
             pl_par_dr2_x_understand = False
             while not pl_par_dr2_x_understand:
                 try:
-                    pl_par_dr2_x = float(input("Wie lautet dein zweiter "
-                                               "Richtungsvektor(x-Koordinate): "))
+                    pl_par_dr2_x = float(input("Wie lautet dein zweiter Richtungsvektor(x-Koordinate): "))
                     pl_par_dr2_x_understand = True
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
             pl_par_dr2_y_understand = False
             while not pl_par_dr2_y_understand:
                 try:
-                    pl_par_dr2_y = float(input("Wie lautet dein zweiter "
-                                               "Richtungsvektor(y-Koordinate): "))
+                    pl_par_dr2_y = float(input("Wie lautet dein zweiter Richtungsvektor(y-Koordinate): "))
                     pl_par_dr2_y_understand = True
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
             pl_par_dr2_z_understand = False
             while not pl_par_dr2_z_understand:
                 try:
-                    pl_par_dr2_z = float(input("Wie lautet dein zweiter "
-                                               "Richtungsvektor(z-Koordinate): "))
+                    pl_par_dr2_z = float(input("Wie lautet dein zweiter Richtungsvektor(z-Koordinate): "))
                     pl_par_dr2_z_understand = True
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
@@ -825,8 +820,7 @@ def stage_2_def_pl_coord():
                 except ValueError:
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
             if Calc.Vector(pl_coord_a, pl_coord_b, pl_coord_c).fullzero:
-                print("Diese Gleichung beschreibt keine Ebene."
-                      "\nVersuchen wir das nochmal.")
+                print("Diese Gleichung beschreibt keine Ebene.\nVersuchen wir das nochmal.")
                 pl_coord_correct = False
             else:
                 pl_coord_correct = True
@@ -1001,6 +995,101 @@ def stage_2_def_pl_pt():
     return [pl_pt_aa_x, pl_pt_aa_y, pl_pt_aa_z, pl_pt_bb_x, pl_pt_bb_y, pl_pt_bb_z, pl_pt_cc_x, pl_pt_cc_y, pl_pt_cc_z]
 
 
+def obj_to_str(obj, rnd):  # Stage 5 Preparation
+    output_str = ["-1"]
+    if not (type(rnd) == float or type(rnd) == int):
+        rnd = 2
+    if type(obj) == int or type(obj) == float:
+        obj_c = Calc.c_round(obj, rnd)
+        output_str.clear()
+        output_str.append("Zahl " + str(obj_c))
+    elif type(obj) == Calc.Point:
+        pt_x = Calc.c_round(obj.x, rnd)
+        pt_y = Calc.c_round(obj.y, rnd)
+        pt_z = Calc.c_round(obj.z, rnd)
+        output_str.clear()
+        output_str.append("Punkt (" + str(pt_x) + "|" + str(pt_y) + "|" + str(pt_z) + ")")
+    elif type(obj) == Calc.Vector:
+        vc_x = Calc.c_round(obj.x, rnd)
+        vc_y = Calc.c_round(obj.y, rnd)
+        vc_z = Calc.c_round(obj.z, rnd)
+        output_str.clear()
+        output_str.append("Vektor (" + str(vc_x) + "|" + str(vc_y) + "|" + str(vc_z) + ")")
+    elif type(obj) == Calc.Line:
+        ln_sp_x = Calc.c_round(obj.support.x, rnd)
+        ln_sp_y = Calc.c_round(obj.support.y, rnd)
+        ln_sp_z = Calc.c_round(obj.support.z, rnd)
+        ln_dr_x = Calc.c_round(obj.dr.x, rnd)
+        ln_dr_y = Calc.c_round(obj.dr.y, rnd)
+        ln_dr_z = Calc.c_round(obj.dr.z, rnd)
+        output_str.clear()
+        output_str.append("Gerade: x = (" + str(ln_sp_x) + "|" + str(ln_sp_y) + "|" + str(ln_sp_z) + ")"
+                          " + (" + str(ln_dr_x) + "|" + str(ln_dr_y) + "|" + str(ln_dr_z) + ")s")
+    elif type(obj) == Calc.Plane:
+        pl_sp_x = Calc.c_round(obj.support.x, rnd)
+        pl_sp_y = Calc.c_round(obj.support.y, rnd)
+        pl_sp_z = Calc.c_round(obj.support.z, rnd)
+        pl_nm_x = Calc.c_round(obj.normal.x, rnd)
+        pl_nm_y = Calc.c_round(obj.normal.y, rnd)
+        pl_nm_z = Calc.c_round(obj.normal.z, rnd)
+        pl_dr1_x = Calc.c_round(obj.dr1.x, rnd)
+        pl_dr1_y = Calc.c_round(obj.dr1.y, rnd)
+        pl_dr1_z = Calc.c_round(obj.dr1.z, rnd)
+        pl_dr2_x = Calc.c_round(obj.dr2.x, rnd)
+        pl_dr2_y = Calc.c_round(obj.dr2.y, rnd)
+        pl_dr2_z = Calc.c_round(obj.dr2.z, rnd)
+        pl_a = Calc.c_round(obj.a, rnd)
+        pl_b = Calc.c_round(obj.b, rnd)
+        pl_c = Calc.c_round(obj.c, rnd)
+        pl_d = Calc.c_round(obj.d, rnd)
+        output_str.clear()
+        output_str.append("Ebene: x = (" + str(pl_sp_x) + "|" + str(pl_sp_y) + "|" + str(pl_sp_z) + ")"
+                          " + (" + str(pl_dr1_x) + "|" + str(pl_dr1_y) + "|" + str(pl_dr1_z) + ")s"
+                          " + (" + str(pl_dr2_x) + "|" + str(pl_dr2_y) + "|" + str(pl_dr2_z) + ")t")
+        output_str.append("Ebene: 0 = (" + str(pl_nm_x) + "|" + str(pl_nm_y) + "|" + str(pl_nm_z) + ") * (x"
+                          " - (" + str(pl_sp_x) + "|" + str(pl_sp_y) + "|" + str(pl_sp_z) + "))")
+        output_str.append("Ebene: (" + str(pl_a) + ")x + (" + str(pl_b) + ")y + (" + str(pl_c) + ")z = " + str(pl_d))
+    return output_str
+
+
+def user_rnd():
+    rnd_choice = 0
+    rnd_understand = False
+    while not rnd_understand:
+        rnd_understand = False
+        try:
+            rnd_choice = floor(float(input("Auf welche Nachkommastelle hättest du gerne deine Zahlen gerundet?\n")))
+            rnd_understand = True
+            print("Okay gut.")
+        except ValueError:
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+    return rnd_choice
+
+
+def rnd_preference():
+    rnd_prf = [0, False]
+    rnd_confirm = False
+    while not rnd_confirm:
+        rnd_confirm_no = False
+        user_vc_confirm = input("\nKurze Frage, hättest du gerne alle Zahlen gleich gerundet?\n").upper()
+        for ii in user_boolean:
+            for jj in ii:
+                if user_vc_confirm == jj:
+                    if user_boolean.index(ii) == 0:
+                        rnd_confirm = True
+                        print("Mhm.")
+                        rnd_prf = [user_rnd(), True]
+                    elif user_boolean.index(ii) == 1:
+                        rnd_confirm_no = True
+                        print("Okay verstanden.")
+                        rnd_prf = [0, False]
+        if not (rnd_confirm_no or rnd_confirm):
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+        if rnd_confirm_no:
+            break
+    return rnd_prf
+
+
 # Task Object & Stage 2 / 3
 class Task:
     def __init__(self, task_name, chosen_topic):
@@ -1010,9 +1099,11 @@ class Task:
         self.obj_types = []
         self.obj_calc = []
         self.method_calc = [0.1, False]  # [index in topic / basic_method , if in basic_method]
-        self.sol = []
+        self.rnd = [2, False]
+        self.sol = []  # Solution object
+        self.solution = "-1 solution"  # Solution text
 
-# basic_define = Stage 2 & 3 for method == basic, else Stage 3(blank)
+    # basic_define = Stage 2 & 3 for method == basic, else Stage 3(blank)
     def basic_define(self):  # Stage 3, return method as self.method_calc
         if self.chosen_topic != 3:
             self.method_calc.clear()
@@ -1114,7 +1205,7 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_ld_vc2[0], bm_ld_vc2[1], bm_ld_vc2[2]))
                     print("Verstanden")
 
-# obj_define = Stage 2 for method != basic, else blank
+    # obj_define = Stage 2 for method != basic, else blank
     def obj_define(self):  # Stage 2
         if self.chosen_topic != 3:
             print("\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic][0] + " zwischen " +
@@ -1175,7 +1266,7 @@ class Task:
                     print("Perfekt.")
                 name_i += 1
 
-# Stage 4
+    # Stage 4
     def solve(self):  # sol == -1: error
         if self.method_calc[1]:
             sol_basic = -1
@@ -1291,6 +1382,209 @@ class Task:
                     elif type(self.obj_calc[1]) == Calc.Plane:
                         sol_con = Calc.Con.plane2(self.obj_calc[0], self.obj_calc[1])
                 self.sol.append(sol_con)
+
+    # Stage 5 & 6
+    def def_solution(self):
+        sol_text = "-1"
+        if not self.rnd[1]:
+            self.rnd[0] = user_rnd()
+        print("")
+        if self.method_calc[1]:
+            if self.method_calc[0] == 0:  # Plus
+                sol_text = (self.task_name + " ist fertig!\nDas Ergebnis der Addition vom "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + " und vom " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " ist " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 1:  # Minus
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + " minus dem" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " ist der " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 2:  # scalar_multi
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + " mal der " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " ist der " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 3:  # scalar_product
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis des Skalarproduktes:\nDer "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + " mal dem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " ist die " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 4:  # vector_product
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis des Kreuzproduktes:\nDer "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + " mal dem" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " ist der " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 5:  # spar_product
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDas Spatprodukt vom "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + ", dem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " und dem " + obj_to_str(self.obj_calc[2], self.rnd[0])[0]
+                            + " ist die " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 6:  # unit
+                sol_text = (self.task_name + " ist fertig.\nDer Einheitsvektor von dem "
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + " ist der " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+            elif self.method_calc[0] == 7:  # ld
+                if self.sol[0]:
+                    sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                + " und der " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                + " sind linear abhängig.")
+                else:
+                    sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                + " und der " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                + " sind linear unabhängig.")
+        else:
+            if self.method_calc[0] == 0:
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + "\ndem dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + "\nsind " + str(Calc.c_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
+            if self.method_calc[0] == 1:
+                if self.sol[0] == -1:  # No Cross Area
+                    sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nZwischen dem ersten Objekt,\n"
+                                + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                + "\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                + "\nexistiert keine Schnittmenge.")
+                else:  # Cross Area
+                    sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nZwischen dem ersten Objekt,\n"
+                                + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                + "\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                + "\nexistiert folgende Schnittmenge:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[0])
+            if self.method_calc[0] == 2:
+                if type(self.obj_calc[0]) == Calc.Point:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt im zweitem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 5:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt nicht im zweitem "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt in der " + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 5:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt nicht in der "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt in der " + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 5:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt nicht in der "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                elif type(self.obj_calc[0]) == Calc.Line:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " liegt in der " + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 5:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " liegt nicht in der "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt komplett innerhalb der zweiten "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 2:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " ist parralel zur zweiten "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 3:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " und die zweite "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + " schneiden sich.")
+                        if self.sol[0] == 4:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " ist zu der zweiten "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + " windschief.")
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " liegt komplett innerhalb der "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 2:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " ist parralel zur "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 3:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + " schneidet die "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                elif type(self.obj_calc[0]) == Calc.Plane:
+                    if type(self.obj_calc[1]) == Calc.Point:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " liegt in der " + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 5:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " liegt nicht in der "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                    elif type(self.obj_calc[1]) == Calc.Line:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " liegt komplett innerhalb der "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 2:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " ist parralel zur "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 3:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                        + " schneidet die "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0] + ".")
+                    elif type(self.obj_calc[1]) == Calc.Plane:
+                        if self.sol[0] == 1:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + "\nliegt komplett innerhalb der zweiten "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 2:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + "\nist parralel zur zweiten "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ".")
+                        if self.sol[0] == 3:
+                            sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDie erste "
+                                        + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                                        + "\nund die zweite "
+                                        + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + " schneiden sich.")
+        return sol_text
+
+    # All Stages
+    def get_solution(self):
+        self.basic_define()
+        self.obj_define()
+        self.solve()
+        self.solution = self.def_solution()
 
 
 # Stage 0 & 1
@@ -1433,12 +1727,13 @@ def stage_1(chosen_topic, task_name):
         chosen_task.obj_types.append(stage1[1])
         task_list.append(chosen_task)
     elif chosen_topic == 3:
+        print("Verstehe.")
         chosen_task = Task(task_name, chosen_topic)
         task_list.append(chosen_task)
 
 
-# Chat Start
-def start_chat():
+# Chat
+def early_game():
     print("Schön von dir zu hören, " + username + "!")
     print("Du bist hier, um über Mathe zu reden? Freut mich!")
     print("Von mir aus können wir gerne stundenlang über "
@@ -1458,29 +1753,15 @@ def start_chat():
         stage_1(user_chosen_topic, name)
 
 
+def mid_game():
+    rnd_main = rnd_preference()
+    for aa in task_list:
+        if rnd_main[1]:
+            aa.rnd = rnd_main
+        aa.get_solution()
+        print(aa.solution)
+
+
 # Testing
-start_chat()
-for cc in task_list:
-    cc.basic_define()
-    cc.obj_define()
-    cc.solve()
-for aa in task_list:
-    print("\nTesting Area:\n")
-    print("Solve (" + aa.task_name + "):")
-    if type(aa.sol[0]) == int or type(aa.sol[0]) == float:
-        print(aa.sol[0])
-    elif type(aa.sol[0]) == Calc.Point:
-        print("P(" + str(aa.sol[0].x) + "|" + str(aa.sol[0].y) + "|" + str(aa.sol[0].z) + ")")
-    elif type(aa.sol[0]) == Calc.Vector:
-        print("v = (" + str(aa.sol[0].x) + "|" + str(aa.sol[0].y) + "|" + str(aa.sol[0].z) + ")")
-    elif type(aa.sol[0]) == Calc.Line:
-        print("Support = (" + str(aa.sol[0].support.x) + "|" + str(aa.sol[0].support.y) +
-              "|" + str(aa.sol[0].support.z) + ")")
-        print("Direction = (" + str(aa.sol[0].dr.x) + "|" + str(aa.sol[0].dr.y) + "|" + str(aa.sol[0].dr.z) + ")")
-    elif type(aa.sol[0]) == Calc.Plane:
-        print("Plane: (" + str(aa.sol[0].a) + ")x + (" + str(aa.sol[0].b) + ")y + ("
-              + str(aa.sol[0].c) + ")z = " + str(aa.sol[0].d))
-    elif type(aa.sol[0]) == str:
-        print(aa.sol[0])
-    elif type(aa.sol[0]) == bool:
-        print(aa.sol[0])
+early_game()
+mid_game()

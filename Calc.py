@@ -1,6 +1,12 @@
 from math import *
 import sys
 
+# Round
+def c_round(aa, c):
+    if c > 9:
+        c = 9
+    Output = round(pow(10, floor(abs(c)))*aa)/pow(10, floor(abs(c)))
+    return Output
 
 # Converter
 class Conv:
@@ -141,7 +147,7 @@ class Basic:
             Output = Vector(Outx,Outy,Outz)
             return Output
         def sparproduct(aa,bb,cc):
-            Output = Basic.Vc.sproduct(Basic.Vc.vproduct(aa,bb),cc)
+            Output = abs(Basic.Vc.sproduct(Basic.Vc.vproduct(aa,bb),cc))
             return Output
         def unit(aa):
             Output = Basic.Vc.smulti(aa,1/aa.l)
