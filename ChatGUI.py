@@ -5,8 +5,9 @@ from math import *
 
 '''
 Todo:
-- Proper Machine Name
 - Obj converter as basic task
+- custom input
+- basic calc file
 '''
 '''
 Stages:
@@ -20,7 +21,7 @@ Stages:
 7 == Repeat or End
 '''
 # Meta Var
-program_name = "Siri"
+program_name = "Abbey"
 programmer_name = "Blind Fish"
 
 # Choice Arrays
@@ -71,7 +72,8 @@ object_type_pt_pt = ["PUNKT", "PUNKTE"]
 object_type_pt = [object_type_pt_pt]
 object_type_vc_vc = ["VEKTOR", "VEKTOREN"]
 object_type_vc = [object_type_vc_vc]
-object_type_ln_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE PUNKTE", "ZWEI PUNKTE", "2 PUNKTE", "."]
+object_type_ln_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "GRUPPE VON ZWEI PUNKTEN",
+                     "MEHRERE PUNKTE", "ZWEI PUNKTE", "2 PUNKTE", "."]
 object_type_ln_par = ["PARAMETER", "PARAMETERFORM", "VEKTOR", "VEKTOREN", "RICHTUNGSVEKTOR", "RICHTUNGSVEKTOREN"]
 object_type_ln = [object_type_ln_par, object_type_ln_pt]
 object_type_pl_par = ["PARAMETER", "PARAMETERFORM", "VEKTOR", "VEKTOREN", "RICHTUNGSVEKTOR", "RICHTUNGSVEKTOREN",
@@ -82,13 +84,17 @@ object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE 
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
 
-# Name
-username = input("Hallo, ich bin " + program_name + ". Wie heißt du?\n")
+# Intro
+username = str(input("Hallo, ich bin " + program_name + ". Wie heißt du?\n"))
 username_help = str(username) + " "
 if username_help.isspace():
     print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
     username = "Mathematik-Fan"
 misunderstand.append(username + ", ich weiß nicht genau was du meinst.")
+print("Schön von dir zu hören, " + username + "!")
+print("Du bist hier, um über Mathe zu reden? Freut mich!")
+print("Von mir aus können wir gerne stundenlang über "
+      "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
 
 
 # Task 2
@@ -386,7 +392,7 @@ def stage_2_def_ln_par():
                     print(misunderstand[random.randint(0, len(misunderstand) - 1)])
             # dr_confirm
             print(
-                "Also Richtungsvektor d = (" + str(ln_par_dr_x) + "|" + str(ln_par_dr_y) + "|" +
+                "Also Richtungsvektor r = (" + str(ln_par_dr_x) + "|" + str(ln_par_dr_y) + "|" +
                 str(ln_par_dr_z) + ")?")
             while not ln_par_dr_confirm:
                 user_ln_dr_confirm = input().upper()
@@ -1090,7 +1096,7 @@ def rnd_preference():
     return rnd_prf
 
 
-# Task Object & Stage 2 / 3
+# Task Object & Stage 2-6
 class Task:
     def __init__(self, task_name, chosen_topic):
         self.task_name = task_name
@@ -1113,7 +1119,7 @@ class Task:
             # Stage 3
             self.method_calc.clear()
             print("\nOkay, zu " + self.task_name + ", da ging es um Grundrechnungen.\n"
-                  "Um was für eine Berechnung ging es nochmal?")
+                  "Um was genau ging es nochmal?")
             bm_type = 0.1
             bm_understand = False
             while not bm_understand:
@@ -1212,7 +1218,7 @@ class Task:
                   object_full_list[self.obj_types[0]][0] + " und " + object_full_list[self.obj_types[1]][0] + "):")
             name_i = 1
             while name_i <= len(self.obj_types):
-                print("Das " + str(name_i) + ". Objekt..")
+                print("\nDas " + str(name_i) + ". Objekt..")
                 if self.obj_types[name_i - 1] == 0:
                     pt = stage_2_def_pt()
                     task_object = stage_2_pt(pt[0], pt[1], pt[2])
@@ -1420,7 +1426,7 @@ class Task:
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
                             + ", dem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                             + " und dem " + obj_to_str(self.obj_calc[2], self.rnd[0])[0]
-                            + " ist die " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+                            + " ist " + str(Calc.c_round(self.sol[0], self.rnd[0])) + ".")
             elif self.method_calc[0] == 6:  # unit
                 sol_text = (self.task_name + " ist fertig.\nDer Einheitsvektor von dem "
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
@@ -1440,19 +1446,19 @@ class Task:
             if self.method_calc[0] == 0:
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
-                            + "\ndem dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
-                            + "\nsind " + str(Calc.c_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
+                            + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + ",\nsind " + str(Calc.c_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
             if self.method_calc[0] == 1:
                 if self.sol[0] == -1:  # No Cross Area
                     sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nZwischen dem ersten Objekt,\n"
                                 + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
-                                + "\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
-                                + "\nexistiert keine Schnittmenge.")
+                                + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                + ",\nexistiert keine Schnittmenge.")
                 else:  # Cross Area
                     sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nZwischen dem ersten Objekt,\n"
                                 + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
-                                + "\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
-                                + "\nexistiert folgende Schnittmenge:\n"
+                                + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                                + ",\nexistiert folgende Schnittmenge:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0])
             if self.method_calc[0] == 2:
                 if type(self.obj_calc[0]) == Calc.Point:
@@ -1585,11 +1591,10 @@ class Task:
         self.obj_define()
         self.solve()
         self.solution = self.def_solution()
+        self.complete = True
 
 
 # Stage 0 & 1
-
-
 def stage_1_dis():
     print("Abstände? Da weiß ich bescheid!")
     chosen_object1 = 0
@@ -1685,7 +1690,10 @@ def stage_1_contain():
 
 
 def stage_0(iteration):
-    user_topic = input("Zu was hast du denn deine " + str(iteration) + ". Frage?\n").upper()
+    if iteration == 1:
+        user_topic = input("Zu was hast du denn deine Frage?\n").upper()
+    else:
+        user_topic = input("Zu was hast du denn deine " + str(iteration) + ". Frage?\n").upper()
     chosen_topic = 0
     user_topic_understand = False
     for answer_list in topic:
@@ -1733,35 +1741,71 @@ def stage_1(chosen_topic, task_name):
 
 
 # Chat
-def early_game():
-    print("Schön von dir zu hören, " + username + "!")
-    print("Du bist hier, um über Mathe zu reden? Freut mich!")
-    print("Von mir aus können wir gerne stundenlang über "
-          "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+def early_game(iteration):
     iterate_understand = False
     iterate = 0
     while not iterate_understand:
         try:
-            iterate = int(input("Wie viele Fragen hast du für mich?\n"))
+            if iteration > 0:
+                iterate = int(input("Wie viele weitere Fragen hast du für mich?\n"))
+            else:
+                iterate = int(input("Wie viele Fragen hast du für mich?\n"))
             iterate_understand = True
         except ValueError:
             print(misunderstand[random.randint(0, len(misunderstand) - 1)])
 
     for i in range(iterate):
-        user_chosen_topic = stage_0(i + 1)
-        name = "Frage " + str(i + 1)
+        user_chosen_topic = stage_0(i + 1 + iteration)
+        name = "Frage " + str(i + 1 + iteration)
         stage_1(user_chosen_topic, name)
 
 
 def mid_game():
     rnd_main = rnd_preference()
     for aa in task_list:
-        if rnd_main[1]:
-            aa.rnd = rnd_main
-        aa.get_solution()
-        print(aa.solution)
+        if not aa.complete:
+            if rnd_main[1]:
+                aa.rnd = rnd_main
+            aa.get_solution()
+            print(aa.solution)
+
+
+def end_game():  # Stage 7
+    print("")
+    if len(task_list) in range(1, 8, 1):
+        print("\nGut, alles ist fertig!")
+    elif len(task_list) in range(9, 16, 1):
+        print("\nSuper, habe alles fertig gerechnet!")
+    elif len(task_list) in range(17, 24, 1):
+        print("\nPuh, das war viel, aber wir haben es geschafft!")
+    else:
+        print("\nKrass, " + str(len(task_list)) + " Fragen! Aber wir haben es geschafft.")
+    repeat_confirm = False
+    while not repeat_confirm:
+        repeat_confirm_no = False
+        user_repeat = input("Hast du noch weitere Fragen?\n").upper()
+        for ii in user_boolean:
+            for jj in ii:
+                if user_repeat == jj:
+                    if user_boolean.index(ii) == 0:
+                        repeat_confirm = True
+                        print("Noch mehr Fragen? Schieß los!")
+                        chat(len(task_list))
+                    elif user_boolean.index(ii) == 1:
+                        repeat_confirm_no = True
+                        print("Okay super.")
+        if not (repeat_confirm_no or repeat_confirm):
+            print(misunderstand[random.randint(0, len(misunderstand) - 1)])
+        if repeat_confirm_no:
+            break
+    print("Dann wohl bis später, ich hoffe ich war hilfreich.\nBis dann, " + username + "!")
+
+
+def chat(iteration):
+    early_game(iteration)
+    mid_game()
+    end_game()
 
 
 # Testing
-early_game()
-mid_game()
+chat(0)
