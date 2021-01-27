@@ -29,11 +29,6 @@ date = str(datetime.date.today())
 # Choice Arrays
 task_list = []
 
-# Warning: Strangers with the same name
-# Warning: Names and birth dates in public code
-common_names = [["ADRIAN", "YYYY-05-24"], ["BLIND FISH", "YYYY-05-24"], ["JOHANNES", "YYYY-MM-DD"],
-                ["MARVIN", "YYYY-05-12"], ["LOGIKERUS", "YYYY-05-12"], ["ELLI", "YYYY-12-08"],
-                ["ELISABETH", "YYYY-12-08"], ["DILARA", "YYYY-01-29"], ["JAMILA", "YYYY-01-17"]]
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
                  "Wie meinst du das?"]
@@ -94,6 +89,12 @@ object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE 
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
 
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
+
+# Warning: Strangers with the same name
+# Warning: Names and birth dates in public code
+common_names = [["ADRIAN", "YYYY-05-24"], ["BLIND FISH", "YYYY-05-24"], ["JOHANNES", "YYYY-MM-DD"],
+                ["MARVIN", "YYYY-05-12"], ["LOGIKERUS", "YYYY-05-12"], ["ELLI", "YYYY-12-08"],
+                ["ELISABETH", "YYYY-12-08"], ["DILARA", "YYYY-01-29"], ["JAMILA", "YYYY-01-17"]]
 
 
 # date check
