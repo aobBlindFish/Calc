@@ -2,12 +2,14 @@ import sys
 import Calc
 import random
 from math import *
+import datetime
 
 '''
 Todo:
 - Obj converter as basic task
 - custom input
 - basic calc file
+- chat layout
 '''
 '''
 Stages:
@@ -23,9 +25,15 @@ Stages:
 # Meta Var
 program_name = "Abbey"
 programmer_name = "Blind Fish"
-
+date = str(datetime.date.today())
 # Choice Arrays
 task_list = []
+
+# Warning: Strangers with the same name
+# Warning: Names and birth dates in public code
+common_names = [["ADRIAN", "YYYY-05-24"], ["BLIND FISH", "YYYY-05-24"], ["JOHANNES", "YYYY-MM-DD"],
+                ["MARVIN", "YYYY-05-12"], ["LOGIKERUS", "YYYY-05-12"], ["ELLI", "YYYY-12-08"],
+                ["ELISABETH", "YYYY-12-08"], ["DILARA", "YYYY-01-29"], ["JAMILA", "YYYY-01-17"]]
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
                  "Wie meinst du das?"]
@@ -36,25 +44,24 @@ user_boolean = [user_true, user_false]
 
 basic_plus = ["PLUS", "PLUSRECHNEN", "PLUS RECHNEN", "ADDITION", "ADDIEREN", "SUMME"]
 basic_minus = ["MINUS", "MINUSRECHNEN", "MINUS RECHNEN", "DIFFERENZ", "DIFFERENZIEREN"]
-basic_scalar_multi = ["SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG"]
+basic_scalar_multi = ["SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG", "SKALIERT"]
 basic_scalar_product = ["SKALARPRODUKT"]
 basic_vector_product = ["VEKTORPRODUKT", "KREUZPRODUKT"]
 basic_spar_product = ["SPATPRODUKT", "SPAT"]
 basic_unit = ["EINHEITSVEKTOR", "BASISVEKTOR"]
-basic_ld = ["LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT"]
-
+basic_ld = ["LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG"]
 basic_method = [basic_plus, basic_minus, basic_scalar_multi, basic_scalar_product, basic_vector_product,
                 basic_spar_product, basic_unit, basic_ld]
 
 topic_basic = ["Grundrechnung", "GRUNDRECHNUNGEN", "GRUNDRECHNUNG", "BASISSACHEN", "BASISSACHE",
                "PLUS", "ADDITION", "ADDIEREN", "SUMME",
-               "MINUS", "DIFFERENZ",
-               "SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG",
+               "MINUS", "DIFFERENZ", "MINUS RECHNEN", "DIFFERENZ", "DIFFERENZIEREN",
+               "SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG", "SKALIERT",
                "SKALARPRODUKT",
                "VEKTORPRODUKT", "KREUZPRODUKT",
                "SPATPRODUKT", "SPAT",
                "EINHEITSVEKTOR", "BASISVEKTOR",
-               "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT",
+               "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG",
                "SKALAR", "MAL"]
 topic_dis = ["Abstand", "ABSTAND", "ABSTÄNDE", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["Schnittmenge", "SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE",
@@ -63,26 +70,108 @@ topic_contain = ["Lagebeziehung", "LAGEBEZIEHUNG", "LAGEBEZIEHUNGEN", "LAGEVERH�
 topic = [topic_dis, topic_cross, topic_contain, topic_basic]
 
 object_point = ["Punkt", "PUNKT", "."]
-object_line = ["Gerade", "GERADE", "LINIE"]
+object_line = ["Gerade", "GERADE", "LINIE", "STRICH"]
 object_plane = ["Ebene", "EBENE", "FLÄCHE", "OBERFLÄCHE"]
 object_vector = ["Vektor", "VEKTOR", "RICHTUNG"]
 object_full_list = [object_point, object_line, object_plane, object_vector]
 
 object_type_pt_pt = ["PUNKT", "PUNKTE"]
 object_type_pt = [object_type_pt_pt]
+
 object_type_vc_vc = ["VEKTOR", "VEKTOREN"]
 object_type_vc = [object_type_vc_vc]
+
 object_type_ln_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "GRUPPE VON ZWEI PUNKTEN",
                      "MEHRERE PUNKTE", "ZWEI PUNKTE", "2 PUNKTE", "."]
 object_type_ln_par = ["PARAMETER", "PARAMETERFORM", "VEKTOR", "VEKTOREN", "RICHTUNGSVEKTOR", "RICHTUNGSVEKTOREN"]
 object_type_ln = [object_type_ln_par, object_type_ln_pt]
+
 object_type_pl_par = ["PARAMETER", "PARAMETERFORM", "VEKTOR", "VEKTOREN", "RICHTUNGSVEKTOR", "RICHTUNGSVEKTOREN",
                       "SPANNVEKTOR", "SPANNVEKTOREN"]
 object_type_pl_norm = ["NORMAL", "NORMALE", "NORMALENFORM"]
 object_type_pl_coord = ["KOORDINATE", "KOORDINATEN", "KOORDINATENFORM", "COORDS", "COORD"]
 object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE PUNKTE", "DREI PUNKTE", "3 PUNKTE", "."]
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
+
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
+
+
+# date check
+def date_check(custom_date):
+    date_overlap = True
+    for i in range(5, 10, 1):
+        if custom_date[i] != date[i]:
+            date_overlap = False
+            return date_overlap
+    return date_overlap
+
+
+# Common Name
+def name_input(username_input):  # Sort through any known name for a special greeting
+    user_text = str(username_input)
+    birthday = False
+    greeting = str("Schön von dir zu hören, " + str(user_text) +
+                   "!\nDu bist hier, um über Mathe zu reden? Freut mich!\n"
+                   "Von mir aus können wir gerne stundenlang über "
+                   "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+    for ii in common_names:
+        if user_text.upper() == ii[0]:
+            if common_names.index(ii) == 0:
+                greeting = str("Ah, man sieht sich wieder, " + user_text + "."
+                               + "\nBrauchst du meine Hilfe oder willst du mich wieder testen?\n"
+                                 "Ist ja auch egal, ich bin sowieso bestens vorbereitet "
+                                 "aber das weißt du ja besser als ich.")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 1:
+                greeting = str("Ah, man sieht sich wieder, " + user_text + "."
+                               + "\nBrauchst du meine Hilfe oder willst du mich wieder testen?\n"
+                                 "Ist ja auch egal, ich bin sowieso bestens vorbereitet "
+                                 "aber das weißt du ja besser als ich.")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 2:
+                greeting = str("Oh hi " + user_text + ". Ich bin etwas überrascht von dir zu hören."
+                               + "\nIch habe gehört, dass du meine Hilfe "
+                                 "für deine Hausaufgaben nicht haben möchtest.\n"
+                                 "Hast du dich umentschieden? Ich könnte dir beispielsweise bei "
+                                 "Schnittmengen, Abständen oder Lagebeziehungen eine Hilfe sein.")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 3:
+                greeting = str(user_text + "? Schön von dir zu hören!"
+                               + "\nDass du Mathe-Fragen hast überrascht mich etwas.\n"
+                                 "Worum geht es denn heute? Schnittmengen, Abstände, Lagebeziehungen "
+                                 "oder vielleicht doch was anderes?")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 4:
+                greeting = str(user_text + "? Schön von dir zu hören!"
+                               + "\nDass du Mathe-Fragen hast überrascht mich etwas.\n"
+                                 "Worum geht es denn heute? Schnittmengen, Abstände, Lagebeziehungen "
+                                 "oder vielleicht doch was anderes?")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 5:
+                greeting = str("Schön von dir zu hören, " + str(user_text) +
+                               "!\nBist du hier um die Lösung deiner Hausaufgaben zu überprüfen? "
+                               "Mein Gefühl sagt mir, dass du alles schon richtig hast, aber mal sehen.\n"
+                               "Worum geht es denn in den Aufgaben von heute? "
+                               "Schnittmengen, Abstände, Lagebeziehungen oder vielleicht doch was anderes?")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 6:
+                greeting = str("Schön von dir zu hören, " + str(user_text) +
+                               "!\nBist du hier um die Lösung deiner Hausaufgaben zu überprüfen? "
+                               "Mein Gefühl sagt mir, dass du alles schon richtig hast, aber mal sehen.\n"
+                               "Worum geht es denn in den Aufgaben von heute? "
+                               "Schnittmengen, Abstände, Lagebeziehungen oder vielleicht doch was anderes?")
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 7:
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 8:
+                birthday = date_check(ii[1])
+    if birthday:
+        greeting = str("Hi " + user_text + "! Herzlichen Glückwunsch zum Geburtstag!"
+                       + "\nHoffentlich konntest du heute schöneres machen als über Mathe nachzudenken.\n"
+                         "Weil ich dich dafür aber besser kennen lernen kann, können wir von mir aus gerne über"
+                         " Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+    return greeting
+
 
 # Intro
 username = str(input("Hallo, ich bin " + program_name + ". Wie heißt du?\n"))
@@ -91,10 +180,7 @@ if username_help.isspace():
     print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
     username = "Mathematik-Fan"
 misunderstand.append(username + ", ich weiß nicht genau was du meinst.")
-print("Schön von dir zu hören, " + username + "!")
-print("Du bist hier, um über Mathe zu reden? Freut mich!")
-print("Von mir aus können wir gerne stundenlang über "
-      "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+print(name_input(username))
 
 
 # Task 2
@@ -1798,7 +1884,7 @@ def end_game():  # Stage 7
             print(misunderstand[random.randint(0, len(misunderstand) - 1)])
         if repeat_confirm_no:
             break
-    print("Dann wohl bis später, ich hoffe ich war hilfreich.\nBis dann, " + username + "!")
+    print("Dann wohl bis später, ich hoffe ich war eine Hilfe.\nBis dann, " + username + "!")
 
 
 def chat(iteration):
