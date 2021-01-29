@@ -23,7 +23,7 @@ Stages:
 7 == Repeat or End
 '''
 # Meta Var
-program_name = "Abbey"
+program_name = "Siri"
 programmer_name = "Blind Fish"
 date = str(datetime.date.today())
 # Choice Arrays
