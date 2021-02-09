@@ -1,12 +1,6 @@
 from math import *
 import sys
 
-# Round
-def c_round(aa, c):
-    if c > 9:
-        c = 9
-    Output = round(pow(10, floor(abs(c)))*aa)/pow(10, floor(abs(c)))
-    return Output
 
 # Converter
 class Conv:

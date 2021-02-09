@@ -1,5 +1,6 @@
 import sys
 import Calc
+import BasicMath
 import random
 from math import *
 import datetime
@@ -26,7 +27,6 @@ programmer_name = "Blind Fish"
 date = str(datetime.date.today())
 # Choice Arrays
 task_list = []
-
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
                  "Wie meinst du das?"]
@@ -893,8 +893,52 @@ def stage_2_def_pl_coord():
             else:
                 pl_coord_correct = True
         # confirm
-        print("Also die Ebene:\n(" + str(pl_coord_a) + ")x + (" + str(pl_coord_b) + ")y + (" +
-              str(pl_coord_c) + ")z = " + str(pl_coord_d) + " ?")
+        pl_coord_a_str = str(pl_coord_a)
+        pl_coord_b_str = str(pl_coord_b)
+        pl_coord_c_str = str(pl_coord_c)
+        pl_coord_d_str = str(pl_coord_d)
+        # a
+        if pl_coord_a == 0:
+            pl_coord_a_str = ""
+        elif pl_coord_a < 0:
+            pl_coord_b_str = "-" + str(abs(pl_coord_a)) + "x"
+        elif pl_coord_a > 0:
+            pl_coord_a_str = str(pl_coord_a) + "x"
+        # b
+        if pl_coord_b == 0:
+            pl_coord_b_str = ""
+        elif pl_coord_b < 0:
+            if pl_coord_a == 0:
+                pl_coord_b_str = "-" + str(abs(pl_coord_b)) + "y"
+            else:
+                pl_coord_b_str = " - " + str(abs(pl_coord_b)) + "y"
+        elif pl_coord_b > 0:
+            if pl_coord_a == 0:
+                pl_coord_b_str = str(pl_coord_b) + "y"
+            else:
+                pl_coord_b_str = " + " + str(pl_coord_b) + "y"
+        # c
+        if pl_coord_c == 0:
+            pl_coord_c_str = ""
+        elif pl_coord_c < 0:
+            if pl_coord_a == 0 and pl_coord_b == 0:
+                pl_coord_c_str = "-" + str(abs(pl_coord_c)) + "z"
+            else:
+                pl_coord_c_str = " - " + str(abs(pl_coord_c)) + "z"
+        elif pl_coord_c > 0:
+            if pl_coord_a == 0 and pl_coord_b == 0:
+                pl_coord_c_str = str(pl_coord_c) + "z"
+            else:
+                pl_coord_c_str = " + " + str(pl_coord_c) + "z"
+        # d
+        if pl_coord_d == 0:
+            pl_coord_d_str = str(pl_coord_d)
+        elif pl_coord_d < 0:
+            pl_coord_d_str = str(pl_coord_d)
+        elif pl_coord_d > 0:
+            pl_coord_d_str = str(pl_coord_d)
+        print("Also die Ebene:\n" + pl_coord_a_str + pl_coord_b_str +
+              pl_coord_c_str + " = " + pl_coord_d_str + "?")
         while not pl_coord_confirm:
             user_pl_coord_confirm = input().upper()
             for ii in user_boolean:
@@ -1068,55 +1112,99 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
     if not (type(rnd) == float or type(rnd) == int):
         rnd = 2
     if type(obj) == int or type(obj) == float:
-        obj_c = Calc.c_round(obj, rnd)
+        obj_c = BasicMath.constant_round(obj, rnd)
         output_str.clear()
         output_str.append("Zahl " + str(obj_c))
     elif type(obj) == Calc.Point:
-        pt_x = Calc.c_round(obj.x, rnd)
-        pt_y = Calc.c_round(obj.y, rnd)
-        pt_z = Calc.c_round(obj.z, rnd)
+        pt_x = BasicMath.constant_round(obj.x, rnd)
+        pt_y = BasicMath.constant_round(obj.y, rnd)
+        pt_z = BasicMath.constant_round(obj.z, rnd)
         output_str.clear()
         output_str.append("Punkt (" + str(pt_x) + "|" + str(pt_y) + "|" + str(pt_z) + ")")
     elif type(obj) == Calc.Vector:
-        vc_x = Calc.c_round(obj.x, rnd)
-        vc_y = Calc.c_round(obj.y, rnd)
-        vc_z = Calc.c_round(obj.z, rnd)
+        vc_x = BasicMath.constant_round(obj.x, rnd)
+        vc_y = BasicMath.constant_round(obj.y, rnd)
+        vc_z = BasicMath.constant_round(obj.z, rnd)
         output_str.clear()
         output_str.append("Vektor (" + str(vc_x) + "|" + str(vc_y) + "|" + str(vc_z) + ")")
     elif type(obj) == Calc.Line:
-        ln_sp_x = Calc.c_round(obj.support.x, rnd)
-        ln_sp_y = Calc.c_round(obj.support.y, rnd)
-        ln_sp_z = Calc.c_round(obj.support.z, rnd)
-        ln_dr_x = Calc.c_round(obj.dr.x, rnd)
-        ln_dr_y = Calc.c_round(obj.dr.y, rnd)
-        ln_dr_z = Calc.c_round(obj.dr.z, rnd)
+        ln_sp_x = BasicMath.constant_round(obj.support.x, rnd)
+        ln_sp_y = BasicMath.constant_round(obj.support.y, rnd)
+        ln_sp_z = BasicMath.constant_round(obj.support.z, rnd)
+        ln_dr_x = BasicMath.constant_round(obj.dr.x, rnd)
+        ln_dr_y = BasicMath.constant_round(obj.dr.y, rnd)
+        ln_dr_z = BasicMath.constant_round(obj.dr.z, rnd)
         output_str.clear()
         output_str.append("Gerade: x = (" + str(ln_sp_x) + "|" + str(ln_sp_y) + "|" + str(ln_sp_z) + ")"
                           " + (" + str(ln_dr_x) + "|" + str(ln_dr_y) + "|" + str(ln_dr_z) + ")s")
     elif type(obj) == Calc.Plane:
-        pl_sp_x = Calc.c_round(obj.support.x, rnd)
-        pl_sp_y = Calc.c_round(obj.support.y, rnd)
-        pl_sp_z = Calc.c_round(obj.support.z, rnd)
-        pl_nm_x = Calc.c_round(obj.normal.x, rnd)
-        pl_nm_y = Calc.c_round(obj.normal.y, rnd)
-        pl_nm_z = Calc.c_round(obj.normal.z, rnd)
-        pl_dr1_x = Calc.c_round(obj.dr1.x, rnd)
-        pl_dr1_y = Calc.c_round(obj.dr1.y, rnd)
-        pl_dr1_z = Calc.c_round(obj.dr1.z, rnd)
-        pl_dr2_x = Calc.c_round(obj.dr2.x, rnd)
-        pl_dr2_y = Calc.c_round(obj.dr2.y, rnd)
-        pl_dr2_z = Calc.c_round(obj.dr2.z, rnd)
-        pl_a = Calc.c_round(obj.a, rnd)
-        pl_b = Calc.c_round(obj.b, rnd)
-        pl_c = Calc.c_round(obj.c, rnd)
-        pl_d = Calc.c_round(obj.d, rnd)
+        pl_sp_x = BasicMath.constant_round(obj.support.x, rnd)
+        pl_sp_y = BasicMath.constant_round(obj.support.y, rnd)
+        pl_sp_z = BasicMath.constant_round(obj.support.z, rnd)
+        pl_nm_x = BasicMath.constant_round(obj.normal.x, rnd)
+        pl_nm_y = BasicMath.constant_round(obj.normal.y, rnd)
+        pl_nm_z = BasicMath.constant_round(obj.normal.z, rnd)
+        pl_dr1_x = BasicMath.constant_round(obj.dr1.x, rnd)
+        pl_dr1_y = BasicMath.constant_round(obj.dr1.y, rnd)
+        pl_dr1_z = BasicMath.constant_round(obj.dr1.z, rnd)
+        pl_dr2_x = BasicMath.constant_round(obj.dr2.x, rnd)
+        pl_dr2_y = BasicMath.constant_round(obj.dr2.y, rnd)
+        pl_dr2_z = BasicMath.constant_round(obj.dr2.z, rnd)
+        pl_a = BasicMath.constant_round(obj.a, rnd)
+        pl_b = BasicMath.constant_round(obj.b, rnd)
+        pl_c = BasicMath.constant_round(obj.c, rnd)
+        pl_d = BasicMath.constant_round(obj.d, rnd)
+        pl_a_str = str(pl_a)
+        pl_b_str = str(pl_b)
+        pl_c_str = str(pl_c)
+        pl_d_str = str(pl_d)
+        # a
+        if pl_a == 0:
+            pl_a_str = ""
+        elif pl_a < 0:
+            pl_b_str = "-" + str(abs(pl_a)) + "x"
+        elif pl_a > 0:
+            pl_a_str = str(pl_a) + "x"
+        # b
+        if pl_b == 0:
+            pl_b_str = ""
+        elif pl_b < 0:
+            if pl_a == 0:
+                pl_b_str = "-" + str(abs(pl_b)) + "y"
+            else:
+                pl_b_str = " - " + str(abs(pl_b)) + "y"
+        elif pl_b > 0:
+            if pl_a == 0:
+                pl_b_str = str(pl_b) + "y"
+            else:
+                pl_b_str = " + " + str(pl_b) + "y"
+        # c
+        if pl_c == 0:
+            pl_c_str = ""
+        elif pl_c < 0:
+            if pl_a == 0 and pl_b == 0:
+                pl_c_str = "-" + str(abs(pl_c)) + "z"
+            else:
+                pl_c_str = " - " + str(abs(pl_c)) + "z"
+        elif pl_c > 0:
+            if pl_a == 0 and pl_b == 0:
+                pl_c_str = str(pl_c) + "z"
+            else:
+                pl_c_str = " + " + str(pl_c) + "z"
+        # d
+        if pl_d == 0:
+            pl_d_str = str(pl_d)
+        elif pl_d < 0:
+            pl_d_str = str(pl_d)
+        elif pl_d > 0:
+            pl_d_str = str(pl_d)
         output_str.clear()
         output_str.append("Ebene: x = (" + str(pl_sp_x) + "|" + str(pl_sp_y) + "|" + str(pl_sp_z) + ")"
                           " + (" + str(pl_dr1_x) + "|" + str(pl_dr1_y) + "|" + str(pl_dr1_z) + ")s"
                           " + (" + str(pl_dr2_x) + "|" + str(pl_dr2_y) + "|" + str(pl_dr2_z) + ")t")
         output_str.append("Ebene: 0 = (" + str(pl_nm_x) + "|" + str(pl_nm_y) + "|" + str(pl_nm_z) + ") * (x"
                           " - (" + str(pl_sp_x) + "|" + str(pl_sp_y) + "|" + str(pl_sp_z) + "))")
-        output_str.append("Ebene: (" + str(pl_a) + ")x + (" + str(pl_b) + ")y + (" + str(pl_c) + ")z = " + str(pl_d))
+        output_str.append("Ebene: " + pl_a_str + pl_b_str + pl_c_str + " = " + pl_d_str)
     return output_str
 
 
@@ -1275,8 +1363,7 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_ld_vc2[0], bm_ld_vc2[1], bm_ld_vc2[2]))
                     print("Verstanden")
                 elif self.method_calc[0] == 8:  # method convert
-                    print("Verstehe. Ich kann gerne ein Objekt von dir verschieden beschreiben."
-                          "\nUm welches Objekt geht es?")
+                    print("Verstehe. Welches Objekt soll ich näher beschreiben?")
                     bm_conv_understand = False
                     bm_conv_obj_index = -1
                     while not bm_conv_understand:
@@ -1323,7 +1410,7 @@ class Task:
                                                                  Calc.Vector(bm_conv_obj[3],
                                                                              bm_conv_obj[4], bm_conv_obj[5])))
                         elif bm_conv_type == 2:
-                            bm_conv_obj = stage_2_def_pl_norm()
+                            bm_conv_obj = stage_2_def_pl_coord()
                             self.obj_calc.append(stage_2_pl_coord(bm_conv_obj[0], bm_conv_obj[1],
                                                                   bm_conv_obj[2], bm_conv_obj[3]))
                         elif bm_conv_type == 3:
@@ -1555,7 +1642,7 @@ class Task:
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
                             + ", dem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                             + " und dem " + obj_to_str(self.obj_calc[2], self.rnd[0])[0]
-                            + " ist " + str(Calc.c_round(self.sol[0], self.rnd[0])) + ".")
+                            + " ist " + str(BasicMath.constant_round(self.sol[0], self.rnd[0])) + ".")
             elif self.method_calc[0] == 6:  # unit
                 sol_text = (self.task_name + " ist fertig.\nDer Einheitsvektor von dem "
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
@@ -1575,7 +1662,7 @@ class Task:
                 if type(self.sol[0]) == Calc.Point:
                     sol_text = (self.task_name + " ist fertig. Hier ist dein Punkt:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
-                                + str(Calc.c_round(self.sol[0].ov.l, self.rnd[0]))
+                                + str(BasicMath.constant_round(self.sol[0].ov.l, self.rnd[0]))
                                 + " Längeneinheiten vom Ursprung entfernt.")
                 elif type(self.sol[0]) == Calc.Line:
                     sol_text = (self.task_name + " ist fertig. Hier ist deine Gerade:\n"
@@ -1590,13 +1677,14 @@ class Task:
                 elif type(self.sol[0]) == Calc.Vector:
                     sol_text = (self.task_name + " ist fertig. Hier ist dein Vektor:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
-                                + str(Calc.c_round(self.sol[0].l, self.rnd[0])) + " Längeneinheiten lang.\n")
+                                + str(BasicMath.constant_round(self.sol[0].l, self.rnd[0]))
+                                + " Längeneinheiten lang.\n")
         else:
             if self.method_calc[0] == 0:
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
-                            + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
-                            + ",\nsind " + str(Calc.c_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
+                            + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ","
+                            + "\nsind " + str(BasicMath.constant_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
             if self.method_calc[0] == 1:
                 if self.sol[0] == -1:  # No Cross Area
                     sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nZwischen dem ersten Objekt,\n"
