@@ -6,10 +6,8 @@ import datetime
 
 '''
 Todo:
-- Obj converter as basic task
 - custom input
 - basic calc file
-- chat layout
 '''
 '''
 Stages:
@@ -23,7 +21,7 @@ Stages:
 7 == Repeat or End
 '''
 # Meta Var
-program_name = "Siri"
+program_name = "Mathemann"
 programmer_name = "Blind Fish"
 date = str(datetime.date.today())
 # Choice Arrays
@@ -45,19 +43,14 @@ basic_vector_product = ["VEKTORPRODUKT", "KREUZPRODUKT"]
 basic_spar_product = ["SPATPRODUKT", "SPAT"]
 basic_unit = ["EINHEITSVEKTOR", "BASISVEKTOR"]
 basic_ld = ["LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG"]
+basic_convert = ["UMWANDLUNG", "UMWANDELN", "UMFORMUNG", "UMFORMEN", "UMRECHNUNG", "UMRECHNEN"]
 basic_method = [basic_plus, basic_minus, basic_scalar_multi, basic_scalar_product, basic_vector_product,
-                basic_spar_product, basic_unit, basic_ld]
+                basic_spar_product, basic_unit, basic_ld, basic_convert]
 
-topic_basic = ["Grundrechnung", "GRUNDRECHNUNGEN", "GRUNDRECHNUNG", "BASISSACHEN", "BASISSACHE",
-               "PLUS", "ADDITION", "ADDIEREN", "SUMME",
-               "MINUS", "DIFFERENZ", "MINUS RECHNEN", "DIFFERENZ", "DIFFERENZIEREN",
-               "SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG", "SKALIERT",
-               "SKALARPRODUKT",
-               "VEKTORPRODUKT", "KREUZPRODUKT",
-               "SPATPRODUKT", "SPAT",
-               "EINHEITSVEKTOR", "BASISVEKTOR",
-               "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG",
-               "SKALAR", "MAL"]
+topic_basic = ["Grundrechnung", "SKALAR", "MAL"]
+for basic_method_type in basic_method:
+    for basic_method_keyword in basic_method_type:
+        topic_basic.append(basic_method_keyword)
 topic_dis = ["Abstand", "ABSTAND", "ABSTÄNDE", "DISTANZ", "DISTANZEN", "ENTFERNUNG", "ENTFERNUNGEN"]
 topic_cross = ["Schnittmenge", "SCHNITTPUNKT", "SCHNITTPUNKTE", "SCHNITTGERADE", "SCHNITTGERADEN", "SCHNITTMENGE",
                "SCHNITTMENGEN"]
@@ -92,9 +85,10 @@ object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_
 
 # Warning: Strangers with the same name
 # Warning: Names and birth dates in public code
-common_names = [["ADRIAN", "YYYY-05-24"], ["BLIND FISH", "YYYY-05-24"], ["JOHANNES", "YYYY-MM-DD"],
-                ["MARVIN", "YYYY-05-12"], ["LOGIKERUS", "YYYY-05-12"], ["ELLI", "YYYY-12-08"],
-                ["ELISABETH", "YYYY-12-08"], ["DILARA", "YYYY-01-29"], ["JAMILA", "YYYY-01-17"]]
+common_names = [["ADRIAN", "YYYY-05-24"], ["BLIND FISH", "YYYY-05-24"], ["BF", "YYYY-05-24"],
+                ["JOHANNES", "YYYY-MM-DD"], ["MARVIN", "YYYY-05-12"], ["LOGIKERUS", "YYYY-05-12"],
+                ["ELLI", "YYYY-12-08"], ["ELISABETH", "YYYY-12-08"], ["DILARA", "YYYY-01-29"],
+                ["JAMILA", "YYYY-01-17"]]
 
 
 # date check
@@ -107,7 +101,7 @@ def date_check(custom_date):
     return date_overlap
 
 
-# Common Name
+# Common Name & Intro
 def name_input(username_input):  # Sort through any known name for a special greeting
     user_text = str(username_input)
     birthday = False
@@ -117,54 +111,35 @@ def name_input(username_input):  # Sort through any known name for a special gre
                    "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
     for ii in common_names:
         if user_text.upper() == ii[0]:
-            if common_names.index(ii) == 0:
+            if common_names.index(ii) == 0 or common_names.index(ii) == 1 or common_names.index(ii) == 2:
                 greeting = str("Ah, man sieht sich wieder, " + user_text + "."
                                + "\nBrauchst du meine Hilfe oder willst du mich wieder testen?\n"
                                  "Ist ja auch egal, ich bin sowieso bestens vorbereitet "
                                  "aber das weißt du ja besser als ich.")
                 birthday = date_check(ii[1])
-            elif common_names.index(ii) == 1:
-                greeting = str("Ah, man sieht sich wieder, " + user_text + "."
-                               + "\nBrauchst du meine Hilfe oder willst du mich wieder testen?\n"
-                                 "Ist ja auch egal, ich bin sowieso bestens vorbereitet "
-                                 "aber das weißt du ja besser als ich.")
-                birthday = date_check(ii[1])
-            elif common_names.index(ii) == 2:
+            elif common_names.index(ii) == 3:
                 greeting = str("Oh hi " + user_text + ". Ich bin etwas überrascht von dir zu hören."
                                + "\nIch habe gehört, dass du meine Hilfe "
                                  "für deine Hausaufgaben nicht haben möchtest.\n"
                                  "Hast du dich umentschieden? Ich könnte dir beispielsweise bei "
-                                 "Schnittmengen, Abständen oder Lagebeziehungen eine Hilfe sein.")
+                                 "Schnittmengen, Abständen, Lagebeziehungen oder Umformungen eine Hilfe sein.")
                 birthday = date_check(ii[1])
-            elif common_names.index(ii) == 3:
+            elif common_names.index(ii) == 4 or common_names.index(ii) == 5:
                 greeting = str(user_text + "? Schön von dir zu hören!"
                                + "\nDass du Mathe-Fragen hast überrascht mich etwas.\n"
-                                 "Worum geht es denn heute? Schnittmengen, Abstände, Lagebeziehungen "
+                                 "Worum geht es denn heute? Schnittmengen, Abstände, Lagebeziehungen, Umformungen "
                                  "oder vielleicht doch was anderes?")
                 birthday = date_check(ii[1])
-            elif common_names.index(ii) == 4:
-                greeting = str(user_text + "? Schön von dir zu hören!"
-                               + "\nDass du Mathe-Fragen hast überrascht mich etwas.\n"
-                                 "Worum geht es denn heute? Schnittmengen, Abstände, Lagebeziehungen "
-                                 "oder vielleicht doch was anderes?")
-                birthday = date_check(ii[1])
-            elif common_names.index(ii) == 5:
+            elif common_names.index(ii) == 6 or common_names.index(ii) == 7:
                 greeting = str("Schön von dir zu hören, " + str(user_text) +
                                "!\nBist du hier um die Lösung deiner Hausaufgaben zu überprüfen? "
                                "Mein Gefühl sagt mir, dass du alles schon richtig hast, aber mal sehen.\n"
-                               "Worum geht es denn in den Aufgaben von heute? "
-                               "Schnittmengen, Abstände, Lagebeziehungen oder vielleicht doch was anderes?")
-                birthday = date_check(ii[1])
-            elif common_names.index(ii) == 6:
-                greeting = str("Schön von dir zu hören, " + str(user_text) +
-                               "!\nBist du hier um die Lösung deiner Hausaufgaben zu überprüfen? "
-                               "Mein Gefühl sagt mir, dass du alles schon richtig hast, aber mal sehen.\n"
-                               "Worum geht es denn in den Aufgaben von heute? "
-                               "Schnittmengen, Abstände, Lagebeziehungen oder vielleicht doch was anderes?")
-                birthday = date_check(ii[1])
-            elif common_names.index(ii) == 7:
+                               "Worum geht es denn in den Aufgaben von heute? Schnittmengen, "
+                               "Abstände, Lagebeziehungen, Umformungen oder vielleicht doch was anderes?")
                 birthday = date_check(ii[1])
             elif common_names.index(ii) == 8:
+                birthday = date_check(ii[1])
+            elif common_names.index(ii) == 9:
                 birthday = date_check(ii[1])
     if birthday:
         greeting = str("Hi " + user_text + "! Herzlichen Glückwunsch zum Geburtstag!"
@@ -1148,10 +1123,11 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
 def user_rnd():
     rnd_choice = 0
     rnd_understand = False
+    print("Auf welche Nachkommastelle hättest du gerne deine Zahlen gerundet?")
     while not rnd_understand:
         rnd_understand = False
         try:
-            rnd_choice = floor(float(input("Auf welche Nachkommastelle hättest du gerne deine Zahlen gerundet?\n")))
+            rnd_choice = floor(float(input()))
             rnd_understand = True
             print("Okay gut.")
         except ValueError:
@@ -1162,9 +1138,10 @@ def user_rnd():
 def rnd_preference():
     rnd_prf = [0, False]
     rnd_confirm = False
+    print("\nKurze Frage, hättest du gerne alle Zahlen gleich gerundet?")
     while not rnd_confirm:
         rnd_confirm_no = False
-        user_vc_confirm = input("\nKurze Frage, hättest du gerne alle Zahlen gleich gerundet?\n").upper()
+        user_vc_confirm = input().upper()
         for ii in user_boolean:
             for jj in ii:
                 if user_vc_confirm == jj:
@@ -1297,6 +1274,69 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_ld_vc1[0], bm_ld_vc1[1], bm_ld_vc1[2]))
                     self.obj_calc.append(stage_2_vc(bm_ld_vc2[0], bm_ld_vc2[1], bm_ld_vc2[2]))
                     print("Verstanden")
+                elif self.method_calc[0] == 8:  # method convert
+                    print("Verstehe. Ich kann gerne ein Objekt von dir verschieden beschreiben."
+                          "\nUm welches Objekt geht es?")
+                    bm_conv_understand = False
+                    bm_conv_obj_index = -1
+                    while not bm_conv_understand:
+                        bm_conv_input = input().upper()
+                        for object_type_array in object_full_list:
+                            for object_word in object_type_array:
+                                if bm_conv_input == object_word:
+                                    bm_conv_understand = True
+                                    bm_conv_obj_index = object_full_list.index(object_type_array)
+                        if not bm_conv_understand:
+                            print(misunderstand[random.randint(0, len(misunderstand) - 1)] +
+                                  "\nWelches Objekt soll ich für dich umrechnen?")
+                    if bm_conv_obj_index == 0:
+                        bm_conv_obj = stage_2_def_pt()
+                        self.obj_calc.append(stage_2_pt(bm_conv_obj[0], bm_conv_obj[1], bm_conv_obj[2]))
+                    elif bm_conv_obj_index == 1:
+                        bm_conv_type = stage_2_line()
+                        if bm_conv_type == 0:
+                            bm_conv_obj = stage_2_def_ln_par()
+                            self.obj_calc.append(stage_2_ln_par(Calc.Vector(bm_conv_obj[0],
+                                                                            bm_conv_obj[1], bm_conv_obj[2]),
+                                                                Calc.Vector(bm_conv_obj[3],
+                                                                            bm_conv_obj[4], bm_conv_obj[5])))
+                        elif bm_conv_type == 1:
+                            bm_conv_obj = stage_2_def_ln_pt()
+                            self.obj_calc.append(stage_2_ln_pt(Calc.Point(bm_conv_obj[0],
+                                                                          bm_conv_obj[1], bm_conv_obj[2]),
+                                                               Calc.Point(bm_conv_obj[3],
+                                                                          bm_conv_obj[4], bm_conv_obj[5])))
+                    elif bm_conv_obj_index == 2:
+                        bm_conv_type = stage_2_plane()
+                        if bm_conv_type == 0:
+                            bm_conv_obj = stage_2_def_pl_par()
+                            self.obj_calc.append(stage_2_pl_par(Calc.Vector(bm_conv_obj[0],
+                                                                            bm_conv_obj[1], bm_conv_obj[2]),
+                                                                Calc.Vector(bm_conv_obj[3],
+                                                                            bm_conv_obj[4], bm_conv_obj[5]),
+                                                                Calc.Vector(bm_conv_obj[6],
+                                                                            bm_conv_obj[7], bm_conv_obj[8])))
+                        elif bm_conv_type == 1:
+                            bm_conv_obj = stage_2_def_pl_norm()
+                            self.obj_calc.append(stage_2_pl_norm(Calc.Vector(bm_conv_obj[0],
+                                                                             bm_conv_obj[1], bm_conv_obj[2]),
+                                                                 Calc.Vector(bm_conv_obj[3],
+                                                                             bm_conv_obj[4], bm_conv_obj[5])))
+                        elif bm_conv_type == 2:
+                            bm_conv_obj = stage_2_def_pl_norm()
+                            self.obj_calc.append(stage_2_pl_coord(bm_conv_obj[0], bm_conv_obj[1],
+                                                                  bm_conv_obj[2], bm_conv_obj[3]))
+                        elif bm_conv_type == 3:
+                            bm_conv_obj = stage_2_def_pl_pt()
+                            self.obj_calc.append(stage_2_pl_pt(Calc.Point(bm_conv_obj[0],
+                                                                          bm_conv_obj[1], bm_conv_obj[2]),
+                                                               Calc.Point(bm_conv_obj[3],
+                                                                          bm_conv_obj[4], bm_conv_obj[5]),
+                                                               Calc.Point(bm_conv_obj[6],
+                                                                          bm_conv_obj[7], bm_conv_obj[8])))
+                    elif bm_conv_obj_index == 3:
+                        bm_conv_obj = stage_2_def_vc()
+                        self.obj_calc.append(stage_2_vc(bm_conv_obj[0], bm_conv_obj[1], bm_conv_obj[2]))
 
     # obj_define = Stage 2 for method != basic, else blank
     def obj_define(self):  # Stage 2
@@ -1379,6 +1419,8 @@ class Task:
                 sol_basic = Calc.Basic.Vc.unit(self.obj_calc[0])
             elif self.method_calc[0] == 7:  # ld
                 sol_basic = Calc.Basic.Vc.lindep(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 8:  # convert
+                sol_basic = self.obj_calc[0]
             self.sol.append(sol_basic)
         else:
             if self.method_calc[0] == 0:  # Distance
@@ -1484,7 +1526,7 @@ class Task:
         print("")
         if self.method_calc[1]:
             if self.method_calc[0] == 0:  # Plus
-                sol_text = (self.task_name + " ist fertig!\nDas Ergebnis der Addition vom "
+                sol_text = (self.task_name + " ist fertig.\nDas Ergebnis der Addition vom "
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
                             + " und vom " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                             + " ist " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
@@ -1529,6 +1571,26 @@ class Task:
                                 + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
                                 + " und der " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                                 + " sind linear unabhängig.")
+            elif self.method_calc[0] == 8:  # convert
+                if type(self.sol[0]) == Calc.Point:
+                    sol_text = (self.task_name + " ist fertig. Hier ist dein Punkt:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
+                                + str(Calc.c_round(self.sol[0].ov.l, self.rnd[0]))
+                                + " Längeneinheiten vom Ursprung entfernt.")
+                elif type(self.sol[0]) == Calc.Line:
+                    sol_text = (self.task_name + " ist fertig. Hier ist deine Gerade:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
+                elif type(self.sol[0]) == Calc.Plane:
+                    sol_text = (self.task_name + " ist fertig. Hier ist deine Ebene in Parameterform:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[0] + "."
+                                + "\nUnd hier in der Normalenform:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[1] + "."
+                                + "\nUnd hier in der Koordinatenform:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[2] + ".")
+                elif type(self.sol[0]) == Calc.Vector:
+                    sol_text = (self.task_name + " ist fertig. Hier ist dein Vektor:\n"
+                                + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
+                                + str(Calc.c_round(self.sol[0].l, self.rnd[0])) + " Längeneinheiten lang.\n")
         else:
             if self.method_calc[0] == 0:
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
@@ -1881,11 +1943,11 @@ def end_game():  # Stage 7
                     elif user_boolean.index(ii) == 1:
                         repeat_confirm_no = True
                         print("Okay super.")
+                        print("Dann wohl bis später, " + username + ". Ich hoffe ich war hilfreich!")
         if not (repeat_confirm_no or repeat_confirm):
             print(misunderstand[random.randint(0, len(misunderstand) - 1)])
         if repeat_confirm_no:
             break
-    print("Dann wohl bis später, ich hoffe ich war eine Hilfe.\nBis dann, " + username + "!")
 
 
 def chat(iteration):
