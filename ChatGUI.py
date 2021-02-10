@@ -8,7 +8,6 @@ import datetime
 '''
 Todo:
 - custom input
-- basic calc file
 '''
 '''
 Stages:
@@ -27,6 +26,8 @@ programmer_name = "Blind Fish"
 date = str(datetime.date.today())
 # Choice Arrays
 task_list = []
+
+emergency = ["/back", "/help"]
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
                  "Wie meinst du das?"]
@@ -91,6 +92,24 @@ common_names = [["ADRIAN", "YYYY-05-24"], ["BLIND FISH", "YYYY-05-24"], ["BF", "
                 ["JAMILA", "YYYY-01-17"]]
 
 
+# Custom Input
+def custom_input(prompt):
+    output = "-1 custom input error"
+    normalcy = False
+    while not normalcy:
+        normalcy = True
+        output = input(str(prompt))
+        for command in emergency:
+            if output == command:
+                normalcy = False
+                if emergency.index(command) == 1:
+                    print(program_name + " hat " + programmer_name + " hinzugefügt.\n")
+                    print(programmer_name + ": Du weißt nicht was du machen sollst? Um ehrlich zu sein, "
+                          + program_name + " ist schon etwas kompliziert.")
+                    print("\n" + programmer_name + " hat die Gruppe verlassen.")
+    return output
+
+
 # date check
 def date_check(custom_date):
     date_overlap = True
@@ -150,7 +169,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
 
 
 # Intro
-username = str(input("Hallo, ich bin " + program_name + ". Wie heißt du?\n"))
+username = str(custom_input("Hallo, ich bin " + program_name + ". Wie heißt du?\n"))
 username_help = str(username) + " "
 if username_help.isspace():
     print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
