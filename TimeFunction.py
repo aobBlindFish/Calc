@@ -11,6 +11,3 @@ def date_check(custom_date):
             date_overlap = False
             return date_overlap
     return date_overlap
-
-
-print(date_check("YYYY-12-23"))

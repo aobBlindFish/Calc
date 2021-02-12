@@ -4,6 +4,7 @@ import BasicMath
 import random
 from math import *
 import datetime
+import time
 
 '''
 Todo:
@@ -120,6 +121,16 @@ def date_check(custom_date):
     return date_overlap
 
 
+# custom delay
+def custom_delay(sec):
+    time.sleep(sec)
+
+
+# delay presets
+short_delay = 0.4
+med_delay = 0.8
+
+
 # Common Name & Intro
 def name_input(username_input):  # Sort through any known name for a special greeting
     user_text = str(username_input)
@@ -174,8 +185,10 @@ username_help = str(username) + " "
 if username_help.isspace():
     print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
     username = "Mathematik-Fan"
+    custom_delay(med_delay)
 misunderstand.append(username + ", ich weiß nicht genau was du meinst.")
 print(name_input(username))
+custom_delay(med_delay)
 
 
 # Task 2
@@ -1853,6 +1866,7 @@ class Task:
 # Stage 0 & 1
 def stage_1_dis():
     print("Abstände? Da weiß ich bescheid!")
+    custom_delay(short_delay)
     chosen_object1 = 0
     chosen_object2 = 0
     user_object1_understand = False
