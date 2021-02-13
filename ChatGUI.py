@@ -1,10 +1,11 @@
 import sys
-import Calc
-import BasicMath
-import random
 from math import *
+import random
 import datetime
 import time
+import Calc
+import BasicMath
+import Humanize
 
 '''
 Todo:
@@ -22,13 +23,19 @@ Stages:
 7 == Repeat or End
 '''
 # Meta Var
-program_name = "Mathemann"
+program_name_list = [["Mathemann", 0],  # [Name, Humanize.sex]
+                     ["Siri", 1],
+                     ["Alexa", 1]]
+program_id = program_name_list[random.randint(0, len(program_name_list) - 1)]
+program_name = program_id[0]
+program_sex = program_id[1]
 programmer_name = "Blind Fish"
 date = str(datetime.date.today())
-# Choice Arrays
+# Key Arrays
 task_list = []
 
 emergency = ["/back", "/help"]
+help_hints = ["Halte deine Antworten kurz. Am besten reduzierst du dich auf ein paar Stichworten pro Antwort."]
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
                  "Wie meinst du das?"]
@@ -104,10 +111,34 @@ def custom_input(prompt):
             if output == command:
                 normalcy = False
                 if emergency.index(command) == 1:
-                    print(program_name + " hat " + programmer_name + " hinzugefügt.\n")
-                    print(programmer_name + ": Du weißt nicht was du machen sollst? Um ehrlich zu sein, "
-                          + program_name + " ist schon etwas kompliziert.")
-                    print("\n" + programmer_name + " hat die Gruppe verlassen.")
+                    print("Du brauchst weitere Hilfe? Ich frage mal meinem Programmierer,"
+                          " er kann dir hoffentlich helfen.")
+                    custom_delay(long_delay)
+                    print("--- " + program_name + " hat " + programmer_name + " hinzugefügt ---\n")
+                    custom_delay(long_delay)
+                    # help text
+                    print(programmer_name + ": Du weißt nicht was du machen sollst? Um ehrlich zu sein, Gesppräche mit "
+                          + program_name + " können schnell schwierig werden. ")
+                    custom_delay(med_delay)
+                    print(Humanize.pronoun(program_sex, 0) +
+                          " ist leider dafür bekannt, oft andere nicht zu verstehen.")
+                    custom_delay(long_delay)
+                    print(program_name + ": Ja, ich habe so meine Schwierigkeiten von Python auf Deutsch umzusteigen, "
+                                         "so lange lebe ich hier auch nicht.")
+                    custom_delay(med_delay)
+                    print(programmer_name + ": Naja, wie dem auch sei, " + username + ", hier ein paar Tips:")
+                    custom_delay(long_delay)
+                    for hint in help_hints:
+                        custom_delay(long_delay)
+                        print(programmer_name + ": " + str(help_hints.index(hint) + 1) + ". " + hint)
+                    custom_delay(long_delay)
+                    print(program_name + ": Ja genau! Das würde mir beim Verstehen super helfen.")
+                    custom_delay(2.4)
+                    print(programmer_name + ": Super. Dann lasse ich euch beim Rechnen mal allein, viel Spaß.")
+                    custom_delay(med_delay)
+                    print("\n--- " + programmer_name + " hat die Gruppe verlassen ---\n")
+                    print("Okay, fangen wir nochmal an.\n")
+                    custom_delay(med_delay)
     return output
 
 
@@ -129,10 +160,12 @@ def custom_delay(sec):
 # delay presets
 short_delay = 0.4
 med_delay = 0.8
+long_delay = 1.4
 
 
 # Common Name & Intro
 def name_input(username_input):  # Sort through any known name for a special greeting
+    custom_delay(short_delay)
     user_text = str(username_input)
     birthday = False
     greeting = str("Schön von dir zu hören, " + str(user_text) +
@@ -148,7 +181,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
                                  "aber das weißt du ja besser als ich.")
                 birthday = date_check(ii[1])
             elif common_names.index(ii) == 3:
-                greeting = str("Oh hi " + user_text + ". Ich bin etwas überrascht von dir zu hören."
+                greeting = str("Oh hallo " + user_text + ". Ich bin etwas überrascht von dir zu hören."
                                + "\nIch habe gehört, dass du meine Hilfe "
                                  "für deine Hausaufgaben nicht haben möchtest.\n"
                                  "Hast du dich umentschieden? Ich könnte dir beispielsweise bei "
@@ -171,6 +204,11 @@ def name_input(username_input):  # Sort through any known name for a special gre
                 birthday = date_check(ii[1])
             elif common_names.index(ii) == 9:
                 birthday = date_check(ii[1])
+    if user_text.upper() == program_name.upper():
+        greeting = str(str(user_text) + "? Wow wir haben den selben Namen! Du bist mir jetzt schon sympathisch."
+                       "\nDu bist hier, um über Mathe zu reden?\n"
+                       "Von mir aus können wir gerne stundenlang über "
+                       "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
     if birthday:
         greeting = str("Hi " + user_text + "! Herzlichen Glückwunsch zum Geburtstag!"
                        + "\nHoffentlich konntest du heute schöneres machen als über Mathe nachzudenken.\n"
@@ -180,7 +218,9 @@ def name_input(username_input):  # Sort through any known name for a special gre
 
 
 # Intro
-username = str(custom_input("Hallo, ich bin " + program_name + ". Wie heißt du?\n"))
+print("--- " + program_name + " ist der Gruppe beitreten ---")
+custom_delay(long_delay)
+username = str(input("Hallo, ich bin " + program_name + ". Wie heißt du?\n"))
 username_help = str(username) + " "
 if username_help.isspace():
     print("Kann es sein, dass du keinen Namen hast? Naja egal.\n")
@@ -188,7 +228,7 @@ if username_help.isspace():
     custom_delay(med_delay)
 misunderstand.append(username + ", ich weiß nicht genau was du meinst.")
 print(name_input(username))
-custom_delay(med_delay)
+custom_delay(short_delay)
 
 
 # Task 2
@@ -933,9 +973,15 @@ def stage_2_def_pl_coord():
         if pl_coord_a == 0:
             pl_coord_a_str = ""
         elif pl_coord_a < 0:
-            pl_coord_b_str = "-" + str(abs(pl_coord_a)) + "x"
+            if pl_coord_a == -1:
+                pl_coord_a_str = "-x"
+            else:
+                pl_coord_a_str = "-" + str(abs(pl_coord_a)) + "x"
         elif pl_coord_a > 0:
-            pl_coord_a_str = str(pl_coord_a) + "x"
+            if pl_coord_a == 1:
+                pl_coord_a_str = "x"
+            else:
+                pl_coord_a_str = str(pl_coord_a) + "x"
         # b
         if pl_coord_b == 0:
             pl_coord_b_str = ""
@@ -1170,18 +1216,21 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
         output_str.append("Gerade: x = (" + str(ln_sp_x) + "|" + str(ln_sp_y) + "|" + str(ln_sp_z) + ")"
                           " + (" + str(ln_dr_x) + "|" + str(ln_dr_y) + "|" + str(ln_dr_z) + ")s")
     elif type(obj) == Calc.Plane:
+        # parameter
         pl_sp_x = BasicMath.constant_round(obj.support.x, rnd)
         pl_sp_y = BasicMath.constant_round(obj.support.y, rnd)
         pl_sp_z = BasicMath.constant_round(obj.support.z, rnd)
-        pl_nm_x = BasicMath.constant_round(obj.normal.x, rnd)
-        pl_nm_y = BasicMath.constant_round(obj.normal.y, rnd)
-        pl_nm_z = BasicMath.constant_round(obj.normal.z, rnd)
         pl_dr1_x = BasicMath.constant_round(obj.dr1.x, rnd)
         pl_dr1_y = BasicMath.constant_round(obj.dr1.y, rnd)
         pl_dr1_z = BasicMath.constant_round(obj.dr1.z, rnd)
         pl_dr2_x = BasicMath.constant_round(obj.dr2.x, rnd)
         pl_dr2_y = BasicMath.constant_round(obj.dr2.y, rnd)
         pl_dr2_z = BasicMath.constant_round(obj.dr2.z, rnd)
+        # normal
+        pl_nm_x = BasicMath.constant_round(obj.normal.x, rnd)
+        pl_nm_y = BasicMath.constant_round(obj.normal.y, rnd)
+        pl_nm_z = BasicMath.constant_round(obj.normal.z, rnd)
+        # coordinates
         pl_a = BasicMath.constant_round(obj.a, rnd)
         pl_b = BasicMath.constant_round(obj.b, rnd)
         pl_c = BasicMath.constant_round(obj.c, rnd)
@@ -1190,6 +1239,9 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
         pl_b_str = str(pl_b)
         pl_c_str = str(pl_c)
         pl_d_str = str(pl_d)
+        # points
+        axis_str = "-1"
+        track_point_list = Calc.trackpoint_pl(obj)
         # a
         if pl_a == 0:
             pl_a_str = ""
@@ -1237,6 +1289,14 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
         output_str.append("Ebene: 0 = (" + str(pl_nm_x) + "|" + str(pl_nm_y) + "|" + str(pl_nm_z) + ") * (x"
                           " - (" + str(pl_sp_x) + "|" + str(pl_sp_y) + "|" + str(pl_sp_z) + "))")
         output_str.append("Ebene: " + pl_a_str + pl_b_str + pl_c_str + " = " + pl_d_str)
+        for i in track_point_list:
+            if i[1] == 0:
+                axis_str = "Spurpunkt X-Achse: "
+            elif i[1] == 1:
+                axis_str = "Spurpunkt Y-Achse: "
+            elif i[1] == 2:
+                axis_str = "Spurpunkt Z-Achse: "
+            output_str.append(axis_str + obj_to_str(i[0], rnd)[0])
     return output_str
 
 
@@ -1700,12 +1760,17 @@ class Task:
                     sol_text = (self.task_name + " ist fertig. Hier ist deine Gerade:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
                 elif type(self.sol[0]) == Calc.Plane:
+                    track_point_str = ""
+                    if len(obj_to_str(self.sol[0], self.rnd[0])) > 2:
+                        for i in range(3, len(obj_to_str(self.sol[0], self.rnd[0]))):
+                            track_point_str = track_point_str + obj_to_str(self.sol[0], self.rnd[0])[i] + "\n"
                     sol_text = (self.task_name + " ist fertig. Hier ist deine Ebene in Parameterform:\n"
-                                + obj_to_str(self.sol[0], self.rnd[0])[0] + "."
+                                + obj_to_str(self.sol[0], self.rnd[0])[0]
                                 + "\nUnd hier in der Normalenform:\n"
-                                + obj_to_str(self.sol[0], self.rnd[0])[1] + "."
+                                + obj_to_str(self.sol[0], self.rnd[0])[1]
                                 + "\nUnd hier in der Koordinatenform:\n"
-                                + obj_to_str(self.sol[0], self.rnd[0])[2] + ".")
+                                + obj_to_str(self.sol[0], self.rnd[0])[2] + "."
+                                + "\nZusätzlich gibt es folgende Spurpunkte:\n" + track_point_str)
                 elif type(self.sol[0]) == Calc.Vector:
                     sol_text = (self.task_name + " ist fertig. Hier ist dein Vektor:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
@@ -1716,7 +1781,8 @@ class Task:
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
                             + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ","
-                            + "\nsind " + str(BasicMath.constant_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
+                            + "\nbetragen "
+                            + str(BasicMath.constant_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
             if self.method_calc[0] == 1:
                 if self.sol[0] == -1:  # No Cross Area
                     sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nZwischen dem ersten Objekt,\n"
@@ -2017,9 +2083,9 @@ def early_game(iteration):
     while not iterate_understand:
         try:
             if iteration > 0:
-                iterate = int(input("Wie viele weitere Fragen hast du für mich?\n"))
+                iterate = int(custom_input("Wie viele weitere Fragen hast du für mich?\n"))
             else:
-                iterate = int(input("Wie viele Fragen hast du für mich?\n"))
+                iterate = int(custom_input("Wie viele Fragen hast du für mich?\n"))
             iterate_understand = True
         except ValueError:
             print(misunderstand[random.randint(0, len(misunderstand) - 1)])
@@ -2041,7 +2107,6 @@ def mid_game():
 
 
 def end_game():  # Stage 7
-    print("")
     if len(task_list) in range(1, 8, 1):
         print("\nGut, alles ist fertig!")
     elif len(task_list) in range(9, 16, 1):
@@ -2065,6 +2130,7 @@ def end_game():  # Stage 7
                         repeat_confirm_no = True
                         print("Okay super.")
                         print("Dann wohl bis später, " + username + ". Ich hoffe ich war hilfreich!")
+                        print("\n--- " + program_name + "hat die Gruppe verlassen ---\n")
         if not (repeat_confirm_no or repeat_confirm):
             print(misunderstand[random.randint(0, len(misunderstand) - 1)])
         if repeat_confirm_no:

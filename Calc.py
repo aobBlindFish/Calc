@@ -1,4 +1,5 @@
 from math import *
+import BasicMath
 import sys
 
 
@@ -109,9 +110,6 @@ class Conv:
                 OutVec = Vector(aa.d,bb.d,cc.d)
                 Output = [OutMtx,OutVec]
                 return Output
-    def pt2vc(aa):
-        Output = Vector(aa.x,aa.y,aa.z)
-        return Output
     def vc2pt(aa):
         Output = Point(aa.x,aa.y,aa.z)
         return Output
@@ -135,8 +133,8 @@ class Basic:
             Output = aa.x*bb.x + aa.y*bb.y + aa.z*bb.z
             return Output
         def vproduct(aa,bb):
-            Outx = aa.y*bb.z - aa.z*bb.y
-            Outy = aa.z*bb.x - aa.x*bb.z
+            Outx = aa.y * bb.z - aa.z * bb.y
+            Outy = aa.z * bb.x - aa.x * bb.z
             Outz = aa.x * bb.y - aa.y * bb.x
             Output = Vector(Outx,Outy,Outz)
             return Output
@@ -160,9 +158,9 @@ class Basic:
             if aa.zeroz != bb.zeroz:
                 return Output
             if aa.czero == False and bb.czero == False:
-                a = round(1000000000000*(aa.x / bb.x))
-                b = round(1000000000000*(aa.y / bb.y))
-                c = round(1000000000000*(aa.z / bb.z))
+                a = BasicMath.constant_round((aa.x / bb.x), 8)
+                b = BasicMath.constant_round((aa.y / bb.y), 8)
+                c = BasicMath.constant_round((aa.z / bb.z), 8)
                 if a == b and a == c:
                     Output = True
                     return Output
@@ -170,12 +168,12 @@ class Basic:
                     Output = False
                     return Output
             if aa.zerox == True:
-                if aa.zeroy == True or aa.zeroz == True:
+                if aa.zeroy or aa.zeroz:
                     Output = True
                     return Output
                 else:
-                    b = round(1000000000000*(aa.y / bb.y))
-                    c = round(1000000000000*(aa.z / bb.z))
+                    b = BasicMath.constant_round((aa.y / bb.y), 8)
+                    c = BasicMath.constant_round((aa.z / bb.z), 8)
                     if b == c:
                         Output = True
                         return Output
@@ -187,8 +185,8 @@ class Basic:
                     Output = True
                     return Output
                 else:
-                    a = round(1000000000000*(aa.x / bb.x))
-                    c = round(1000000000000*(aa.z / bb.z))
+                    a = BasicMath.constant_round((aa.x / bb.x), 8)
+                    c = BasicMath.constant_round((aa.z / bb.z), 8)
                     if a == c:
                         Output = True
                         return Output
@@ -196,8 +194,8 @@ class Basic:
                         Output = False
                         return Output
             if aa.zeroz == True:
-                a = round(1000000000000*(aa.x / bb.x))
-                b = round(1000000000000*(aa.y / bb.y))
+                a = BasicMath.constant_round((aa.x / bb.x), 8)
+                b = BasicMath.constant_round((aa.y / bb.y), 8)
                 if a == b:
                     Output = True
                     return Output
@@ -222,10 +220,10 @@ class Basic:
             help1 = Matrix(aa.b1, aa.a12, aa.a13, aa.b2, aa.a22, aa.a23, aa.b3, aa.a32, aa.a33)
             help2 = Matrix(aa.a11, aa.b1, aa.a13, aa.a21, aa.b2, aa.a23, aa.a31, aa.b3, aa.a33)
             help3 = Matrix(aa.a11, aa.a12, aa.b1, aa.a21, aa.a22, aa.b2, aa.a31, aa.a32, aa.b3)
-            ox = round(1000000000*(Basic.LGS.det(help1) / Basic.LGS.det(aa.Mtx)))/1000000000 #Auf 9. Nachkommastelle genau
-            oy = round(1000000000*(Basic.LGS.det(help2) / Basic.LGS.det(aa.Mtx)))/1000000000 #Auf 9. Nachkommastelle genau
-            oz = round(1000000000*(Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)))/1000000000 #Auf 9. Nachkommastelle genau
-            Output = Vector(ox,oy,oz)
+            ox = (Basic.LGS.det(help1) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
+            oy = (Basic.LGS.det(help2) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
+            oz = (Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
+            Output = Vector(ox, oy, oz)
             return Output
 # Objects
 class Vector:
@@ -254,9 +252,9 @@ class Vector:
         self.czero = czero
 class Point:
     def __init__(self,x,y,z):
-        self.x = x
-        self.y = y
-        self.z = z
+        self.x = BasicMath.constant_round(x, 8)
+        self.y = BasicMath.constant_round(y, 8)
+        self.z = BasicMath.constant_round(z, 8)
         pt = (x,y,z); self.pt = pt
         ov = Vector(x,y,z); self.ov = ov
 class Line:
@@ -305,10 +303,10 @@ class Plane:
         normal = Conv.Pl.Par.norm(support,dr1,dr2)[1]
         self.normal = normal
         coord = Conv.Pl.Par.coord(support,dr1,dr2)
-        a = coord[0]; self.a = round(1000000000000*a)/1000000000000
-        b = coord[1]; self.b = round(1000000000000*b)/1000000000000
-        c = coord[2]; self.c = round(1000000000000*c)/1000000000000
-        d = coord[3]; self.d = round(1000000000000*d)/1000000000000
+        a = coord[0]; self.a = BasicMath.constant_round(a, 8)
+        b = coord[1]; self.b = BasicMath.constant_round(b, 8)
+        c = coord[2]; self.c = BasicMath.constant_round(c, 8)
+        d = coord[3]; self.d = BasicMath.constant_round(d, 8)
         fxy = [0,0,0,0]
         if c != 0:
             fxy[0] = 1;
@@ -408,7 +406,7 @@ class Con:
             pt = pl
             pl = temp
         Output = True
-        if (round(1000000000000*(pt.x * pl.a + pt.y * pl.b + pt.z * pl.c)) == round(1000000000000*pl.d)):#Auf 9. Nachkommastelle genau
+        if (BasicMath.constant_round((pt.x * pl.a + pt.y * pl.b + pt.z * pl.c), 8) == BasicMath.constant_round(pl.d, 8)):
             Output = True
             return Output
         else:
@@ -468,7 +466,7 @@ class Dis:
             temp = pt
             pt = pl
             pl = temp
-        Output = abs(round(1000000000000*(pt.x * pl.a + pt.y * pl.b + pt.z * pl.c - pl.d))/1000000000000) #Auf 9. Nachkommastelle genau
+        Output = abs(BasicMath.constant_round((pt.x * pl.a + pt.y * pl.b + pt.z * pl.c - pl.d), 8))
         return Output
     def pointline(pt,ln):
         if type(pt) == Line and type(ln) == Point:
@@ -534,3 +532,14 @@ class Cross:
             Out2 = Conv.vc2pt(Basic.LGS.solve(lgs6))
             Output = Line(Conv.Ln.Pt.par(Out1, Out2)[0], Conv.Ln.Pt.par(Out1, Out2)[1])
             return Output
+def trackpoint_pl(pl):
+    x_axis = Line(Vector(0, 0, 0), Vector(1, 0, 0))
+    y_axis = Line(Vector(0, 0, 0), Vector(0, 1, 0))
+    z_axis = Line(Vector(0, 0, 0), Vector(0, 0, 1))
+    axes = [x_axis, y_axis, z_axis]
+    points = []
+    for axis in axes:
+        if Basic.Vc.sproduct(pl.normal, axis.dr) != 0:
+            cross_point = [Cross.lineplane(axis, pl), axes.index(axis)]
+            points.append(cross_point)
+    return points
