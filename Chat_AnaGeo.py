@@ -161,7 +161,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
     birthday = False
     greeting = str("Schön von dir zu hören, " + str(user_text) +
                    "!\nDu bist hier, um über Mathe zu reden? Freut mich!\n"
-                   "Wo brauchst du meine Hilfe, Schnittmengen, Abstände, Lagebeziehungen oder doch was anderes?")
+                   "Wo brauchst du meine Hilfe? Schnittmengen, Abstände, Lagebeziehungen oder doch was anderes?")
     for ii in common_names:
         if user_text.upper() == ii[0]:
             if common_names.index(ii) == 0 or common_names.index(ii) == 1 or common_names.index(ii) == 2:
@@ -197,7 +197,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
     if user_text.upper() == program_name.upper():
         greeting = str(str(user_text) + "? Wow wir haben den selben Namen! Du bist mir jetzt schon sympathisch."
                        "\nDu bist hier, um über Mathe zu reden?\n"
-                       "Wo brauchst du meine Hilfe, Schnittmengen, Abstände, Lagebeziehungen oder doch was anderes?")
+                       "Wo brauchst du meine Hilfe? Schnittmengen, Abstände, Lagebeziehungen oder doch was anderes?")
     if birthday:
         greeting = str("Hi " + user_text + "! Herzlichen Glückwunsch zum Geburtstag!"
                        + "\nHoffentlich konntest du heute schöneres machen als über Mathe nachzudenken.\n"
