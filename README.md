@@ -1,29 +1,35 @@
-# Foobar
+# Hausaufgabenhilfe
 
-Foobar is a Python library for dealing with word.
+Das Programm hilf dem Benutzer bei Hausaufgaben im Fachbereich Mathematik.
 
-## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+## Benutzung
 
-```bash
-pip install foobar
+Das Programm ist benutzbar über Use the package manager [repl.it](https://repl.it/):
+1. Erstelle ein Account
+2. Erstelle ein neues repl("+ New repl")
+3. Klicke auf "Import from GitHub"
+4. Benutze den Link zu dieser GitHub-Repository:
+ ```
+aobBlindFish/Calc
 ```
+5. Klicke auf "Import from GitHub"
 
-## Usage
-
-```python
-import foobar
-
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
+Nachdem das Programm installiert wurde, gehe links unter den Dateien auf ".replit"
+6. Überschreibe die Datei mit folgendem Text:
 ```
+language = "python3"
+run = "python3 ChatLobby.py"
+```
+Jetzt is das Programm vollständig benutzbar. [repl.it](https://repl.it/) erlaubt es einem, die Größe der verschiedenen Fenster zu bearbeiten; am besten machst du die Konsole so groß wie möglich.
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+### Tips
+- Halte deine Antworten eher kurz
 
-Please make sure to update tests as appropriate.
+## Versionen
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+- Noch in Beta-Version
+
+## Autor
+
+- Blind Fish - Adrian Oppong-Boateng
