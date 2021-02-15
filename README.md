@@ -30,6 +30,19 @@ Jetzt is das Programm vollständig benutzbar. [repl.it](https://repl.it/) erlaub
 
 - Noch in Beta-Version
 
+## Updates
+### Repl.it
+Um auf repl.it die neuste Version runterzuladen muss man:
+1. Ganz links auf "Version Control" (Falls dort Sachen kaum lesbar sind einfach das Fenster vergrößern)
+2. Den Knopf "Pull" in orange drücken
+
+Sobald der Knopf verschwindet oder der Knopf nicht da ist:
+3. Sicherstellen, dass in der Datei ".replit" ausschließlich und genau folgendes steht:
+```
+language = "python3"
+run = "python3 ChatLobby.py"
+```
+
 ## Autor
 
 - Blind Fish - Adrian Oppong-Boateng
