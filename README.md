@@ -1,11 +1,11 @@
 # Hausaufgabenhilfe
 
-Das Programm hilf dem Benutzer bei Hausaufgaben im Fachbereich Mathematik.
+Das Programm hilft dem Benutzer bei Hausaufgaben im Fachbereich Mathematik(analytische Geometrie).
 
 
 ## Benutzung
 
-Das Programm ist benutzbar über Use the package manager [repl.it](https://repl.it/):
+Das Programm ist benutzbar über [repl.it](https://repl.it/):
 1. Erstelle ein Account
 2. Erstelle ein neues repl("+ New repl")
 3. Klicke auf "Import from GitHub"
@@ -16,6 +16,7 @@ aobBlindFish/Calc
 5. Klicke auf "Import from GitHub"
 
 Nachdem das Programm installiert wurde, gehe links unter den Dateien auf ".replit"
+
 6. Überschreibe die Datei mit folgendem Text:
 ```
 language = "python3"
@@ -33,10 +34,11 @@ Jetzt is das Programm vollständig benutzbar. [repl.it](https://repl.it/) erlaub
 ## Updates
 ### Repl.it
 Um auf repl.it die neuste Version runterzuladen muss man:
-1. Ganz links auf "Version Control" (Falls dort Sachen kaum lesbar sind einfach das Fenster vergrößern)
-2. Den Knopf "Pull" in orange drücken
+1. Ganz links auf "Version Control" (Falls dort die Informationen kaum lesbar sind einfach das Fenster vergrößern)
+2. Den Knopf "Pull" in Orange drücken
 
 Sobald der Knopf verschwindet oder der Knopf nicht da ist:
+
 3. Sicherstellen, dass in der Datei ".replit" ausschließlich und genau folgendes steht:
 ```
 language = "python3"
