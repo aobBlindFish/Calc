@@ -49,4 +49,5 @@ TimeFunction.custom_delay(TimeFunction.short_delay)
 print(ChatMessage.chat_enter_exit(programmer.name)[1])
 
 # Chat Continue
+Chat_AnaGeo.intro_game(username)
 Chat_AnaGeo.chat(0, username, programmer)

@@ -161,8 +161,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
     birthday = False
     greeting = str("Schön von dir zu hören, " + str(user_text) +
                    "!\nDu bist hier, um über Mathe zu reden? Freut mich!\n"
-                   "Von mir aus können wir gerne stundenlang über "
-                   "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+                   "Wo brauchst du meine Hilfe, Schnittmengen, Abstände, Lagebeziehungen oder doch was anderes?")
     for ii in common_names:
         if user_text.upper() == ii[0]:
             if common_names.index(ii) == 0 or common_names.index(ii) == 1 or common_names.index(ii) == 2:
@@ -198,8 +197,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
     if user_text.upper() == program_name.upper():
         greeting = str(str(user_text) + "? Wow wir haben den selben Namen! Du bist mir jetzt schon sympathisch."
                        "\nDu bist hier, um über Mathe zu reden?\n"
-                       "Von mir aus können wir gerne stundenlang über "
-                       "Schnittmengen, Abstände, Lagebeziehungen und weiteres sprechen!")
+                       "Wo brauchst du meine Hilfe, Schnittmengen, Abstände, Lagebeziehungen oder doch was anderes?")
     if birthday:
         greeting = str("Hi " + user_text + "! Herzlichen Glückwunsch zum Geburtstag!"
                        + "\nHoffentlich konntest du heute schöneres machen als über Mathe nachzudenken.\n"
@@ -1760,7 +1758,7 @@ class Task:
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
                             + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ","
-                            + "\nbetragen "
+                            + "\nbeträgt "
                             + str(BasicMath.constant_round(self.sol[0], self.rnd[0])) + " Längeneinheiten.")
             if self.method_calc[0] == 1:
                 if self.sol[0] == -1:  # No Cross Area
@@ -2056,11 +2054,14 @@ def stage_1(chosen_topic, task_name):
 
 
 # Chat
-def early_game(iteration, username, programmer):
+def intro_game(username):
     print(ChatMessage.chat_enter_exit(program_name)[0])
     TimeFunction.custom_delay(TimeFunction.long_delay)
     print(name_input(username))
     TimeFunction.custom_delay(TimeFunction.short_delay)
+
+
+def early_game(iteration, username, programmer):
     iterate_understand = False
     iterate = 0
     while not iterate_understand:
