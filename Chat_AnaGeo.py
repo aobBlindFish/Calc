@@ -11,7 +11,7 @@ import TimeFunction
 Todo:
 - custom input
 - change acc. ChatMessage
-- README
+- READeME.text
     - repl.it.start
 '''
 '''
