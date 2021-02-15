@@ -1,9 +1,13 @@
-import sys
-
-pronoun_m = ["Er", "Sein", "Ihm"]
-pronoun_w = ["Sie", "Ihr", "Ihr"]
+# pronoun_m = [Nominativ, Genitiv, Dativ, Akkusativ]
+pronoun_m = ["Er", "Seiner", "Ihm", "Ihn"]
+pronoun_w = ["Sie", "Ihrer", "Ihr", "Sie"]
 pronoun_list = [pronoun_m, pronoun_w]
 
 
-def pronoun(sex, pronoun_nmb):  # m == 0; w == 1
-    return pronoun_list[sex][pronoun_nmb]
+class Identity:
+    def __init__(self, name, sex):
+        self.name = str(name)
+        self.sex = sex
+
+    def pronoun(self, pronoun_nmb):  # m == 0; w == 1
+        return pronoun_list[self.sex][pronoun_nmb]

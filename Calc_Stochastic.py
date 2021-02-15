@@ -38,4 +38,3 @@ def lotto(uppercase, lowercase):
         category_nmb = uppercase.index(category)
         output = output*comb(uppercase[category_nmb], lowercase[category_nmb])
     return BasicMath.constant_round(output, 8)
-

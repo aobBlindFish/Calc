@@ -22,4 +22,3 @@ def custom_range(top, constant, bottom, accuracy):
     if top_round > c_round > bottom_round:
         output = True
     return output
-
