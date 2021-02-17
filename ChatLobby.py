@@ -11,7 +11,6 @@ programmer = Humanize.Identity("Blind Fish", 0)
 input_male = ["M", "MÄNNLICH", "MALE", "MANN", "JUNGE"]
 input_female = ["W", "WEIBLICH", "FEMALE", "FRAU", "MÄDCHEN"]
 input_sex = [input_male, input_female]
-
 # Chat Start
 print(ChatMessage.chat_enter_exit(programmer.name)[0])
 print(ChatMessage.chat_msg(programmer.name,
@@ -47,7 +46,7 @@ print(ChatMessage.chat_msg(programmer.name,
                            "Gut dankeschön, " + username + ". Ich hole mal die Hilfe für dich."))
 TimeFunction.custom_delay(TimeFunction.short_delay)
 print(ChatMessage.chat_enter_exit(programmer.name)[1])
-
+Chat_AnaGeo.set_name(Humanize.Identity(username, user_sex), programmer)
 # Chat Continue
-Chat_AnaGeo.intro_game(username)
-Chat_AnaGeo.chat(0, username, programmer)
+Chat_AnaGeo.intro_game()
+Chat_AnaGeo.chat(0)

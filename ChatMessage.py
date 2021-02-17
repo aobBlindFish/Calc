@@ -1,5 +1,5 @@
 def chat_enter_exit(username):
-    enter_str = "\n--- " + str(username) + " ist dem Chat betreten ---\n"
+    enter_str = "\n--- " + str(username) + " ist dem Chat beigetreten ---\n"
     exit_str = "\n--- " + str(username) + " hat den Chat verlassen ---\n"
     return [enter_str, exit_str]
 
