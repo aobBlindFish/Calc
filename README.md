@@ -24,13 +24,6 @@ run = "python3 ChatLobby.py"
 ```
 Jetzt is das Programm vollständig benutzbar. [repl.it](https://repl.it/) erlaubt es einem, die Größe der verschiedenen Fenster zu bearbeiten; am besten machst du die Konsole so groß wie möglich.
 
-### Tips
-- Halte deine Antworten eher kurz
-
-## Versionen
-
-- Noch in Beta-Version
-
 ## Updates
 ### Repl.it
 Um auf repl.it die neuste Version runterzuladen muss man:

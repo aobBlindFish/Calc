@@ -225,7 +225,45 @@ class Basic:
             oz = (Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
             Output = Vector(ox, oy, oz)
             return Output
+    def angle(aa,bb):
+        if (type(aa) == Vector and aa.l == 0) or (type(bb) == Vector and bb.l == 0):
+            sys.exit("Der Vektor hat keine Richtung.")
+        # calculate
+        if type(aa) == Vector:
+            if type(bb) == Vector:
+                output = degrees(acos(Basic.Vc.sproduct(aa, bb) / (aa.l * bb.l)))
+            elif type(bb) == Line:
+                output = degrees(acos(Basic.Vc.sproduct(aa, bb.dr) / (aa.l * bb.dr.l)))
+            elif type(bb) == Plane:
+                output = degrees(asin(Basic.Vc.sproduct(aa, bb.normal) / (aa.l * bb.normal.l)))
+        elif type(aa) == Line:
+            if type(bb) == Vector:
+                output = degrees(acos(Basic.Vc.sproduct(aa.dr, bb) / (aa.dr.l * bb.l)))
+            elif type(bb) == Line:
+                if Con.line2(aa, bb) != 3:
+                    sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Geraden.")
+                output = degrees(acos(Basic.Vc.sproduct(aa.dr, bb.dr) / (aa.dr.l * bb.dr.l)))
+            elif type(bb) == Plane:
+                if not (Con.lineplane(aa, bb) == 1 or Con.lineplane(aa, bb) == 3):
+                    sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Objekten.")
+                output = degrees(asin(Basic.Vc.sproduct(aa.dr, bb.normal) / (aa.dr.l * bb.normal.l)))
+        elif type(aa) == Plane:
+            if type(bb) == Vector:
+                output = degrees(asin(Basic.Vc.sproduct(aa.normal, bb) / (aa.normal.l * bb.l)))
+            elif type(bb) == Line:
+                if not (Con.lineplane(aa, bb) == 1 or Con.lineplane(aa, bb) == 3):
+                    sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Objekten.")
+                output = degrees(asin(Basic.Vc.sproduct(aa.normal, bb.dr) / (aa.normal.l * bb.dr.l)))
+            elif type(bb) == Plane:
+                if not (Con.plane2(aa, bb) == 1 or Con.plane2(aa, bb) == 3):
+                    sys.exit("Es gibt keine eindeutige Schnittgerade zwischen den beiden Ebenen.")
+                output = degrees(acos(Basic.Vc.sproduct(aa.normal, bb.normal) / (aa.normal.l * bb.normal.l)))
+        return Angle(output)
 # Objects
+class Angle:
+    def __init__(self, ang_deg):
+        self.ang_degree = ang_deg
+        self.ang_radian = radians(ang_deg)
 class Vector:
     def __init__(self,x,y,z):
         self.x = x

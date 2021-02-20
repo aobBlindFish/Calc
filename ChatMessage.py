@@ -4,8 +4,15 @@ def chat_enter_exit(username):
     return [enter_str, exit_str]
 
 
-def chat_msg(username, msg):
-    return str(username) + ": " + str(msg)
+def chat_msg(name, msg):
+    output = ""
+    if str(msg)[:1] == "\n":  # move linebreak to the front
+        output += "\n" + str(name) + ": "
+        for i in range(len(str(msg))-1):
+            output += str(msg)[i + 1]
+    else:
+        output = str(name) + ": " + str(msg)
+    return output
 
 
 def chat_inv_kick(user1, user2):

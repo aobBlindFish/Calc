@@ -9,7 +9,7 @@ import ChatMessage
 import TimeFunction
 '''
 Todo until V1.0:
-- Angles
+- complete custom_help
 '''
 '''
 Stages:
@@ -32,26 +32,30 @@ program_sex = program_id.sex
 date = str(datetime.date.today())
 user = Humanize.Identity("Max", 0)
 programmer = Humanize.Identity("BF", 0)
+help_key_word = "-1"
 
 
-def set_name(user_id, programmer_id):
+def set_data(user_id, programmer_id, help_word):
     global user
     user = user_id
     global programmer
     programmer = programmer_id
+    global help_key_word
+    help_key_word = help_word
 
 
 # Key Arrays
 task_list = []
 
-emergency = ["/help"]
-help_hints = ["Halte deine Antworten kurz. Am besten reduzierst du dich auf ein paar Stichworte pro Antwort."]
+help_hints = ["Halte deine Antworten kurz. Am besten reduzierst du dich auf ein paar Stichworte pro Antwort.",
+              "Falls du bemerkt hast, dass du mehr Fragen hast als du angegeben hast, keine Sorge. "
+              "Am Ende der Konversation kannst du weitere Fragen stellen."]
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
-                 "Wie meinst du das?"]
+                 "Wie meinst du das?", user.name + ", was soll das hier bedeuten?"]
 
-user_true = ["JA", "KLAR", "JUP", "JAP", "GENAU", "RICHTIG", "KORREKT", "PASST", "CHECK", "SURE"]
-user_false = ["NEIN", "NE", "NICHT", "FALSCH", "UNGENAU"]
+user_true = ["JA", "KLAR", "JUP", "JAP", "GENAU", "RICHTIG", "KORREKT", "PASST", "CHECK", "SURE", "YOS"]
+user_false = ["NEIN", "NE", "NICHT", "FALSCH", "UNGENAU", "NÖ", "NOPE"]
 user_boolean = [user_true, user_false]
 
 basic_plus = ["PLUS", "PLUSRECHNEN", "PLUS RECHNEN", "ADDITION", "ADDIEREN", "SUMME"]
@@ -63,10 +67,11 @@ basic_spar_product = ["SPATPRODUKT", "SPAT"]
 basic_unit = ["EINHEITSVEKTOR", "BASISVEKTOR"]
 basic_ld = ["LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG"]
 basic_convert = ["UMWANDLUNG", "UMWANDELN", "UMFORMUNG", "UMFORMEN", "UMRECHNUNG", "UMRECHNEN"]
+basic_angle = ["WINKEL", "GRAD", "GRADZAHL", "RADIEN"]
 basic_method = [basic_plus, basic_minus, basic_scalar_multi, basic_scalar_product, basic_vector_product,
-                basic_spar_product, basic_unit, basic_ld, basic_convert]
+                basic_spar_product, basic_unit, basic_ld, basic_convert, basic_angle]
 
-topic_basic = ["Grundrechnung", "SKALAR", "MAL"]
+topic_basic = ["Grundrechnung", "GRUNDRECHNUNG", "GRUNDSACHEN", "SKALAR", "MAL"]
 for basic_method_type in basic_method:
     for basic_method_keyword in basic_method_type:
         topic_basic.append(basic_method_keyword)
@@ -80,7 +85,8 @@ object_point = ["Punkt", "PUNKT", "."]
 object_line = ["Gerade", "GERADE", "LINIE", "STRICH"]
 object_plane = ["Ebene", "EBENE", "FLÄCHE", "OBERFLÄCHE"]
 object_vector = ["Vektor", "VEKTOR", "RICHTUNG"]
-object_full_list = [object_point, object_line, object_plane, object_vector]
+object_angle = ["Winkel", "WINKEL", "RADIEN"]
+object_full_list = [object_point, object_line, object_plane, object_vector, object_angle]
 
 object_type_pt_pt = ["PUNKT", "PUNKTE"]
 object_type_pt = [object_type_pt_pt]
@@ -99,6 +105,10 @@ object_type_pl_norm = ["NORMAL", "NORMALE", "NORMALENFORM"]
 object_type_pl_coord = ["KOORDINATE", "KOORDINATEN", "KOORDINATENFORM", "COORDS", "COORD"]
 object_type_pl_pt = ["PUNKT", "PUNKTE", "GRUPPE VON MEHREREN PUNKTEN", "MEHRERE PUNKTE", "DREI PUNKTE", "3 PUNKTE", "."]
 object_type_pl = [object_type_pl_par, object_type_pl_norm, object_type_pl_coord, object_type_pl_pt]
+
+object_type_angle_deg = ["GRAD", "GRADZAHL"]
+object_type_angle_rad = ["RADIEN"]
+object_type_angle = [object_type_angle_deg, object_type_angle_rad]
 
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
 
@@ -122,8 +132,8 @@ def custom_help():
     print(ChatMessage.chat_msg(programmer.name,
                                program_id.pronoun(0) + " ist leider dafür bekannt, oft andere nicht zu verstehen."))
     TimeFunction.custom_delay(TimeFunction.long_delay)
-    print(ChatMessage.chat_msg(program_name, "Ja, ich habe so meine Schwierigkeiten von Python auf Deutsch umzusteigen,"
-                                             " so lange lebe ich hier auch nicht."))
+    print(ChatMessage.chat_msg(program_name,
+                               "Ja, ich habe so meine Schwierigkeiten von Python auf Deutsch umzusteigen."))
     TimeFunction.custom_delay(TimeFunction.med_delay)
     print(ChatMessage.chat_msg(programmer.name, "Naja, wie dem auch sei, "
                                + user.name + ", hier ein paar Tips:"))
@@ -147,17 +157,15 @@ def custom_input(prompt):
     while not normalcy:
         normalcy = True
         output = input(str(prompt))
-        for command in emergency:
-            if output == command:
-                normalcy = False
-                if emergency.index(command) == 0:
-                    print(ChatMessage.chat_msg(program_name,
-                                               "Du brauchst weitere Hilfe? Ich frage mal meinem Programmierer, "
-                                               "er kann dir hoffentlich helfen."))
-                    TimeFunction.custom_delay(TimeFunction.long_delay)
-                    custom_help()
-                    print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal.\n"))
-                    TimeFunction.custom_delay(TimeFunction.med_delay)
+        if output.upper() == help_key_word.upper():
+            normalcy = False
+            print(ChatMessage.chat_msg(program_name,
+                                       "Du brauchst weitere Hilfe? Ich frage mal meinem Programmierer, "
+                                       "er kann dir hoffentlich helfen."))
+            TimeFunction.custom_delay(TimeFunction.long_delay)
+            custom_help()
+            print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal.\n"))
+            TimeFunction.custom_delay(TimeFunction.med_delay)
     return output
 
 
@@ -225,6 +233,7 @@ def stage_2_plane():
                     pl_understand = True
                     pl_type = object_type_pl.index(ii)
         if not pl_understand:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)] +
                                        "\nIn welcher Form kennst du diese Ebene? In der Parameterform, Normalenform, "
                                        "Koordinatenform oder als Gruppe von mehreren Punkten?"))
@@ -243,6 +252,7 @@ def stage_2_line():
                     ln_understand = True
                     ln_type = object_type_ln.index(ii)
         if not ln_understand:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)] +
                   "\nIn welcher Form kennst du diese Gerade? In der Parameterform oder als Gruppe von zwei Punkten?"))
     return ln_type
@@ -305,10 +315,12 @@ def stage_2_def_c():
         while not c_understand:
             c_understand = False
             try:
-                c = float(custom_input("Was ist deine Konstante: "))
+                c = float(custom_input(ChatMessage.chat_msg(program_name, "Was ist deine Konstante: ")))
                 c_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.med_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
+        TimeFunction.custom_delay(TimeFunction.short_delay)
         print(ChatMessage.chat_msg(program_name, "Also die Konstante " + str(c) + "?"))
         while not c_confirm:
             user_c_confirm = custom_input("").upper()
@@ -319,8 +331,10 @@ def stage_2_def_c():
                             c_confirm = True
                         elif user_boolean.index(ii) == 1:
                             c_confirm_no = True
+                            TimeFunction.custom_delay(TimeFunction.short_delay)
                             print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
             if not (c_confirm_no or c_confirm):
+                TimeFunction.custom_delay(TimeFunction.short_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             if c_confirm_no:
                 break
@@ -338,28 +352,35 @@ def stage_2_def_vc():
         vc_x_understand = False
         while not vc_x_understand:
             try:
-                vc_x = float(custom_input("In welche Richtung zeigt der Vektor(x-Koordinate): "))
+                vc_x = float(custom_input(ChatMessage.chat_msg(program_name,
+                                                               "In welche Richtung zeigt der Vektor(x-Koordinate): ")))
                 vc_x_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         vc_y_understand = False
         while not vc_y_understand:
             try:
-                vc_y = float(custom_input("In welche Richtung zeigt der Vektor(y-Koordinate): "))
+                vc_y = float(custom_input(ChatMessage.chat_msg(program_name,
+                                                               "In welche Richtung zeigt der Vektor(y-Koordinate): ")))
                 vc_y_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         vc_z_understand = False
         while not vc_z_understand:
             try:
-                vc_z = float(custom_input("In welche Richtung zeigt der Vektor(z-Koordinate): "))
+                vc_z = float(custom_input(ChatMessage.chat_msg(program_name,
+                                                               "In welche Richtung zeigt der Vektor(z-Koordinate): ")))
                 vc_z_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         # vc_confirm
         print(ChatMessage.chat_msg(program_name, "Also ein Vektor mit diesen Koordinaten "
                                                  "(" + str(vc_x) + "|" + str(vc_y) + "|" + str(vc_z) + ")?"))
         if Calc_AnaGeo.Vector(vc_x, vc_y, vc_z).fullzero:
+            TimeFunction.custom_delay(TimeFunction.short_delay)
             print(ChatMessage.chat_msg(program_name, "Achtung: Dieser Vektor hat eine Länge von 0 Längeneinheiten."))
         while not vc_confirm:
             user_vc_confirm = custom_input("").upper()
@@ -370,8 +391,10 @@ def stage_2_def_vc():
                             vc_confirm = True
                         elif user_boolean.index(ii) == 1:
                             vc_confirm_no = True
+                            TimeFunction.custom_delay(TimeFunction.med_delay)
                             print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
             if not (vc_confirm_no or vc_confirm):
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             if vc_confirm_no:
                 break
@@ -389,23 +412,26 @@ def stage_2_def_pt():
         pt_x_understand = False
         while not pt_x_understand:
             try:
-                pt_x = float(custom_input("Wo ist der Punkt(x-Koordinate): "))
+                pt_x = float(custom_input(ChatMessage.chat_msg(program_name, "Wo ist der Punkt(x-Koordinate): ")))
                 pt_x_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         pt_y_understand = False
         while not pt_y_understand:
             try:
-                pt_y = float(custom_input("Wo ist der Punkt(y-Koordinate): "))
+                pt_y = float(custom_input(ChatMessage.chat_msg(program_name, "Wo ist der Punkt(y-Koordinate): ")))
                 pt_y_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         pt_z_understand = False
         while not pt_z_understand:
             try:
-                pt_z = float(custom_input("Wo ist der Punkt(z-Koordinate): "))
+                pt_z = float(custom_input(ChatMessage.chat_msg(program_name, "Wo ist der Punkt(z-Koordinate): ")))
                 pt_z_understand = True
             except ValueError:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         # pt_confirm
         print(ChatMessage.chat_msg(program_name, "Also ein Punkt mit diesen Koordinaten "
@@ -421,6 +447,7 @@ def stage_2_def_pt():
                             pt_confirm_no = True
                             print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
             if not (pt_confirm_no or pt_confirm):
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             if pt_confirm_no:
                 break
@@ -443,23 +470,29 @@ def stage_2_def_ln_par():
             ln_par_sp_x_understand = False
             while not ln_par_sp_x_understand:
                 try:
-                    ln_par_sp_x = float(custom_input("Wie lautet dein Stützvektor(x-Koordinate): "))
+                    ln_par_sp_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(x-Koordinate): ")))
                     ln_par_sp_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_par_sp_y_understand = False
             while not ln_par_sp_y_understand:
                 try:
-                    ln_par_sp_y = float(custom_input("Wie lautet dein Stützvektor(y-Koordinate): "))
+                    ln_par_sp_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(y-Koordinate): ")))
                     ln_par_sp_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_par_sp_z_understand = False
             while not ln_par_sp_z_understand:
                 try:
-                    ln_par_sp_z = float(custom_input("Wie lautet dein Stützvektor(z-Koordinate): "))
+                    ln_par_sp_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(z-Koordinate): ")))
                     ln_par_sp_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # sp_confirm
             print(ChatMessage.chat_msg(program_name, "Also Stützvektor s = (" + str(ln_par_sp_x) + "|"
@@ -476,6 +509,7 @@ def stage_2_def_ln_par():
                                 ln_par_sp_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (ln_par_sp_confirm_no or ln_par_sp_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if ln_par_sp_confirm_no:
                     break
@@ -487,25 +521,31 @@ def stage_2_def_ln_par():
             while not ln_par_dr_x_understand:
                 try:
                     ln_par_dr_x = float(
-                        custom_input("Wie lautet dein Richtungsvektor(x-Koordinate): "))
+                        custom_input(ChatMessage.chat_msg(program_name,
+                                                          "Wie lautet dein Richtungsvektor(x-Koordinate): ")))
                     ln_par_dr_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_par_dr_y_understand = False
             while not ln_par_dr_y_understand:
                 try:
                     ln_par_dr_y = float(
-                        custom_input("Wie lautet dein Richtungsvektor(y-Koordinate): "))
+                        custom_input(ChatMessage.chat_msg(program_name,
+                                                          "Wie lautet dein Richtungsvektor(y-Koordinate): ")))
                     ln_par_dr_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_par_dr_z_understand = False
             while not ln_par_dr_z_understand:
                 try:
                     ln_par_dr_z = float(
-                        custom_input("Wie lautet dein Richtungsvektor(z-Koordinate): "))
+                        custom_input(ChatMessage.chat_msg(program_name,
+                                                          "Wie lautet dein Richtungsvektor(z-Koordinate): ")))
                     ln_par_dr_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # dr_confirm
             print(ChatMessage.chat_msg(program_name, "Also Richtungsvektor r = (" + str(ln_par_dr_x) + "|"
@@ -521,6 +561,7 @@ def stage_2_def_ln_par():
                                 ln_par_dr_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (ln_par_dr_confirm_no or ln_par_dr_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if ln_par_dr_confirm_no:
                     break
@@ -529,6 +570,7 @@ def stage_2_def_ln_par():
                            Calc_AnaGeo.Vector(ln_par_dr_x, ln_par_dr_y, ln_par_dr_z))
             ln_par_correct = True
         except SystemExit:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, "Diese Vektoren beschreiben keine eindeutige Gerade."
                   "\nVersuchen wir das nochmal."))
     return [ln_par_sp_x, ln_par_sp_y, ln_par_sp_z, ln_par_dr_x, ln_par_dr_y, ln_par_dr_z]
@@ -550,23 +592,29 @@ def stage_2_def_ln_pt():
             ln_pt_aa_x_understand = False
             while not ln_pt_aa_x_understand:
                 try:
-                    ln_pt_aa_x = float(custom_input("Wo ist dein erster Punkt(x-Koordinate): "))
+                    ln_pt_aa_x = float(custom_input(ChatMessage.chat_msg(program_name,
+                                                                         "Wo ist dein erster Punkt(x-Koordinate): ")))
                     ln_pt_aa_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_pt_aa_y_understand = False
             while not ln_pt_aa_y_understand:
                 try:
-                    ln_pt_aa_y = float(custom_input("Wo ist dein erster Punkt(y-Koordinate): "))
+                    ln_pt_aa_y = float(custom_input(ChatMessage.chat_msg(program_name,
+                                                                         "Wo ist dein erster Punkt(y-Koordinate): ")))
                     ln_pt_aa_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_pt_aa_z_understand = False
             while not ln_pt_aa_z_understand:
                 try:
-                    ln_pt_aa_z = float(custom_input("Wo ist dein erster Punkt(z-Koordinate): "))
+                    ln_pt_aa_z = float(custom_input(ChatMessage.chat_msg(program_name,
+                                                                         "Wo ist dein erster Punkt(z-Koordinate): ")))
                     ln_pt_aa_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # aa_confirm
             print(ChatMessage.chat_msg(program_name, "Also Punkt A(" + str(ln_pt_aa_x) + "|" + str(ln_pt_aa_y) + "|" +
@@ -583,6 +631,7 @@ def stage_2_def_ln_pt():
                                 ln_pt_aa_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (ln_pt_aa_confirm_no or ln_pt_aa_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if ln_pt_aa_confirm_no:
                     break
@@ -594,25 +643,28 @@ def stage_2_def_ln_pt():
             while not ln_pt_bb_x_understand:
                 try:
                     ln_pt_bb_x = float(
-                        custom_input("Wo ist dein zweiter Punkt(x-Koordinate): "))
+                        custom_input(ChatMessage.chat_msg(program_name, "Wo ist dein zweiter Punkt(x-Koordinate): ")))
                     ln_pt_bb_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_pt_bb_y_understand = False
             while not ln_pt_bb_y_understand:
                 try:
                     ln_pt_bb_y = float(
-                        custom_input("Wo ist dein zweiter Punkt(y-Koordinate): "))
+                        custom_input(ChatMessage.chat_msg(program_name, "Wo ist dein zweiter Punkt(y-Koordinate): ")))
                     ln_pt_bb_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             ln_pt_bb_z_understand = False
             while not ln_pt_bb_z_understand:
                 try:
                     ln_pt_bb_z = float(
-                        custom_input("Wo ist dein zweiter Punkt(z-Koordinate): "))
+                        custom_input(ChatMessage.chat_msg(program_name, "Wo ist dein zweiter Punkt(z-Koordinate): ")))
                     ln_pt_bb_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # bb_confirm
             print(ChatMessage.chat_msg(program_name, "Also Punkt B(" + str(ln_pt_bb_x) + "|"
@@ -628,6 +680,7 @@ def stage_2_def_ln_pt():
                                 ln_pt_bb_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (ln_pt_bb_confirm_no or ln_pt_bb_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if ln_pt_bb_confirm_no:
                     break
@@ -636,6 +689,7 @@ def stage_2_def_ln_pt():
                           Calc_AnaGeo.Point(ln_pt_bb_x, ln_pt_bb_y, ln_pt_bb_z))
             ln_pt_correct = True
         except SystemExit:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, "Diese Vektoren beschreiben keine eindeutige Gerade."
                   "\nVersuchen wir das nochmal."))
     return [ln_pt_aa_x, ln_pt_aa_y, ln_pt_aa_z, ln_pt_bb_x, ln_pt_bb_y, ln_pt_bb_z]
@@ -660,23 +714,29 @@ def stage_2_def_pl_par():
             pl_par_sp_x_understand = False
             while not pl_par_sp_x_understand:
                 try:
-                    pl_par_sp_x = float(custom_input("Wie lautet dein Stützvektor(x-Koordinate): "))
+                    pl_par_sp_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(x-Koordinate): ")))
                     pl_par_sp_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_par_sp_y_understand = False
             while not pl_par_sp_y_understand:
                 try:
-                    pl_par_sp_y = float(custom_input("Wie lautet dein Stützvektor(y-Koordinate): "))
+                    pl_par_sp_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(y-Koordinate): ")))
                     pl_par_sp_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_par_sp_z_understand = False
             while not pl_par_sp_z_understand:
                 try:
-                    pl_par_sp_z = float(custom_input("Wie lautet dein Stützvektor(z-Koordinate): "))
+                    pl_par_sp_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(z-Koordinate): ")))
                     pl_par_sp_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # sp_confirm
             print(ChatMessage.chat_msg(program_name, "Also Stützvektor s = (" + str(pl_par_sp_x) + "|"
@@ -693,6 +753,7 @@ def stage_2_def_pl_par():
                                 pl_par_sp_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (pl_par_sp_confirm_no or pl_par_sp_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_par_sp_confirm_no:
                     break
@@ -703,23 +764,29 @@ def stage_2_def_pl_par():
             pl_par_dr1_x_understand = False
             while not pl_par_dr1_x_understand:
                 try:
-                    pl_par_dr1_x = float(custom_input("Wie lautet dein erster Richtungsvektor(x-Koordinate): "))
+                    pl_par_dr1_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein erster Richtungsvektor(x-Koordinate): ")))
                     pl_par_dr1_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_par_dr1_y_understand = False
             while not pl_par_dr1_y_understand:
                 try:
-                    pl_par_dr1_y = float(custom_input("Wie lautet dein erster Richtungsvektor(y-Koordinate): "))
+                    pl_par_dr1_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein erster Richtungsvektor(y-Koordinate): ")))
                     pl_par_dr1_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_par_dr1_z_understand = False
             while not pl_par_dr1_z_understand:
                 try:
-                    pl_par_dr1_z = float(custom_input("Wie lautet dein erster Richtungsvektor(z-Koordinate): "))
+                    pl_par_dr1_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein erster Richtungsvektor(z-Koordinate): ")))
                     pl_par_dr1_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # dr1_confirm
             print(ChatMessage.chat_msg(program_name, "Also Spannvektor d1 = (" + str(pl_par_dr1_x) + "|"
@@ -736,6 +803,7 @@ def stage_2_def_pl_par():
                                 pl_par_dr1_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (pl_par_dr1_confirm_no or pl_par_dr1_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_par_dr1_confirm_no:
                     break
@@ -746,23 +814,29 @@ def stage_2_def_pl_par():
             pl_par_dr2_x_understand = False
             while not pl_par_dr2_x_understand:
                 try:
-                    pl_par_dr2_x = float(custom_input("Wie lautet dein zweiter Richtungsvektor(x-Koordinate): "))
+                    pl_par_dr2_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein zweiter Richtungsvektor(x-Koordinate): ")))
                     pl_par_dr2_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_par_dr2_y_understand = False
             while not pl_par_dr2_y_understand:
                 try:
-                    pl_par_dr2_y = float(custom_input("Wie lautet dein zweiter Richtungsvektor(y-Koordinate): "))
+                    pl_par_dr2_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein zweiter Richtungsvektor(y-Koordinate): ")))
                     pl_par_dr2_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_par_dr2_z_understand = False
             while not pl_par_dr2_z_understand:
                 try:
-                    pl_par_dr2_z = float(custom_input("Wie lautet dein zweiter Richtungsvektor(z-Koordinate): "))
+                    pl_par_dr2_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein zweiter Richtungsvektor(z-Koordinate): ")))
                     pl_par_dr2_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # dr2_confirm
             print(ChatMessage.chat_msg(program_name, "Also Spannvektor d2 = (" + str(pl_par_dr2_x) + "|"
@@ -778,6 +852,7 @@ def stage_2_def_pl_par():
                                 pl_par_dr2_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (pl_par_dr2_confirm_no or pl_par_dr2_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_par_dr2_confirm_no:
                     break
@@ -787,6 +862,7 @@ def stage_2_def_pl_par():
                            Calc_AnaGeo.Vector(pl_par_dr2_x, pl_par_dr2_y, pl_par_dr2_z))
             pl_par_correct = True
         except SystemExit:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, "Diese Vektoren beschreiben keine eindeutige Ebene."
                                                      "\nVersuchen wir das nochmal."))
     return [pl_par_sp_x, pl_par_sp_y, pl_par_sp_z,
@@ -810,23 +886,29 @@ def stage_2_def_pl_norm():
             pl_norm_sp_x_understand = False
             while not pl_norm_sp_x_understand:
                 try:
-                    pl_norm_sp_x = float(custom_input("Wie lautet dein Stützvektor(x-Koordinate): "))
+                    pl_norm_sp_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(x-Koordinate): ")))
                     pl_norm_sp_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_norm_sp_y_understand = False
             while not pl_norm_sp_y_understand:
                 try:
-                    pl_norm_sp_y = float(custom_input("Wie lautet dein Stützvektor(y-Koordinate): "))
+                    pl_norm_sp_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(y-Koordinate): ")))
                     pl_norm_sp_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_norm_sp_z_understand = False
             while not pl_norm_sp_z_understand:
                 try:
-                    pl_norm_sp_z = float(custom_input("Wie lautet dein Stützvektor(z-Koordinate): "))
+                    pl_norm_sp_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Stützvektor(z-Koordinate): ")))
                     pl_norm_sp_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # sp_confirm
             print(ChatMessage.chat_msg(program_name, "Also Stützvektor s = (" + str(pl_norm_sp_x) + "|"
@@ -843,6 +925,7 @@ def stage_2_def_pl_norm():
                                 pl_norm_sp_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (pl_norm_sp_confirm_no or pl_norm_sp_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_norm_sp_confirm_no:
                     break
@@ -853,23 +936,29 @@ def stage_2_def_pl_norm():
             pl_norm_norm_x_understand = False
             while not pl_norm_norm_x_understand:
                 try:
-                    pl_norm_norm_x = float(custom_input("Wie lautet dein Normalvektor(x-Koordinate): "))
+                    pl_norm_norm_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Normalvektor(x-Koordinate): ")))
                     pl_norm_norm_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_norm_norm_y_understand = False
             while not pl_norm_norm_y_understand:
                 try:
-                    pl_norm_norm_y = float(custom_input("Wie lautet dein Normalvektor(y-Koordinate): "))
+                    pl_norm_norm_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Normalvektor(y-Koordinate): ")))
                     pl_norm_norm_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_norm_norm_z_understand = False
             while not pl_norm_norm_z_understand:
                 try:
-                    pl_norm_norm_z = float(custom_input("Wie lautet dein Normalvektor(z-Koordinate): "))
+                    pl_norm_norm_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wie lautet dein Normalvektor(z-Koordinate): ")))
                     pl_norm_norm_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # norm_confirm
             print(ChatMessage.chat_msg(program_name, "Also Normalvektor n = (" + str(pl_norm_norm_x) + "|"
@@ -885,6 +974,7 @@ def stage_2_def_pl_norm():
                                 pl_norm_norm_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
                 if not (pl_norm_norm_confirm_no or pl_norm_norm_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_norm_norm_confirm_no:
                     break
@@ -893,6 +983,7 @@ def stage_2_def_pl_norm():
                             Calc_AnaGeo.Vector(pl_norm_norm_x, pl_norm_norm_y, pl_norm_norm_z))
             pl_norm_correct = True
         except SystemExit:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, "Diese Vektoren beschreiben keine eindeutige Ebene."
                                                      "\nVersuchen wir das nochmal."))
     return [pl_norm_sp_x, pl_norm_sp_y, pl_norm_sp_z, pl_norm_norm_x, pl_norm_norm_y, pl_norm_norm_z]
@@ -900,6 +991,7 @@ def stage_2_def_pl_norm():
 
 def stage_2_def_pl_coord():
     print(ChatMessage.chat_msg(program_name, "Für die Ebenengleichung der Form: ax + by + cz = d"))
+    TimeFunction.custom_delay(TimeFunction.med_delay)
     pl_coord_a = 0
     pl_coord_b = 0
     pl_coord_c = 0
@@ -913,35 +1005,40 @@ def stage_2_def_pl_coord():
             pl_coord_a_understand = False
             while not pl_coord_a_understand:
                 try:
-                    pl_coord_a = float(custom_input("Was ist a: "))
+                    pl_coord_a = float(custom_input(ChatMessage.chat_msg(program_name, "Was ist a: ")))
                     pl_coord_a_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # b
             pl_coord_b_understand = False
             while not pl_coord_b_understand:
                 try:
-                    pl_coord_b = float(custom_input("Was ist b: "))
+                    pl_coord_b = float(custom_input(ChatMessage.chat_msg(program_name, "Was ist b: ")))
                     pl_coord_b_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # c
             pl_coord_c_understand = False
             while not pl_coord_c_understand:
                 try:
-                    pl_coord_c = float(custom_input("Was ist c: "))
+                    pl_coord_c = float(custom_input(ChatMessage.chat_msg(program_name, "Was ist c: ")))
                     pl_coord_c_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # d
             pl_coord_d_understand = False
             while not pl_coord_d_understand:
                 try:
-                    pl_coord_d = float(custom_input("Was ist d: "))
+                    pl_coord_d = float(custom_input(ChatMessage.chat_msg(program_name, "Was ist d: ")))
                     pl_coord_d_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             if Calc_AnaGeo.Vector(pl_coord_a, pl_coord_b, pl_coord_c).fullzero:
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, "Diese Gleichung beschreibt keine Ebene."
                                                          "\nVersuchen wir das nochmal."))
                 pl_coord_correct = False
@@ -1010,8 +1107,10 @@ def stage_2_def_pl_coord():
                         elif user_boolean.index(ii) == 1:
                             pl_coord_confirm_no = True
                             pl_coord_correct = False
+                            TimeFunction.custom_delay(TimeFunction.med_delay)
                             print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
             if not (pl_coord_confirm_no or pl_coord_confirm):
+                TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             if pl_coord_confirm_no:
                 break
@@ -1037,23 +1136,29 @@ def stage_2_def_pl_pt():
             pl_pt_aa_x_understand = False
             while not pl_pt_aa_x_understand:
                 try:
-                    pl_pt_aa_x = float(custom_input("Wo ist dein erster Punkt(x-Koordinate): "))
+                    pl_pt_aa_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein erster Punkt(x-Koordinate): ")))
                     pl_pt_aa_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_pt_aa_y_understand = False
             while not pl_pt_aa_y_understand:
                 try:
-                    pl_pt_aa_y = float(custom_input("Wo ist dein erster Punkt(y-Koordinate): "))
+                    pl_pt_aa_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein erster Punkt(y-Koordinate): ")))
                     pl_pt_aa_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_pt_aa_z_understand = False
             while not pl_pt_aa_z_understand:
                 try:
-                    pl_pt_aa_z = float(custom_input("Wo ist dein erster Punkt(z-Koordinate): "))
+                    pl_pt_aa_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein erster Punkt(z-Koordinate): ")))
                     pl_pt_aa_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # aa_confirm
             print(ChatMessage.chat_msg(program_name, "Also Punkt A(" + str(pl_pt_aa_x) + "|" + str(pl_pt_aa_y) + "|" +
@@ -1069,7 +1174,9 @@ def stage_2_def_pl_pt():
                             elif user_boolean.index(ii) == 1:
                                 pl_pt_aa_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
+                                TimeFunction.custom_delay(TimeFunction.short_delay)
                 if not (pl_pt_aa_confirm_no or pl_pt_aa_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_pt_aa_confirm_no:
                     break
@@ -1080,23 +1187,29 @@ def stage_2_def_pl_pt():
             pl_pt_bb_x_understand = False
             while not pl_pt_bb_x_understand:
                 try:
-                    pl_pt_bb_x = float(custom_input("Wo ist dein zweiter Punkt(x-Koordinate): "))
+                    pl_pt_bb_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein zweiter Punkt(x-Koordinate): ")))
                     pl_pt_bb_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_pt_bb_y_understand = False
             while not pl_pt_bb_y_understand:
                 try:
-                    pl_pt_bb_y = float(custom_input("Wo ist dein zweiter Punkt(y-Koordinate): "))
+                    pl_pt_bb_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein zweiter Punkt(y-Koordinate): ")))
                     pl_pt_bb_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_pt_bb_z_understand = False
             while not pl_pt_bb_z_understand:
                 try:
-                    pl_pt_bb_z = float(custom_input("Wo ist dein zweiter Punkt(z-Koordinate): "))
+                    pl_pt_bb_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein zweiter Punkt(z-Koordinate): ")))
                     pl_pt_bb_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # bb_confirm
             print(ChatMessage.chat_msg(program_name, "Also Punkt B(" + str(pl_pt_bb_x) + "|" + str(pl_pt_bb_y) + "|" +
@@ -1112,7 +1225,9 @@ def stage_2_def_pl_pt():
                             elif user_boolean.index(ii) == 1:
                                 pl_pt_bb_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
+                                TimeFunction.custom_delay(TimeFunction.short_delay)
                 if not (pl_pt_bb_confirm_no or pl_pt_bb_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_pt_bb_confirm_no:
                     break
@@ -1123,23 +1238,29 @@ def stage_2_def_pl_pt():
             pl_pt_cc_x_understand = False
             while not pl_pt_cc_x_understand:
                 try:
-                    pl_pt_cc_x = float(custom_input("Wo ist dein dritter Punkt(x-Koordinate): "))
+                    pl_pt_cc_x = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein dritter Punkt(x-Koordinate): ")))
                     pl_pt_cc_x_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_pt_cc_y_understand = False
             while not pl_pt_cc_y_understand:
                 try:
-                    pl_pt_cc_y = float(custom_input("Wo ist dein dritter Punkt(y-Koordinate): "))
+                    pl_pt_cc_y = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein dritter Punkt(y-Koordinate): ")))
                     pl_pt_cc_y_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             pl_pt_cc_z_understand = False
             while not pl_pt_cc_z_understand:
                 try:
-                    pl_pt_cc_z = float(custom_input("Wo ist dein dritter Punkt(z-Koordinate): "))
+                    pl_pt_cc_z = float(custom_input(ChatMessage.chat_msg(
+                        program_name, "Wo ist dein dritter Punkt(z-Koordinate): ")))
                     pl_pt_cc_z_understand = True
                 except ValueError:
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             # cc_confirm
             print(ChatMessage.chat_msg(program_name, "Also Punkt C(" + str(pl_pt_cc_x) + "|" + str(pl_pt_cc_y) + "|" +
@@ -1154,7 +1275,9 @@ def stage_2_def_pl_pt():
                             elif user_boolean.index(ii) == 1:
                                 pl_pt_cc_confirm_no = True
                                 print(ChatMessage.chat_msg(program_name, "Okay, versuchen wir das nochmal."))
+                                TimeFunction.custom_delay(TimeFunction.short_delay)
                 if not (pl_pt_cc_confirm_no or pl_pt_cc_confirm):
+                    TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
                 if pl_pt_cc_confirm_no:
                     break
@@ -1164,6 +1287,7 @@ def stage_2_def_pl_pt():
                           Calc_AnaGeo.Point(pl_pt_cc_x, pl_pt_cc_y, pl_pt_cc_z))
             pl_pt_correct = True
         except SystemExit:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
             print(ChatMessage.chat_msg(program_name, "Diese Punkte beschreiben keine eindeutige Ebene"
                                                      "\nVersuchen wir das nochmal."))
     return [pl_pt_aa_x, pl_pt_aa_y, pl_pt_aa_z, pl_pt_bb_x, pl_pt_bb_y, pl_pt_bb_z, pl_pt_cc_x, pl_pt_cc_y, pl_pt_cc_z]
@@ -1177,6 +1301,9 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
         obj_c = BasicMath.constant_round(obj, rnd)
         output_str.clear()
         output_str.append("Zahl " + str(obj_c))
+    elif type(obj) == Calc_AnaGeo.Angle:
+        output_str.clear()
+        output_str.append(str(BasicMath.constant_round(obj.ang_degree, rnd)) + "°")
     elif type(obj) == Calc_AnaGeo.Point:
         pt_x = BasicMath.constant_round(obj.x, rnd)
         pt_y = BasicMath.constant_round(obj.y, rnd)
@@ -1295,6 +1422,7 @@ def user_rnd():
             rnd_understand = True
             print(ChatMessage.chat_msg(program_name, "Okay gut."))
         except ValueError:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
     return rnd_choice
 
@@ -1306,6 +1434,7 @@ def rnd_preference():
     while not rnd_confirm:
         rnd_confirm_no = False
         user_vc_confirm = custom_input("").upper()
+        TimeFunction.custom_delay(0.2)
         for ii in user_boolean:
             for jj in ii:
                 if user_vc_confirm == jj:
@@ -1318,6 +1447,7 @@ def rnd_preference():
                         print(ChatMessage.chat_msg(program_name, "Okay verstanden."))
                         rnd_prf = [0, False]
         if not (rnd_confirm_no or rnd_confirm):
+            TimeFunction.custom_delay(TimeFunction.short_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         if rnd_confirm_no:
             break
@@ -1347,8 +1477,7 @@ class Task:
             # Stage 3
             self.method_calc.clear()
             print(ChatMessage.chat_msg(program_name, "\nOkay, zu " + self.task_name
-                                       + ", da ging es um Grundrechnungen.\n"
-                  "Um was genau ging es nochmal?"))
+                                       + ", da ging es um Grundrechnungen.\nUm was genau ging es nochmal?"))
             bm_type = 0.1
             bm_understand = False
             while not bm_understand:
@@ -1359,6 +1488,7 @@ class Task:
                             bm_understand = True
                             bm_type = basic_method.index(bm)
                 if not bm_understand:
+                    TimeFunction.custom_delay(TimeFunction.med_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
             self.method_calc.append(bm_type)
             self.method_calc.append(True)
@@ -1368,8 +1498,10 @@ class Task:
                     print(ChatMessage.chat_msg(program_name, "Ah, Addition von zwei Vektoren, warum auch nicht?\n"
                                                              "Der erste Vektor, Vektor a:"))
                     bm_plus_vc1 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Okay gut, zum zweiten Vektor, Vektor b:"))
                     bm_plus_vc2 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_plus_vc1[0], bm_plus_vc1[1], bm_plus_vc1[2]))
                     self.obj_calc.append(stage_2_vc(bm_plus_vc2[0], bm_plus_vc2[1], bm_plus_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
@@ -1377,16 +1509,20 @@ class Task:
                     print(ChatMessage.chat_msg(program_name, "Also Subtraktion von zwei Vektoren, z.B. a - b? Gerne!\n"
                                                              "Der erste Vektor, Vektor a:"))
                     bm_minus_vc1 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Verstehe, zum zweiten Vektor, Vektor b:"))
                     bm_minus_vc2 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_minus_vc1[0], bm_minus_vc1[1], bm_minus_vc1[2]))
                     self.obj_calc.append(stage_2_vc(bm_minus_vc2[0], bm_minus_vc2[1], bm_minus_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 2:  # method scalar_multi
                     print(ChatMessage.chat_msg(program_name, "Skalarmultiplikation eines Vektors? Bin dabei!\n"))
                     bm_scalar_multi_vc = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Okay gut."))
                     bm_scalar_multi_c = stage_2_def_c()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_scalar_multi_vc[0], bm_scalar_multi_vc[1],
                                                     bm_scalar_multi_vc[2]))
                     self.obj_calc.append(bm_scalar_multi_c)
@@ -1395,8 +1531,10 @@ class Task:
                     print(ChatMessage.chat_msg(program_name, "Du brauchst das Skalarprodukt von zwei Vektoren? "
                                                              "Bin dabei!\nDer erste Vektor, Vektor a:"))
                     bm_scalar_product_vc1 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Okay, zum zweiten Vektor, Vektor b:"))
                     bm_scalar_product_vc2 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_scalar_product_vc1[0], bm_scalar_product_vc1[1],
                                                     bm_scalar_product_vc1[2]))
                     self.obj_calc.append(stage_2_vc(bm_scalar_product_vc2[0], bm_scalar_product_vc2[1],
@@ -1407,8 +1545,10 @@ class Task:
                           " Für dich doch gerne, " + user.name + "."))
                     print(ChatMessage.chat_msg(program_name, "Der erste Vektor, Vektor a:"))
                     bm_vector_product_vc1 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Gut, zum zweiten Vektor, Vektor b:"))
                     bm_vector_product_vc2 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_vector_product_vc1[0], bm_vector_product_vc1[1],
                                                     bm_vector_product_vc1[2]))
                     self.obj_calc.append(stage_2_vc(bm_vector_product_vc2[0], bm_vector_product_vc2[1],
@@ -1417,22 +1557,77 @@ class Task:
                 elif self.method_calc[0] == 5:  # method spar_product
                     print(ChatMessage.chat_msg(program_name, "Oh, du brauchst das Spatprodukt von drei Vektoren? "
                           "Für dich doch gerne, " + user.name + "."))
-                    print(ChatMessage.chat_msg(program_name, "Also, der erste Vektor, Vektor a:"))
-                    bm_spar_product_vc1 = stage_2_def_vc()
-                    print(ChatMessage.chat_msg(program_name, "Okay, zum zweiten Vektor, Vektor b:"))
-                    bm_spar_product_vc2 = stage_2_def_vc()
-                    print(ChatMessage.chat_msg(program_name, "Verstehe, zum dritten Vektor, Vektor c:"))
-                    bm_spar_product_vc3 = stage_2_def_vc()
-                    self.obj_calc.append(stage_2_vc(bm_spar_product_vc1[0], bm_spar_product_vc1[1],
-                                                    bm_spar_product_vc1[2]))
-                    self.obj_calc.append(stage_2_vc(bm_spar_product_vc2[0], bm_spar_product_vc2[1],
-                                                    bm_spar_product_vc2[2]))
-                    self.obj_calc.append(stage_2_vc(bm_spar_product_vc3[0], bm_spar_product_vc3[1],
-                                                    bm_spar_product_vc3[2]))
+                    # ask preferred type
+                    print(ChatMessage.chat_msg(program_name, "In welcher Form kennst du das Spat?"))
+                    bm_spar_product_type = -1
+                    bm_spar_product_understand = False
+                    while not bm_spar_product_understand:
+                        user_bm_answer = custom_input("").upper()
+                        for i in object_full_list:
+                            for keyword in i:
+                                if user_bm_answer == keyword and \
+                                        (object_full_list.index(i) == 0
+                                         or object_full_list.index(i) == 3):
+                                    bm_spar_product_understand = True
+                                    bm_spar_product_type = object_full_list.index(i)
+                                    print(ChatMessage.chat_msg(program_name, "Verstehe."))
+                        if not bm_spar_product_understand:
+                            TimeFunction.custom_delay(TimeFunction.med_delay)
+                            print(ChatMessage.chat_msg(program_name,
+                                                       misunderstand[random.randint(0, len(misunderstand) - 1)]))
+                    # def via vector
+                    if bm_spar_product_type == 3:
+                        print(ChatMessage.chat_msg(program_name, "Also, der erste Vektor, Vektor a:"))
+                        bm_spar_product_vc1 = stage_2_def_vc()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        print(ChatMessage.chat_msg(program_name, "Okay, zum zweiten Vektor, Vektor b:"))
+                        bm_spar_product_vc2 = stage_2_def_vc()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        print(ChatMessage.chat_msg(program_name, "Verstehe, zum dritten Vektor, Vektor c:"))
+                        bm_spar_product_vc3 = stage_2_def_vc()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        self.obj_calc.append(stage_2_vc(bm_spar_product_vc1[0], bm_spar_product_vc1[1],
+                                                        bm_spar_product_vc1[2]))
+                        self.obj_calc.append(stage_2_vc(bm_spar_product_vc2[0], bm_spar_product_vc2[1],
+                                                        bm_spar_product_vc2[2]))
+                        self.obj_calc.append(stage_2_vc(bm_spar_product_vc3[0], bm_spar_product_vc3[1],
+                                                        bm_spar_product_vc3[2]))
+                    # def via point
+                    elif bm_spar_product_type == 0:
+                        # get coordinates
+                        print(ChatMessage.chat_msg(program_name, "Also, der erste Punkt, Punkt A:"))
+                        bm_spar_product_p1_crd = stage_2_def_pt()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        print(ChatMessage.chat_msg(program_name, "Okay, zum zweiten Punkt, Punkt B:"))
+                        bm_spar_product_p2_crd = stage_2_def_pt()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        print(ChatMessage.chat_msg(program_name, "Verstehe, zum dritten Punkt, Punkt C:"))
+                        bm_spar_product_p3_crd = stage_2_def_pt()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        print(ChatMessage.chat_msg(program_name, "Okay, zum vierten Punkt, Punkt D:"))
+                        bm_spar_product_p4_crd = stage_2_def_pt()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        # def point objects
+                        bm_spar_product_p1 = stage_2_pt(bm_spar_product_p1_crd[0],
+                                                        bm_spar_product_p1_crd[1], bm_spar_product_p1_crd[2])
+                        bm_spar_product_p2 = stage_2_pt(bm_spar_product_p2_crd[0],
+                                                        bm_spar_product_p2_crd[1], bm_spar_product_p2_crd[2])
+                        bm_spar_product_p3 = stage_2_pt(bm_spar_product_p3_crd[0],
+                                                        bm_spar_product_p3_crd[1], bm_spar_product_p3_crd[2])
+                        bm_spar_product_p4 = stage_2_pt(bm_spar_product_p4_crd[0],
+                                                        bm_spar_product_p4_crd[1], bm_spar_product_p4_crd[2])
+                        # calc vector objects
+                        bm_spar_product_vc1 = Calc_AnaGeo.Basic.Vc.minus(bm_spar_product_p2.ov, bm_spar_product_p1.ov)
+                        bm_spar_product_vc2 = Calc_AnaGeo.Basic.Vc.minus(bm_spar_product_p3.ov, bm_spar_product_p1.ov)
+                        bm_spar_product_vc3 = Calc_AnaGeo.Basic.Vc.minus(bm_spar_product_p4.ov, bm_spar_product_p1.ov)
+                        self.obj_calc.append(bm_spar_product_vc1)
+                        self.obj_calc.append(bm_spar_product_vc2)
+                        self.obj_calc.append(bm_spar_product_vc3)
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 6:  # method unit
                     print(ChatMessage.chat_msg(program_name, "Ein bestimmter Einheitsvektor ist gesucht? Gerne doch!"))
                     bm_unit_vc = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_unit_vc[0], bm_unit_vc[1], bm_unit_vc[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 7:  # method ld
@@ -1440,8 +1635,10 @@ class Task:
                                                              "nach linearer Abhängigkeit prüfen? Schon dabei!\n"
                                                              "Zuerst Vektor a:"))
                     bm_ld_vc1 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Verstehe, zum zweiten Vektor, Vektor b:"))
                     bm_ld_vc2 = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_ld_vc1[0], bm_ld_vc1[1], bm_ld_vc1[2]))
                     self.obj_calc.append(stage_2_vc(bm_ld_vc2[0], bm_ld_vc2[1], bm_ld_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
@@ -1457,9 +1654,11 @@ class Task:
                                     bm_conv_understand = True
                                     bm_conv_obj_index = object_full_list.index(object_type_array)
                         if not bm_conv_understand:
+                            TimeFunction.custom_delay(TimeFunction.long_delay)
                             print(ChatMessage.chat_msg(program_name,
                                                        misunderstand[random.randint(0, len(misunderstand) - 1)]
                                                        + "\nWelches Objekt soll ich für dich umrechnen?"))
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     if bm_conv_obj_index == 0:
                         bm_conv_obj = stage_2_def_pt()
                         self.obj_calc.append(stage_2_pt(bm_conv_obj[0], bm_conv_obj[1], bm_conv_obj[2]))
@@ -1508,6 +1707,73 @@ class Task:
                     elif bm_conv_obj_index == 3:
                         bm_conv_obj = stage_2_def_vc()
                         self.obj_calc.append(stage_2_vc(bm_conv_obj[0], bm_conv_obj[1], bm_conv_obj[2]))
+                elif self.method_calc[0] == 9:  # method angle
+                    print(ChatMessage.chat_msg(program_name, "Winkelberechnung? Bin dabei!\n"))
+                    for h in range(2):
+                        # def meta var
+                        bm_angle_obj_index = -1
+                        bm_angle_obj = -1
+                        # ask obj
+                        print(ChatMessage.chat_msg(
+                            program_name,
+                            "Zwischen welchen zwei Objekten brauchst du den Winkel(Objekt " + str(h + 1) + ")?"))
+                        bm_angle_understand = False
+                        while not bm_angle_understand:
+                            user_bm_answer = custom_input("").upper()
+                            for i in object_full_list:
+                                for keyword in i:
+                                    if user_bm_answer == keyword and not \
+                                            (object_full_list.index(i) == 0
+                                             or object_full_list.index(i) == 4):
+                                        bm_angle_understand = True
+                                        bm_angle_obj_index = object_full_list.index(i)
+                                        print(ChatMessage.chat_msg(program_name, "Verstehe."))
+                            if not bm_angle_understand:
+                                TimeFunction.custom_delay(TimeFunction.med_delay)
+                                print(ChatMessage.chat_msg(program_name,
+                                                           misunderstand[random.randint(0, len(misunderstand) - 1)]))
+                        # def obj 1
+                        if bm_angle_obj_index == 1:  # line
+                            bm_angle_obj_type = stage_2_line()
+                            if bm_angle_obj_type == 0:  # parameter
+                                bm_angle_def_obj = stage_2_def_ln_par()
+                                bm_angle_obj = stage_2_ln_par(
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[0], bm_angle_def_obj[1], bm_angle_def_obj[2]),
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[3], bm_angle_def_obj[4], bm_angle_def_obj[5]))
+                            elif bm_angle_obj_type == 1:  # pt
+                                bm_angle_def_obj = stage_2_def_ln_pt()
+                                bm_angle_obj = stage_2_ln_pt(
+                                    Calc_AnaGeo.Point(bm_angle_def_obj[0], bm_angle_def_obj[1], bm_angle_def_obj[2]),
+                                    Calc_AnaGeo.Point(bm_angle_def_obj[3], bm_angle_def_obj[4], bm_angle_def_obj[5]))
+                        elif bm_angle_obj_index == 2:  # plane
+                            bm_angle_obj_type = stage_2_plane()
+                            if bm_angle_obj_type == 0:  # parameter
+                                bm_angle_def_obj = stage_2_def_pl_par()
+                                bm_angle_obj = stage_2_pl_par(
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[0], bm_angle_def_obj[1], bm_angle_def_obj[2]),
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[3], bm_angle_def_obj[4], bm_angle_def_obj[5]),
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[6], bm_angle_def_obj[7], bm_angle_def_obj[8]))
+                            elif bm_angle_obj_type == 1:  # normal
+                                bm_angle_def_obj = stage_2_def_pl_norm()
+                                bm_angle_obj = stage_2_pl_norm(
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[0], bm_angle_def_obj[1], bm_angle_def_obj[2]),
+                                    Calc_AnaGeo.Vector(bm_angle_def_obj[3], bm_angle_def_obj[4], bm_angle_def_obj[5]))
+                            elif bm_angle_obj_type == 2:  # coordinate
+                                bm_angle_def_obj = stage_2_def_pl_coord()
+                                bm_angle_obj = stage_2_pl_coord(bm_angle_def_obj[0], bm_angle_def_obj[1],
+                                                                bm_angle_def_obj[2], bm_angle_def_obj[3])
+                            elif bm_angle_obj_type == 3:  # pt
+                                bm_angle_def_obj = stage_2_def_pl_pt()
+                                bm_angle_obj = stage_2_pl_pt(
+                                    Calc_AnaGeo.Point(bm_angle_def_obj[0], bm_angle_def_obj[1], bm_angle_def_obj[2]),
+                                    Calc_AnaGeo.Point(bm_angle_def_obj[3], bm_angle_def_obj[4], bm_angle_def_obj[5]),
+                                    Calc_AnaGeo.Point(bm_angle_def_obj[6], bm_angle_def_obj[7], bm_angle_def_obj[8]))
+                        elif bm_angle_obj_index == 3:  # vector
+                            bm_angle_def_obj = stage_2_def_vc()
+                            bm_angle_obj = stage_2_vc(bm_angle_def_obj[0], bm_angle_def_obj[1], bm_angle_def_obj[2])
+                        # append obj
+                        self.obj_calc.append(bm_angle_obj)
+                    print(ChatMessage.chat_msg(program_name, "Verstanden"))
 
     # obj_define = Stage 2 for method != basic, else blank
     def obj_define(self):  # Stage 2
@@ -1515,33 +1781,40 @@ class Task:
             print(ChatMessage.chat_msg(program_name, "\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic][0]
                                        + " zwischen " + object_full_list[self.obj_types[0]][0] + " und "
                                        + object_full_list[self.obj_types[1]][0] + "):"))
+            TimeFunction.custom_delay(TimeFunction.short_delay)
             name_i = 1
             while name_i <= len(self.obj_types):
                 print(ChatMessage.chat_msg(program_name, "\nDas " + str(name_i) + ". Objekt.."))
                 if self.obj_types[name_i - 1] == 0:
                     pt = stage_2_def_pt()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     task_object = stage_2_pt(pt[0], pt[1], pt[2])
                     self.obj_calc.append(task_object)
                     print(ChatMessage.chat_msg(program_name, "Perfekt."))
                 if self.obj_types[name_i - 1] == 1:
                     obj_ln_type = stage_2_line()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     if obj_ln_type == 0:
                         print(ChatMessage.chat_msg(program_name, "Okay gut."))
                         ln = stage_2_def_ln_par()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         self.obj_calc.append(stage_2_ln_par(Calc_AnaGeo.Vector(ln[0], ln[1], ln[2]),
                                                             Calc_AnaGeo.Vector(ln[3], ln[4], ln[5])))
                         print(ChatMessage.chat_msg(program_name, "Perfekt."))
                     if obj_ln_type == 1:
                         print(ChatMessage.chat_msg(program_name, "Verstanden."))
                         ln = stage_2_def_ln_pt()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         self.obj_calc.append(stage_2_ln_pt(Calc_AnaGeo.Point(ln[0], ln[1], ln[2]),
                                                            Calc_AnaGeo.Point(ln[3], ln[4], ln[5])))
                         print(ChatMessage.chat_msg(program_name, "Perfekt."))
                 if self.obj_types[name_i - 1] == 2:
                     obj_pl_type = stage_2_plane()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     if obj_pl_type == 0:
                         print(ChatMessage.chat_msg(program_name, "Okay gut."))
                         pl = stage_2_def_pl_par()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         self.obj_calc.append(stage_2_pl_par(Calc_AnaGeo.Vector(pl[0], pl[1], pl[2]),
                                                             Calc_AnaGeo.Vector(pl[3], pl[4], pl[5]),
                                                             Calc_AnaGeo.Vector(pl[6], pl[7], pl[8])))
@@ -1549,23 +1822,27 @@ class Task:
                     elif obj_pl_type == 1:
                         print(ChatMessage.chat_msg(program_name, "Verstanden."))
                         pl = stage_2_def_pl_norm()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         self.obj_calc.append(stage_2_pl_norm(Calc_AnaGeo.Vector(pl[0], pl[1], pl[2]),
                                                              Calc_AnaGeo.Vector(pl[3], pl[4], pl[5])))
                         print(ChatMessage.chat_msg(program_name, "Perfekt."))
                     elif obj_pl_type == 2:
                         print(ChatMessage.chat_msg(program_name, "Okay gut."))
                         pl = stage_2_def_pl_coord()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         self.obj_calc.append(stage_2_pl_coord(pl[0], pl[1], pl[2], pl[3]))
                         print(ChatMessage.chat_msg(program_name, "Perfekt."))
                     elif obj_pl_type == 3:
                         print(ChatMessage.chat_msg(program_name, "Verstehe."))
                         pl = stage_2_def_pl_pt()
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         self.obj_calc.append(stage_2_pl_pt(Calc_AnaGeo.Point(pl[0], pl[1], pl[2]),
                                                            Calc_AnaGeo.Point(pl[3], pl[4], pl[5]),
                                                            Calc_AnaGeo.Point(pl[6], pl[7], pl[8])))
                         print(ChatMessage.chat_msg(program_name, "Perfekt."))
                 if self.obj_types[name_i - 1] == 3:
                     vc = stage_2_def_vc()
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
                     task_object = stage_2_vc(vc[0], vc[1], vc[2])
                     self.obj_calc.append(task_object)
                     print(ChatMessage.chat_msg(program_name, "Perfekt."))
@@ -1593,6 +1870,8 @@ class Task:
                 sol_basic = Calc_AnaGeo.Basic.Vc.lindep(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 8:  # convert
                 sol_basic = self.obj_calc[0]
+            elif self.method_calc[0] == 9:  # angle
+                sol_basic = abs(Calc_AnaGeo.Basic.angle(self.obj_calc[0], self.obj_calc[1]))
             self.sol.append(sol_basic)
         else:
             if self.method_calc[0] == 0:  # Distance
@@ -1692,10 +1971,11 @@ class Task:
 
     # Stage 5 & 6
     def def_solution(self):
+        TimeFunction.custom_delay(TimeFunction.short_delay)
         sol_text = "-1"
         if not self.rnd[1]:
             self.rnd[0] = user_rnd()
-        print(ChatMessage.chat_msg(program_name, ""))
+        print("")
         if self.method_calc[1]:
             if self.method_calc[0] == 0:  # Plus
                 sol_text = (self.task_name + " ist fertig.\nDas Ergebnis der Addition vom "
@@ -1769,6 +2049,12 @@ class Task:
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
                                 + str(BasicMath.constant_round(self.sol[0].l, self.rnd[0]))
                                 + " Längeneinheiten lang.\n")
+            elif self.method_calc[0] == 9:  # angle
+                sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Winkel zwischen dem ersten Objekt,\n"
+                            + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                            + ",\nund dem zweiten Objekt,\n" + obj_to_str(self.obj_calc[1], self.rnd[0])[0] + ","
+                            + "\nbeträgt "
+                            + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
         else:
             if self.method_calc[0] == 0:
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer Abstand zwischen dem ersten Objekt,\n"
@@ -1926,29 +2212,37 @@ class Task:
 def stage_1_dis():
     print(ChatMessage.chat_msg(program_name, "Abstände? Da weiß ich bescheid!"))
     TimeFunction.custom_delay(TimeFunction.short_delay)
+    TimeFunction.custom_delay(TimeFunction.short_delay)
     chosen_object1 = 0
     chosen_object2 = 0
     user_object1_understand = False
     while not user_object1_understand:
-        user_dis_obj1 = custom_input("Zwischen welchen Objekten brauchst du den Abstand(Objekt 1)?\n").upper()
+        user_dis_obj1 = custom_input(ChatMessage.chat_msg(
+            program_name, "Zwischen welchen Objekten brauchst du den Abstand(Objekt 1)?\n")).upper()
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj1 == single_object and not (object_list == object_vector):
+                if user_dis_obj1 == single_object and not \
+                        (object_list == object_vector or object_list == object_angle):
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     print(ChatMessage.chat_msg(program_name, "Okay verstehe."))
+    TimeFunction.custom_delay(TimeFunction.short_delay)
     user_object2_understand = False
     while not user_object2_understand:
-        user_dis_obj2 = custom_input("Was ist denn das zweite Objekt(Objekt 2)?\n").upper()
+        user_dis_obj2 = custom_input(ChatMessage.chat_msg(
+            program_name, "Was ist denn das zweite Objekt(Objekt 2)?\n")).upper()
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj2 == single_object and not (object_list == object_vector):
+                if user_dis_obj2 == single_object and not \
+                        (object_list == object_vector or object_list == object_angle):
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     chosen_objects = [chosen_object1, chosen_object2]
@@ -1957,23 +2251,27 @@ def stage_1_dis():
 
 def stage_1_cross():
     print(ChatMessage.chat_msg(program_name, "Schnittmengen? Da kann ich dir helfen!"))
+    TimeFunction.custom_delay(TimeFunction.short_delay)
     chosen_object1 = 0
     chosen_object2 = 0
     user_object1_understand = False
     while not user_object1_understand:
-        user_dis_obj1 = custom_input("Zwischen welchen zwei Objekten brauchst du die Schnittmenge(Objekt 1)?\n").upper()
+        user_dis_obj1 = custom_input(ChatMessage.chat_msg(
+            program_name, "Zwischen welchen zwei Objekten brauchst du die Schnittmenge(Objekt 1)?\n")).upper()
         for object_list in object_full_list:
             for single_object in object_list:
                 if user_dis_obj1 == single_object and (object_list == object_line or object_list == object_plane):
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     print(ChatMessage.chat_msg(program_name, "Okay gut."))
+    TimeFunction.custom_delay(TimeFunction.short_delay)
     user_object2_understand = False
     while not user_object2_understand:
-        user_dis_obj2 = custom_input("Was ist denn das zweite Objekt(Objekt 2)?\n")
+        user_dis_obj2 = custom_input(ChatMessage.chat_msg(program_name, "Was ist denn das zweite Objekt(Objekt 2)?\n"))
         for object_list in object_full_list:
             for single_object in object_list:
                 if user_dis_obj2.upper() == single_object and \
@@ -1981,6 +2279,7 @@ def stage_1_cross():
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     chosen_objects = [chosen_object1, chosen_object2]
@@ -1989,30 +2288,37 @@ def stage_1_cross():
 
 def stage_1_contain():
     print(ChatMessage.chat_msg(program_name, "Lagebeziehungen? Da helfe ich dir!"))
+    TimeFunction.custom_delay(TimeFunction.short_delay)
     chosen_object1 = 0
     chosen_object2 = 0
     user_object1_understand = False
     while not user_object1_understand:
-        user_dis_obj1 = custom_input("Zwischen welchen zwei Objekten "
-                                     "brauchst du die Lagebeziehung(Objekt 1)?\n").upper()
+        user_dis_obj1 = custom_input(ChatMessage.chat_msg(program_name, "Zwischen welchen zwei Objekten "
+                                     "brauchst du die Lagebeziehung(Objekt 1)?\n")).upper()
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj1 == single_object and not (object_list == object_vector):
+                if user_dis_obj1 == single_object and not \
+                        (object_list == object_vector or object_list == object_angle):
                     user_object1_understand = True
                     chosen_object1 = object_full_list.index(object_list)
         if not user_object1_understand:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     print(ChatMessage.chat_msg(program_name, "Passt."))
+    TimeFunction.custom_delay(TimeFunction.short_delay)
     user_object2_understand = False
     while not user_object2_understand:
-        user_dis_obj2 = custom_input("Was ist denn das zweite Objekt(Objekt 2)?\n")
+        user_dis_obj2 = custom_input(ChatMessage.chat_msg(program_name,
+                                                          "Was ist denn das zweite Objekt(Objekt 2)?\n")).upper()
         for object_list in object_full_list:
             for single_object in object_list:
-                if user_dis_obj2.upper() == single_object and not (object_list == object_vector):
+                if user_dis_obj2 == single_object and not \
+                        (object_list == object_vector or object_list == object_angle):
                     user_object2_understand = True
                     chosen_object2 = object_full_list.index(object_list)
         if not user_object2_understand:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     chosen_objects = [chosen_object1, chosen_object2]
@@ -2021,9 +2327,10 @@ def stage_1_contain():
 
 def stage_0(iteration):
     if iteration == 1:
-        user_topic = custom_input("Zu was hast du denn deine Frage?\n").upper()
+        user_topic = custom_input(ChatMessage.chat_msg(program_name, "Zu was hast du denn deine Frage?\n")).upper()
     else:
-        user_topic = custom_input("Zu was hast du denn deine " + str(iteration) + ". Frage?\n").upper()
+        user_topic = custom_input(ChatMessage.chat_msg(
+            program_name, "Zu was hast du denn deine " + str(iteration) + ". Frage?\n")).upper()
     chosen_topic = 0
     user_topic_understand = False
     for answer_list in topic:
@@ -2033,12 +2340,14 @@ def stage_0(iteration):
                 chosen_topic = topic.index(answer_list)
 
     while not user_topic_understand:
+        TimeFunction.custom_delay(TimeFunction.med_delay)
         print(ChatMessage.chat_msg(program_name,
                                    "Ich weiß nicht was du meinst. Vielleicht weißt du auch nicht, was ich meine."))
+        TimeFunction.custom_delay(TimeFunction.short_delay)
         print(ChatMessage.chat_msg(program_name,
                                    "Ich kann dir gerne helfen, wenn es um Abstände, Schnittmengen, Lagebeziehungen "
                                    "oder allgemeine Grundsachen geht."))
-        user_topic = custom_input("In welchem Bereich brauchst du Hilfe?\n").upper()
+        user_topic = custom_input(ChatMessage.chat_msg(program_name, "In welchem Bereich brauchst du Hilfe?\n")).upper()
         for answer_list in topic:
             for answer in answer_list:
                 if user_topic == answer:
@@ -2086,11 +2395,13 @@ def early_game(iteration):
     while not iterate_understand:
         try:
             if iteration > 0:
-                iterate = int(custom_input("Wie viele weitere Fragen hast du für mich?\n"))
+                iterate = int(custom_input(ChatMessage.chat_msg(
+                    program_name, "Wie viele weitere Fragen hast du für mich?\n")))
             else:
-                iterate = int(custom_input("Wie viele Fragen hast du für mich?\n"))
+                iterate = int(custom_input(ChatMessage.chat_msg(program_name, "Wie viele Fragen hast du für mich?\n")))
             iterate_understand = True
         except ValueError:
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
 
     for i in range(iterate):
@@ -2101,12 +2412,12 @@ def early_game(iteration):
 
 def mid_game():
     rnd_main = rnd_preference()
-    for aa in task_list:
-        if not aa.complete:
+    for task in task_list:
+        if not task.complete:
             if rnd_main[1]:
-                aa.rnd = rnd_main
-            aa.get_solution()
-            print(ChatMessage.chat_msg(program_name, aa.solution))
+                task.rnd = rnd_main
+            task.get_solution()
+            print(ChatMessage.chat_msg(program_name, task.solution))
 
 
 def end_game():  # Stage 7
@@ -2119,23 +2430,30 @@ def end_game():  # Stage 7
     else:
         print(ChatMessage.chat_msg(program_name, "\nKrass, " + str(len(task_list))
                                    + " Fragen! Aber wir haben es geschafft."))
+    TimeFunction.custom_delay(TimeFunction.long_delay)
     repeat_confirm = False
     while not repeat_confirm:
         repeat_confirm_no = False
-        user_repeat = custom_input("Hast du noch weitere Fragen zum Thema analytische Geometrie?\n").upper()
+        user_repeat = custom_input(ChatMessage.chat_msg(
+            program_name, "Hast du noch weitere Fragen zum Thema analytische Geometrie?\n")).upper()
         for ii in user_boolean:
             for jj in ii:
                 if user_repeat == jj:
                     if user_boolean.index(ii) == 0:
                         repeat_confirm = True
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         print(ChatMessage.chat_msg(program_name, "Noch mehr Fragen? Schieß los!"))
                         chat(len(task_list))
                     elif user_boolean.index(ii) == 1:
                         repeat_confirm_no = True
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         print(ChatMessage.chat_msg(program_name, "Okay super."))
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
                         print(ChatMessage.chat_msg(program_name, "Dann wohl bis später, "
                                                    + user.name + ". Ich hoffe ich war hilfreich!"))
+                        TimeFunction.custom_delay(1)
                         print(ChatMessage.chat_enter_exit(program_name)[1])
+                        TimeFunction.custom_delay(1)
         if not (repeat_confirm_no or repeat_confirm):
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
         if repeat_confirm_no:

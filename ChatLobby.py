@@ -5,6 +5,7 @@ import Chat_AnaGeo
 
 # Key Var
 no_answer = "Keine Antwort"
+help_word = "/help"
 dummy = Humanize.Identity("Max", 0)
 programmer = Humanize.Identity("Blind Fish", 0)
 
@@ -43,10 +44,12 @@ while not user_sex_understand:
         user_sex_str = str(input("Was genau meinst du?\n"))
 TimeFunction.custom_delay(TimeFunction.short_delay)
 print(ChatMessage.chat_msg(programmer.name,
-                           "Gut dankeschön, " + username + ". Ich hole mal die Hilfe für dich."))
+                           'Gut dankeschön, ' + username + '. Ich hole mal die Hilfe für dich. '
+                           'Falls du mit etwas nicht klarkommst, sag einfach "' + help_word + '".'))
 TimeFunction.custom_delay(TimeFunction.short_delay)
 print(ChatMessage.chat_enter_exit(programmer.name)[1])
-Chat_AnaGeo.set_name(Humanize.Identity(username, user_sex), programmer)
+TimeFunction.custom_delay(2)
+Chat_AnaGeo.set_data(Humanize.Identity(username, user_sex), programmer, help_word)
 # Chat Continue
 Chat_AnaGeo.intro_game()
 Chat_AnaGeo.chat(0)
