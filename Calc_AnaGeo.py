@@ -3,357 +3,367 @@ import BasicMath
 import sys
 
 
-# Converter
-class Conv:
-    class Pl:
-        class Par:
-            def norm(support, dr1, dr2):
-                OutSupport = support
-                OutNormal = Basic.Vc.unit(Basic.Vc.vproduct(dr1, dr2))
-                Output = [OutSupport, OutNormal]
-                return Output
-            def coord(support, dr1, dr2):
-                help = Conv.Pl.Par.norm(support, dr1, dr2)
-                Output = Conv.Pl.Norm.coord(help[0], help[1])
-                return Output
-        class Norm:
-            def par(support, normal):
-                OutSupport = support
-                basex = Vector(1, 0, 0)
-                basey = Vector(0, 1, 0)
-                basez = Vector(0, 0, 1)
-                d1 = Basic.Vc.vproduct(normal, basex)
-                d2 = Basic.Vc.vproduct(normal, basey)
-                d3 = Basic.Vc.vproduct(normal, basez)
-                if d1.fullzero == True:
-                    dr1 = Basic.Vc.unit(d2)
-                    dr2 = Basic.Vc.unit(d3)
-                elif d2.fullzero == True:
-                    dr1 = Basic.Vc.unit(d1)
-                    dr2 = Basic.Vc.unit(d3)
-                elif d2.fullzero == True:
-                    dr1 = Basic.Vc.unit(d1)
-                    dr2 = Basic.Vc.unit(d2)
-                elif Basic.Vc.lindep(d1, d2) == True:
-                    dr1 = Basic.Vc.unit(d2)
-                    dr2 = Basic.Vc.unit(d3)
+# Converter Plane
+def conv_pl_par_norm(support, dr1, dr2):
+    out_support = support
+    out_normal = basic_vc_unit(basic_vc_vector_product(dr1, dr2))
+    return [out_support, out_normal]
+
+
+def conv_pl_par_coord(support, dr1, dr2):
+    help_pl = conv_pl_par_norm(support, dr1, dr2)
+    return conv_pl_norm_coord(help_pl[0], help_pl[1])
+
+
+def conv_pl_norm_par(support, normal):
+    out_support = support
+    base_x = Vector(1, 0, 0)
+    base_y = Vector(0, 1, 0)
+    base_z = Vector(0, 0, 1)
+    d1 = basic_vc_vector_product(normal, base_x)
+    d2 = basic_vc_vector_product(normal, base_y)
+    d3 = basic_vc_vector_product(normal, base_z)
+    if d1.full_zero:
+        dr1 = basic_vc_unit(d2)
+        dr2 = basic_vc_unit(d3)
+    elif d2.full_zero:
+        dr1 = basic_vc_unit(d1)
+        dr2 = basic_vc_unit(d3)
+    elif d2.full_zero:
+        dr1 = basic_vc_unit(d1)
+        dr2 = basic_vc_unit(d2)
+    elif basic_vc_lin_dep(d1, d2):
+        dr1 = basic_vc_unit(d2)
+        dr2 = basic_vc_unit(d3)
+    else:
+        dr1 = basic_vc_unit(d1)
+        dr2 = basic_vc_unit(d2)
+    return [out_support, dr1, dr2]
+
+
+def conv_pl_norm_coord(support, normal):
+    a = normal.x
+    b = normal.y
+    c = normal.z
+    d = -1 * basic_vc_scalar_product(normal, basic_vc_scalar_multi(support, -1))
+    return [a, b, c, d]
+
+
+def conv_pl_coord_norm(a, b, c, d):
+    normal = basic_vc_unit(Vector(a, b, c))
+    if a != 0:
+        support = Vector(d / a, 0, 0)
+    elif b != 0:
+        support = Vector(0, d / b, 0)
+    else:
+        support = Vector(0, 0, d / c)
+    return [support, normal]
+
+
+def conv_pl_coord_par(a, b, c, d):
+    help_pl = conv_pl_coord_norm(a, b, c, d)
+    return conv_pl_norm_par(help_pl[0], help_pl[1])
+
+
+def conv_pl_pt_par(pt_a, pt_b, pt_c):
+    dr1 = basic_vc_minus(pt_b.ov, pt_a.ov)
+    dr2 = basic_vc_minus(pt_c.ov, pt_a.ov)
+    support = pt_a
+    return [support, dr1, dr2]
+
+
+def conv_pl_pt_norm(pt_a, pt_b, pt_c):
+    help_pl = conv_pl_pt_par(pt_a, pt_b, pt_c)
+    return conv_pl_par_norm(help_pl[0], help_pl[1], help_pl[2])
+
+
+def conv_pl_pt_coord(pt_a, pt_b, pt_c):
+    help_pl = conv_pl_pt_par(pt_a, pt_b, pt_c)
+    return conv_pl_par_coord(help_pl[0], help_pl[1], help_pl[2])
+
+
+# Converter Line
+def conv_ln_pt_par(pt_a, pt_b):
+    support = pt_a.ov
+    direction = basic_vc_minus(pt_b.ov, pt_a.ov)
+    return [support, direction]
+
+
+# Converter LGS
+def conv_lgs_pl_mtx(pl_a, pl_b, pl_c):
+    out_mtx = Matrix(pl_a.a, pl_a.b, pl_a.c, pl_b.a, pl_b.b, pl_b.c, pl_c.a, pl_c.b, pl_c.c)
+    out_vc = Vector(pl_a.d, pl_b.d, pl_c.d)
+    return [out_mtx, out_vc]
+
+
+# Converter Point
+def vc2pt(vc):
+    return Point(vc.x, vc.y, vc.z)
+
+
+# Basic Vector
+def basic_vc_plus(vc_a, vc_b):
+    return Vector(vc_a.x + vc_b.x, vc_a.y + vc_b.y, vc_a.z + vc_b.z)
+
+
+def basic_vc_minus(vc_a, vc_b):
+    return Vector(vc_a.x - vc_b.x, vc_a.y - vc_b.y, vc_a.z - vc_b.z)
+
+
+def basic_vc_scalar_multi(vc, c):
+    if (type(vc) == int or type(type(vc) == float)) and type(c) == Vector:
+        temp = vc
+        vc = c
+        c = temp
+    return Vector(vc.x*c, vc.y*c, vc.z*c)
+
+
+def basic_vc_scalar_product(vc_a, vc_b):
+    return vc_a.x*vc_b.x + vc_a.y*vc_b.y + vc_a.z*vc_b.z
+
+
+def basic_vc_vector_product(vc_a, vc_b):
+    output_x = vc_a.y * vc_b.z - vc_a.z * vc_b.y
+    output_y = vc_a.z * vc_b.x - vc_a.x * vc_b.z
+    output_z = vc_a.x * vc_b.y - vc_a.y * vc_b.x
+    return Vector(output_x, output_y, output_z)
+
+
+def basic_vc_spar_product(vc_a, vc_b, vc_c):
+    return abs(basic_vc_scalar_product(basic_vc_vector_product(vc_a, vc_b), vc_c))
+
+
+def basic_vc_unit(vc):
+    return basic_vc_scalar_multi(vc, 1/vc.length)
+
+
+def basic_vc_lin_dep(vc_a, vc_b):
+    if vc_a.full_zero != vc_b.full_zero:
+        return True
+    elif vc_a.full_zero:
+        return False
+    else:
+        # check for inequality
+        if vc_a.zero_x != vc_b.zero_x:
+            return False
+        if vc_a.zero_y != vc_b.zero_y:
+            return False
+        if vc_a.zero_z != vc_b.zero_z:
+            return False
+
+        # if no 0
+        if not vc_a.con_zero and not vc_b.con_zero:
+            a = BasicMath.constant_round((vc_a.x / vc_b.x), 8)
+            b = BasicMath.constant_round((vc_a.y / vc_b.y), 8)
+            c = BasicMath.constant_round((vc_a.z / vc_b.z), 8)
+            if a == b and a == c:
+                return True
+            else:
+                return False
+
+        if vc_a.zero_x:
+            if vc_a.zero_y or vc_a.zero_z:
+                return True
+            else:
+                b = BasicMath.constant_round((vc_a.y / vc_b.y), 8)
+                c = BasicMath.constant_round((vc_a.z / vc_b.z), 8)
+                if b == c:
+                    return True
                 else:
-                    dr1 = Basic.Vc.unit(d1)
-                    dr2 = Basic.Vc.unit(d2)
-                Output = [OutSupport, dr1, dr2]
-                return Output
-            def coord(support, normal):
-                a = normal.x
-                b = normal.y
-                c = normal.z
-                d = -1 * Basic.Vc.sproduct(normal, Basic.Vc.smulti(support, -1))
-                Output = [a, b, c, d]
-                return Output
-        class Coord:
-            def norm(a, b, c, d):
-                normal = Basic.Vc.unit(Vector(a, b, c))
-                if a != 0:
-                    support = Vector(d / a, 0, 0)
-                elif b != 0:
-                    support = Vector(0, d / b, 0)
+                    return False
+        elif vc_a.zero_y:
+            if vc_a.zero_z:
+                return True
+            else:
+                a = BasicMath.constant_round((vc_a.x / vc_b.x), 8)
+                c = BasicMath.constant_round((vc_a.z / vc_b.z), 8)
+                if a == c:
+                    return True
                 else:
-                    support = Vector(0, 0, d / c)
-                Output = [support, normal]
-                return Output
-            def par(a, b, c, d):
-                help = Conv.Pl.Coord.norm(a, b, c, d)
-                Output = Conv.Pl.Norm.par(help[0], help[1])
-                return Output
-        class Pt:
-            def par(aa,bb,cc):
-                dr1 = Basic.Vc.minus(bb.ov, aa.ov)
-                dr2 = Basic.Vc.minus(cc.ov, aa.ov)
-                support = aa
-                Output = [support,dr1,dr2]
-                return Output
-            def norm(aa,bb,cc):
-                help = Conv.Pl.Pt.par(aa,bb,cc)
-                Output = Conv.Pl.Par.norm(help[0],help[1],help[2])
-            def coord(aa,bb,cc):
-                help = Conv.Pl.Pt.par(aa,bb,cc)
-                Output = Conv.Pl.Par.coord(help[0],help[1],help[2])
-        class Fxy:
-            def par(aa):
-                help = Conv.Pl.Fxy.coord(aa)
-                Output = Conv.Pl.Coord.par(help[0],help[1],help[2],help[3])
-                return Output
-            def norm(aa):
-                help = Conv.Pl.Fxy.coord(aa)
-                Output = Conv.Pl.Coord.norm(help[0],help[1],help[2],help[3])
-                return Output
-            def coord(aa):
-                if aa[0] != 0:
-                    a = aa[1];
-                    b = aa[2];
-                    c = -1*aa[0];
-                    d = -1*aa[3];
-                    Output = [a,b,c,d]
-                    return Output
-                else:
-                    sys.exit("Die Nullgleichung ist keine Ebene.")
-    class Ln:
-        class Pt:
-            def par(aa,bb):
-                support = aa.ov
-                direction = Basic.Vc.minus(bb.ov,aa.ov)
-                Output = [support,direction]
-                return Output
-    class LGS:
-        class Pl:
-            def mtx(aa,bb,cc):
-                OutMtx = Matrix(aa.a,aa.b,aa.c,bb.a,bb.b,bb.c,cc.a,cc.b,cc.c)
-                OutVec = Vector(aa.d,bb.d,cc.d)
-                Output = [OutMtx,OutVec]
-                return Output
-    def vc2pt(aa):
-        Output = Point(aa.x,aa.y,aa.z)
-        return Output
-# Basics
-class Basic:
-    class Vc:
-        def plus(aa,bb):
-            Output = Vector(aa.x + bb.x, aa.y + bb.y, aa.z + bb.z)
-            return Output
-        def minus(aa,bb):
-            Output = Vector(aa.x - bb.x, aa.y - bb.y, aa.z - bb.z)
-            return Output
-        def smulti(aa,c):
-            if (type(aa) == int or type(type(aa) == float)) and type(c) == Vector:
-                temp = aa
-                aa = c
-                c = temp
-            Output = Vector(aa.x*c, aa.y*c, aa.z*c)
-            return Output
-        def sproduct(aa,bb):
-            Output = aa.x*bb.x + aa.y*bb.y + aa.z*bb.z
-            return Output
-        def vproduct(aa,bb):
-            Outx = aa.y * bb.z - aa.z * bb.y
-            Outy = aa.z * bb.x - aa.x * bb.z
-            Outz = aa.x * bb.y - aa.y * bb.x
-            Output = Vector(Outx,Outy,Outz)
-            return Output
-        def sparproduct(aa,bb,cc):
-            Output = abs(Basic.Vc.sproduct(Basic.Vc.vproduct(aa,bb),cc))
-            return Output
-        def unit(aa):
-            Output = Basic.Vc.smulti(aa,1/aa.l)
-            return Output
-        def lindep(aa,bb):
-            Output = False
-            if (aa.fullzero == True and bb.fullzero != True) or (aa.fullzero != True and bb.fullzero == True):
-                Output = True
-                return Output
-            if aa.fullzero == True or bb.fullzero == True:
-                return Output
-            if aa.zerox != bb.zerox:
-                return Output
-            if aa.zeroy != bb.zeroy:
-                return Output
-            if aa.zeroz != bb.zeroz:
-                return Output
-            if aa.czero == False and bb.czero == False:
-                a = BasicMath.constant_round((aa.x / bb.x), 8)
-                b = BasicMath.constant_round((aa.y / bb.y), 8)
-                c = BasicMath.constant_round((aa.z / bb.z), 8)
-                if a == b and a == c:
-                    Output = True
-                    return Output
-                else:
-                    Output = False
-                    return Output
-            if aa.zerox == True:
-                if aa.zeroy or aa.zeroz:
-                    Output = True
-                    return Output
-                else:
-                    b = BasicMath.constant_round((aa.y / bb.y), 8)
-                    c = BasicMath.constant_round((aa.z / bb.z), 8)
-                    if b == c:
-                        Output = True
-                        return Output
-                    else:
-                        Output = False
-                        return Output
-            if aa.zeroy == True:
-                if aa.zeroz == True:
-                    Output = True
-                    return Output
-                else:
-                    a = BasicMath.constant_round((aa.x / bb.x), 8)
-                    c = BasicMath.constant_round((aa.z / bb.z), 8)
-                    if a == c:
-                        Output = True
-                        return Output
-                    else:
-                        Output = False
-                        return Output
-            if aa.zeroz == True:
-                a = BasicMath.constant_round((aa.x / bb.x), 8)
-                b = BasicMath.constant_round((aa.y / bb.y), 8)
-                if a == b:
-                    Output = True
-                    return Output
-                else:
-                    Output = False
-                    return Output
-            return Output
-    class LGS:
-        def det(aa):
-            Output = 0
-            Sum1 = aa.a11*aa.a22*aa.a33
-            Sum2 = aa.a12*aa.a23*aa.a31
-            Sum3 = aa.a13*aa.a21*aa.a32
-            Min1 = aa.a31*aa.a22*aa.a13
-            Min2 = aa.a32*aa.a23*aa.a11
-            Min3 = aa.a33*aa.a21*aa.a12
-            Output = (Sum1 + Sum2 + Sum3) - (Min1 + Min2 + Min3)
-            return Output
-        def solve(aa):
-            if Basic.LGS.det(aa) == 0:
-                sys.exit("Das Gleichungssystem hat keine eindeutige Lösung.")
-            help1 = Matrix(aa.b1, aa.a12, aa.a13, aa.b2, aa.a22, aa.a23, aa.b3, aa.a32, aa.a33)
-            help2 = Matrix(aa.a11, aa.b1, aa.a13, aa.a21, aa.b2, aa.a23, aa.a31, aa.b3, aa.a33)
-            help3 = Matrix(aa.a11, aa.a12, aa.b1, aa.a21, aa.a22, aa.b2, aa.a31, aa.a32, aa.b3)
-            ox = (Basic.LGS.det(help1) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
-            oy = (Basic.LGS.det(help2) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
-            oz = (Basic.LGS.det(help3) / Basic.LGS.det(aa.Mtx)) #Auf 9. Nachkommastelle genau
-            Output = Vector(ox, oy, oz)
-            return Output
-    def angle(aa,bb):
-        if (type(aa) == Vector and aa.l == 0) or (type(bb) == Vector and bb.l == 0):
-            sys.exit("Der Vektor hat keine Richtung.")
-        # calculate
-        if type(aa) == Vector:
-            if type(bb) == Vector:
-                output = degrees(acos(Basic.Vc.sproduct(aa, bb) / (aa.l * bb.l)))
-            elif type(bb) == Line:
-                output = degrees(acos(Basic.Vc.sproduct(aa, bb.dr) / (aa.l * bb.dr.l)))
-            elif type(bb) == Plane:
-                output = degrees(asin(Basic.Vc.sproduct(aa, bb.normal) / (aa.l * bb.normal.l)))
-        elif type(aa) == Line:
-            if type(bb) == Vector:
-                output = degrees(acos(Basic.Vc.sproduct(aa.dr, bb) / (aa.dr.l * bb.l)))
-            elif type(bb) == Line:
-                if Con.line2(aa, bb) != 3:
-                    sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Geraden.")
-                output = degrees(acos(Basic.Vc.sproduct(aa.dr, bb.dr) / (aa.dr.l * bb.dr.l)))
-            elif type(bb) == Plane:
-                if not (Con.lineplane(aa, bb) == 1 or Con.lineplane(aa, bb) == 3):
-                    sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Objekten.")
-                output = degrees(asin(Basic.Vc.sproduct(aa.dr, bb.normal) / (aa.dr.l * bb.normal.l)))
-        elif type(aa) == Plane:
-            if type(bb) == Vector:
-                output = degrees(asin(Basic.Vc.sproduct(aa.normal, bb) / (aa.normal.l * bb.l)))
-            elif type(bb) == Line:
-                if not (Con.lineplane(aa, bb) == 1 or Con.lineplane(aa, bb) == 3):
-                    sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Objekten.")
-                output = degrees(asin(Basic.Vc.sproduct(aa.normal, bb.dr) / (aa.normal.l * bb.dr.l)))
-            elif type(bb) == Plane:
-                if not (Con.plane2(aa, bb) == 1 or Con.plane2(aa, bb) == 3):
-                    sys.exit("Es gibt keine eindeutige Schnittgerade zwischen den beiden Ebenen.")
-                output = degrees(acos(Basic.Vc.sproduct(aa.normal, bb.normal) / (aa.normal.l * bb.normal.l)))
-        return Angle(output)
+                    return False
+        else:
+            a = BasicMath.constant_round((vc_a.x / vc_b.x), 8)
+            b = BasicMath.constant_round((vc_a.y / vc_b.y), 8)
+            if a == b:
+                return True
+            else:
+                return False
+
+
+# Basic LGS
+def basic_lgs_det(lgs):
+    sum1 = lgs.a11 * lgs.a22 * lgs.a33
+    sum2 = lgs.a12 * lgs.a23 * lgs.a31
+    sum3 = lgs.a13 * lgs.a21 * lgs.a32
+    min1 = lgs.a31 * lgs.a22 * lgs.a13
+    min2 = lgs.a32 * lgs.a23 * lgs.a11
+    min3 = lgs.a33 * lgs.a21 * lgs.a12
+    return (sum1 + sum2 + sum3) - (min1 + min2 + min3)
+
+
+def basic_lgs_solve(lgs):
+    if basic_lgs_det(lgs) == 0:
+        sys.exit("Das Gleichungssystem hat keine eindeutige Lösung.")
+    help1 = Matrix(lgs.b1, lgs.a12, lgs.a13, lgs.b2, lgs.a22, lgs.a23, lgs.b3, lgs.a32, lgs.a33)
+    help2 = Matrix(lgs.a11, lgs.b1, lgs.a13, lgs.a21, lgs.b2, lgs.a23, lgs.a31, lgs.b3, lgs.a33)
+    help3 = Matrix(lgs.a11, lgs.a12, lgs.b1, lgs.a21, lgs.a22, lgs.b2, lgs.a31, lgs.a32, lgs.b3)
+    ox = (basic_lgs_det(help1) / basic_lgs_det(lgs.mtx))
+    oy = (basic_lgs_det(help2) / basic_lgs_det(lgs.mtx))
+    oz = (basic_lgs_det(help3) / basic_lgs_det(lgs.mtx))
+    return Vector(ox, oy, oz)
+
+
+# Basic Angle
+def basic_angle(obj_a, obj_b):
+    if (type(obj_a) == Vector and obj_a.length == 0) or (type(obj_b) == Vector and obj_b.length == 0):
+        sys.exit("Der Vektor hat keine Richtung.")
+    # calculate
+    output = 0
+    if type(obj_a) == Vector:
+        if type(obj_b) == Vector:
+            output = degrees(acos(basic_vc_scalar_product(obj_a, obj_b) / (obj_a.length * obj_b.length)))
+        elif type(obj_b) == Line:
+            output = degrees(acos(basic_vc_scalar_product(obj_a, obj_b.dr) / (obj_a.length * obj_b.dr.length)))
+        elif type(obj_b) == Plane:
+            output = degrees(asin(basic_vc_scalar_product(obj_a, obj_b.normal) / (obj_a.length * obj_b.normal.length)))
+    elif type(obj_a) == Line:
+        if type(obj_b) == Vector:
+            output = degrees(acos(basic_vc_scalar_product(obj_a.dr, obj_b) / (obj_a.dr.length * obj_b.length)))
+        elif type(obj_b) == Line:
+            if con_line2(obj_a, obj_b) != 3:
+                sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Geraden.")
+            output = degrees(acos(basic_vc_scalar_product(obj_a.dr, obj_b.dr) /
+                                  (obj_a.dr.length * obj_b.dr.length)))
+        elif type(obj_b) == Plane:
+            if not (con_line_plane(obj_a, obj_b) == 1 or con_line_plane(obj_a, obj_b) == 3):
+                sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Objekten.")
+            output = degrees(asin(basic_vc_scalar_product(obj_a.dr, obj_b.normal) /
+                                  (obj_a.dr.length * obj_b.normal.length)))
+    elif type(obj_a) == Plane:
+        if type(obj_b) == Vector:
+            output = degrees(asin(basic_vc_scalar_product(obj_a.normal, obj_b) /
+                                  (obj_a.normal.length * obj_b.length)))
+        elif type(obj_b) == Line:
+            if not (con_line_plane(obj_a, obj_b) == 1 or con_line_plane(obj_a, obj_b) == 3):
+                sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Objekten.")
+            output = degrees(asin(basic_vc_scalar_product(obj_a.normal, obj_b.dr) /
+                                  (obj_a.normal.length * obj_b.dr.length)))
+        elif type(obj_b) == Plane:
+            if not (con_plane2(obj_a, obj_b) == 1 or con_plane2(obj_a, obj_b) == 3):
+                sys.exit("Es gibt keine eindeutige Schnittgerade zwischen den beiden Ebenen.")
+            output = degrees(acos(basic_vc_scalar_product(obj_a.normal, obj_b.normal) /
+                                  (obj_a.normal.length * obj_b.normal.length)))
+    return Angle(abs(output))
+
+
 # Objects
 class Angle:
     def __init__(self, ang_deg):
         self.ang_degree = ang_deg
         self.ang_radian = radians(ang_deg)
+
+
 class Vector:
-    def __init__(self,x,y,z):
+    def __init__(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
-        l = sqrt(x*x + y*y + z*z); self.l = l
-        fullzero = False
-        if l == 0:
-            fullzero = True
-        self.fullzero = fullzero
-        zerox = False; zeroy = False; zeroz = False; czero = False
+        length = sqrt(x * x + y * y + z * z)
+        self.length = length
+        full_zero = False
+        if length == 0:
+            full_zero = True
+        self.full_zero = full_zero
+        zero_x = False
+        zero_y = False
+        zero_z = False
+        con_zero = False
         if x == 0:
-            zerox = True
-            czero = True
+            zero_x = True
+            con_zero = True
         if y == 0:
-            zeroy = True
-            czero = True
+            zero_y = True
+            con_zero = True
         if z == 0:
-            zeroz = True
-            czero = True
-        self.zerox = zerox
-        self.zeroy = zeroy
-        self.zeroz = zeroz
-        self.czero = czero
+            zero_z = True
+            con_zero = True
+        self.zero_x = zero_x
+        self.zero_y = zero_y
+        self.zero_z = zero_z
+        self.con_zero = con_zero
+
+
 class Point:
-    def __init__(self,x,y,z):
+    def __init__(self, x, y, z):
         self.x = BasicMath.constant_round(x, 8)
         self.y = BasicMath.constant_round(y, 8)
         self.z = BasicMath.constant_round(z, 8)
-        pt = (x,y,z); self.pt = pt
-        ov = Vector(x,y,z); self.ov = ov
+        ov = Vector(x, y, z)
+        self.ov = ov
+
+
 class Line:
-    def __init__(self,support,dr):
-        if dr.fullzero == True:
-            sys.exit("Die Gerade konnte nicht enstehen. Der Richtungsvektor gleicht dem Nullvektor.")
+    def __init__(self, support, dr):
+        if dr.full_zero:
+            sys.exit("Die Gerade konnte nicht entstehen. Der Richtungsvektor gleicht dem Nullvektor.")
         self.support = support
         self.dr = dr
-        sPoint = Point(support.x, support.y, support.z); self.sPoint = sPoint
-        basex = Vector(1, 0, 0)
-        basey = Vector(0, 1, 0)
-        basez = Vector(0, 0, 1)
-        n1 = Basic.Vc.vproduct(dr, basex)
-        n2 = Basic.Vc.vproduct(dr, basey)
-        n3 = Basic.Vc.vproduct(dr, basez)
-        if n1.fullzero == True:
-            phelp1 = Conv.Pl.Norm.par(support, n2)
-            phelp2 = Conv.Pl.Norm.par(support, n3)
-        elif n2.fullzero == True:
-            phelp1 = Conv.Pl.Norm.par(support, n1)
-            phelp2 = Conv.Pl.Norm.par(support, n3)
-        elif n3.fullzero == True:
-            phelp1 = Conv.Pl.Norm.par(support, n1)
-            phelp2 = Conv.Pl.Norm.par(support, n2)
-        elif Basic.Vc.lindep(n1, n2) == True:
-            phelp1 = Conv.Pl.Norm.par(support, n2)
-            phelp2 = Conv.Pl.Norm.par(support, n3)
+        s_point = Point(support.x, support.y, support.z)
+        self.s_point = s_point
+        base_x = Vector(1, 0, 0)
+        base_y = Vector(0, 1, 0)
+        base_z = Vector(0, 0, 1)
+        n1 = basic_vc_vector_product(dr, base_x)
+        n2 = basic_vc_vector_product(dr, base_y)
+        n3 = basic_vc_vector_product(dr, base_z)
+        if n1.full_zero:
+            pl_help1 = conv_pl_norm_par(support, n2)
+            pl_help2 = conv_pl_norm_par(support, n3)
+        elif n2.full_zero:
+            pl_help1 = conv_pl_norm_par(support, n1)
+            pl_help2 = conv_pl_norm_par(support, n3)
+        elif n3.full_zero:
+            pl_help1 = conv_pl_norm_par(support, n1)
+            pl_help2 = conv_pl_norm_par(support, n2)
+        elif basic_vc_lin_dep(n1, n2):
+            pl_help1 = conv_pl_norm_par(support, n2)
+            pl_help2 = conv_pl_norm_par(support, n3)
         else:
-            phelp1 = Conv.Pl.Norm.par(support, n1)
-            phelp2 = Conv.Pl.Norm.par(support, n2)
-        plane1 = Plane(phelp1[0], phelp1[1], phelp1[2])
-        plane2 = Plane(phelp2[0], phelp2[1], phelp2[2])
+            pl_help1 = conv_pl_norm_par(support, n1)
+            pl_help2 = conv_pl_norm_par(support, n2)
+        plane1 = Plane(pl_help1[0], pl_help1[1], pl_help1[2])
+        plane2 = Plane(pl_help2[0], pl_help2[1], pl_help2[2])
         self.plane1 = plane1
         self.plane2 = plane2
+
+
 class Plane:
-    def __init__(self,support,dr1,dr2):
-        if Basic.Vc.lindep(dr1,dr2) == True:
-            sys.exit("Ebene konnte nicht enstehen. Die Spannvektoren sind linear abhängig.")
-        elif dr1.fullzero == True or dr2.fullzero == True:
-            sys.exit("Ebene konnte nicht enstehen. Ein Spannvektor gleicht dem Nullvektor.")
+    def __init__(self, support, dr1, dr2):
+        if basic_vc_lin_dep(dr1, dr2):
+            sys.exit("Ebene konnte nicht entstehen. Die Spannvektoren sind linear abhängig.")
+        elif dr1.full_zero or dr2.full_zero:
+            sys.exit("Ebene konnte nicht entstehen. Ein Spannvektor gleicht dem Nullvektor.")
+
         self.support = support
-        sPoint = Point(support.x,support.y,support.z)
-        self.sPoint = sPoint
+        s_point = Point(support.x, support.y, support.z)
+        self.s_point = s_point
         self.dr1 = dr1
         self.dr2 = dr2
-        normal = Conv.Pl.Par.norm(support,dr1,dr2)[1]
+        normal = conv_pl_par_norm(support, dr1, dr2)[1]
         self.normal = normal
-        coord = Conv.Pl.Par.coord(support,dr1,dr2)
-        a = coord[0]; self.a = BasicMath.constant_round(a, 8)
-        b = coord[1]; self.b = BasicMath.constant_round(b, 8)
-        c = coord[2]; self.c = BasicMath.constant_round(c, 8)
-        d = coord[3]; self.d = BasicMath.constant_round(d, 8)
-        fxy = [0,0,0,0]
-        if c != 0:
-            fxy[0] = 1;
-            fxy[1] = -a / c;
-            fxy[2] = -b / c;
-            fxy[3] = d / c;
-        self.fxy = fxy
+        coord = conv_pl_par_coord(support, dr1, dr2)
+        a = coord[0]
+        b = coord[1]
+        c = coord[2]
+        d = coord[3]
+        self.a = BasicMath.constant_round(a, 8)
+        self.b = BasicMath.constant_round(b, 8)
+        self.c = BasicMath.constant_round(c, 8)
+        self.d = BasicMath.constant_round(d, 8)
+
+
 class Matrix:
-    def __init__(self,a11,a12,a13,a21,a22,a23,a31,a32,a33):
+    def __init__(self, a11, a12, a13, a21, a22, a23, a31, a32, a33):
         self.a11 = a11
         self.a12 = a12
         self.a13 = a13
@@ -363,221 +373,220 @@ class Matrix:
         self.a31 = a31
         self.a32 = a32
         self.a33 = a33
+
+
 class LGS:
-    def __init__(self,Mtx,Vec):
-        self.Mtx = Mtx
-        self.Vec = Vec
-        self.a11 = Mtx.a11
-        self.a12 = Mtx.a12
-        self.a13 = Mtx.a13
-        self.a21 = Mtx.a21
-        self.a22 = Mtx.a22
-        self.a23 = Mtx.a23
-        self.a31 = Mtx.a31
-        self.a32 = Mtx.a32
-        self.a33 = Mtx.a33
-        self.b1 = Vec.x
-        self.b2 = Vec.y
-        self.b3 = Vec.z
+    def __init__(self, mtx, vc):
+        self.mtx = mtx
+        self.vc = vc
+        self.a11 = mtx.a11
+        self.a12 = mtx.a12
+        self.a13 = mtx.a13
+        self.a21 = mtx.a21
+        self.a22 = mtx.a22
+        self.a23 = mtx.a23
+        self.a31 = mtx.a31
+        self.a32 = mtx.a32
+        self.a33 = mtx.a33
+        self.b1 = vc.x
+        self.b2 = vc.y
+        self.b3 = vc.z
+
+
+# Base Units
+x_axis = Line(Vector(0, 0, 0), Vector(1, 0, 0))
+y_axis = Line(Vector(0, 0, 0), Vector(0, 1, 0))
+z_axis = Line(Vector(0, 0, 0), Vector(0, 0, 1))
+
+wall_x1 = Plane(conv_pl_coord_par(1, 0, 0, 0)[0], conv_pl_coord_par(1, 0, 0, 0)[1], conv_pl_coord_par(1, 0, 0, 0)[2])
+wall_x2 = Plane(conv_pl_coord_par(1, 0, 0, 1)[0], conv_pl_coord_par(1, 0, 0, 1)[1], conv_pl_coord_par(1, 0, 0, 1)[2])
+wall_y1 = Plane(conv_pl_coord_par(0, 1, 0, 0)[0], conv_pl_coord_par(0, 1, 0, 0)[1], conv_pl_coord_par(0, 1, 0, 0)[2])
+wall_y2 = Plane(conv_pl_coord_par(0, 1, 0, 1)[0], conv_pl_coord_par(0, 1, 0, 1)[1], conv_pl_coord_par(0, 1, 0, 1)[2])
+wall_z1 = Plane(conv_pl_coord_par(0, 0, 1, 0)[0], conv_pl_coord_par(0, 0, 1, 0)[1], conv_pl_coord_par(0, 0, 1, 0)[2])
+wall_z2 = Plane(conv_pl_coord_par(0, 0, 1, 1)[0], conv_pl_coord_par(0, 0, 1, 1)[1], conv_pl_coord_par(0, 0, 1, 1)[2])
+
+zero = Point(0, 0, 0)
+
+
 # Containment
-class Con:
-    def point2(aa,bb):
-        Output = True
-        if aa.x == bb.x and aa.y == bb.y and aa.z == bb.z:
-            Output == True
-            return Output
+def con_point2(pt_a, pt_b):
+    if pt_a.x == pt_b.x and pt_a.y == pt_b.y and pt_a.z == pt_b.z:
+        return True
+    else:
+        return False
+
+
+def con_line2(ln_a, ln_b):  # 1 = identical, 2 = parallel, 3 = cross point, 4 = skewed
+    support = basic_vc_minus(ln_b.support, ln_a.support)
+    direction1 = basic_vc_scalar_multi(ln_a.dr, -1)
+    direction2 = ln_b.dr
+    if basic_vc_lin_dep(ln_a.dr, ln_b.dr):
+        if con_point_line(ln_a.s_point, ln_b):
+            return 1
         else:
-            Output = False
-            return Output
-    def line2(aa,bb):#0 = error, 1 = identical, 2 = parallel, 3 = crosspoint, 4 = skewed
-        Output = 0
-        Zero = Point(0,0,0)
-        Supp = Basic.Vc.minus(bb.support,aa.support)
-        dire1 = Basic.Vc.smulti(aa.dr,-1)
-        dire2 = bb.dr
-        if Basic.Vc.lindep(aa.dr,bb.dr) == True:
-            if Con.pointline(aa.sPoint,bb) == True:
-                Output = 1
-                return Output
-            else:
-                Output = 2
-                return Output
+            return 2
+    else:
+        help_pl = Plane(support, direction1, direction2)
+        if help_pl.d == 0:
+            return 3
         else:
-            OutHelp = Plane(Supp, dire1, dire2)
-            if OutHelp.d == 0:
-                Output = 3
-                return Output
-            else:
-                Output = 4
-                return Output
-    def plane2(aa,bb):#0 = error, 1 = identical, 2 = parallel, 3 = crossline
-        Output = 0
-        if Basic.Vc.lindep(aa.normal,bb.normal) == True:
-            if Con.pointplane(aa.sPoint,bb) == True:
-                Output = 1
-                return Output
-            else:
-                Output = 2
-                return Output
+            return 4
+
+
+def con_plane2(pl_a, pl_b):  # 1 = identical, 2 = parallel, 3 = cross line
+    if basic_vc_lin_dep(pl_a.normal, pl_b.normal):
+        if con_point_plane(pl_a.s_point, pl_b):
+            return 1
         else:
-            Output = 3
-            return Output
-    def lineplane(ln,pl):#0 = error, 1 = identical, 2 = parallel, 3 = crosspoint
-        if type(ln) == Plane and type(pl) == Line:
-            temp = ln
-            ln = pl
-            pl = temp
-        Output = 0
-        if Basic.Vc.sproduct(ln.dr,pl.normal) == 0:
-            if Con.pointplane(ln.sPoint,pl) == True:
-                Output = 1
-                return Output
-            else:
-                Output = 2
-                return Output
+            return 2
+    else:
+        return 3
+
+
+def con_line_plane(ln, pl):  # 1 = identical, 2 = parallel, 3 = cross point
+    if type(ln) == Plane and type(pl) == Line:
+        temp = ln
+        ln = pl
+        pl = temp
+    if basic_vc_scalar_product(ln.dr, pl.normal) == 0:
+        if con_point_plane(ln.s_point, pl):
+            return 1
         else:
-            Output = 3
-            return Output
-    def pointplane(pt,pl):
-        if type(pt) == Plane and type(pl) == Point:
-            temp = pt
-            pt = pl
-            pl = temp
-        Output = True
-        if (BasicMath.constant_round((pt.x * pl.a + pt.y * pl.b + pt.z * pl.c), 8) == BasicMath.constant_round(pl.d, 8)):
-            Output = True
-            return Output
-        else:
-            Output = False
-            return Output
-    def pointline(pt,ln):
-        if type(pt) == Line and type(ln) == Point:
-            temp = pt
-            pt = ln
-            ln = temp
-        help = Basic.Vc.minus(pt.ov,ln.support)
-        Output = Basic.Vc.lindep(help,ln.dr)
-        return Output
+            return 2
+    else:
+        return 3
+
+
+def con_point_plane(pt, pl):
+    if type(pt) == Plane and type(pl) == Point:
+        temp = pt
+        pt = pl
+        pl = temp
+    if BasicMath.constant_round((pt.x * pl.a + pt.y * pl.b + pt.z * pl.c), 6) == BasicMath.constant_round(pl.d, 6):
+        return True
+    else:
+        return False
+
+
+def con_point_line(pt, ln):
+    if type(pt) == Line and type(ln) == Point:
+        temp = pt
+        pt = ln
+        ln = temp
+    help_vc = basic_vc_minus(pt.ov, ln.support)
+    return basic_vc_lin_dep(help_vc, ln.dr)
+
+
 # Distance
-class Dis:
-    def point2(aa,bb):
-        Output = Basic.Vc.minus(aa,bb).l
-        return Output
-    def line2(aa,bb):
-        Output = 0
-        Zero = Point(0, 0, 0)
-        Supp = Basic.Vc.minus(bb.support, aa.support)
-        dire1 = Basic.Vc.smulti(aa.dr, -1)
-        dire2 = bb.dr
-        if Con.line2(aa,bb) == 1 or Con.line2(aa,bb) == 3:
-            Output = 0
-            return Output
-        elif Con.line2(aa,bb) == 2:
-            Output = abs(Dis.pointline(aa.sPoint,bb))
-            return Output
-        else:
-            OutHelp = Plane(Supp, dire1, dire2)
-            Output = abs(Dis.pointplane(Zero,OutHelp))
-            return Output
-    def plane2(aa,bb):
-        Output = 0
-        if Con.plane2(aa,bb) == 1 or Con.plane2(aa,bb) == 3:
-            Output = 0
-            return Output
-        else:
-            Output = abs(Dis.pointplane(aa.sPoint,bb))
-            return Output
-    def lineplane(ln,pl):
-        if type(ln) == Plane and type(pl) == Line:
-            temp = ln
-            ln = pl
-            pl = temp
-        Output = 0
-        if Con.lineplane(ln,pl) == 1 or Con.lineplane(ln,pl) == 3:
-            Output = 0
-            return Output
-        else:
-            Output = abs(Dis.pointplane(ln.sPoint,pl))
-            return Output
-    def pointplane(pt,pl):
-        if type(pt) == Plane and type(pl) == Point:
-            temp = pt
-            pt = pl
-            pl = temp
-        Output = abs(BasicMath.constant_round((pt.x * pl.a + pt.y * pl.b + pt.z * pl.c - pl.d), 8))
-        return Output
-    def pointline(pt,ln):
-        if type(pt) == Line and type(ln) == Point:
-            temp = pt
-            pt = ln
-            ln = temp
-        hh = Conv.Pl.Norm.par(pt.ov,ln.dr)
-        Help = Plane(hh[0],hh[1],hh[2])
-        Root = Cross.lineplane(ln,Help)
-        Output = abs(Dis.point2(pt,Root))
-        return Output
-# Crossarea
-class Cross:
-    def line2(aa,bb):
-        Output = Point(0,0,0)
-        if Con.line2(aa,bb) != 3:
-            sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Geraden.")
-        help1 = LGS(Conv.LGS.Pl.mtx(aa.plane1, aa.plane2, bb.plane1)[0], Conv.LGS.Pl.mtx(aa.plane1, aa.plane2, bb.plane1)[1])
-        help2 = LGS(Conv.LGS.Pl.mtx(aa.plane1, aa.plane2, bb.plane2)[0], Conv.LGS.Pl.mtx(aa.plane1, aa.plane2, bb.plane2)[1])
-        if Basic.LGS.det(help1.Mtx) == 0:
-            Out = help2
-        else:
-            Out = help1
-        Output = Conv.vc2pt(Basic.LGS.solve(Out))
-        return Output
-    def lineplane(ln,pl):
-        if type(ln) == Plane and type(pl) == Line:
-            temp = ln
-            ln = pl
-            pl = temp
-        if Con.lineplane(ln,pl) != 3:
-            sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen der Gerade und der Ebene.")
-        help = LGS(Conv.LGS.Pl.mtx(ln.plane1, ln.plane2, pl)[0], Conv.LGS.Pl.mtx(ln.plane1, ln.plane2, pl)[1])
-        Output = Conv.vc2pt(Basic.LGS.solve(help))
-        return Output
-    def plane2(aa,bb):
-        if Con.plane2(aa,bb) != 3:
-            sys.exit("Die beiden Ebenen haben keine eindeutige Schnittgerade.")
-        Wallx1 = Plane(Conv.Pl.Coord.par(1, 0, 0, 0)[0], Conv.Pl.Coord.par(1, 0, 0, 0)[1], Conv.Pl.Coord.par(1, 0, 0, 0)[2])
-        Wallx2 = Plane(Conv.Pl.Coord.par(1, 0, 0, 1)[0], Conv.Pl.Coord.par(1, 0, 0, 1)[1], Conv.Pl.Coord.par(1, 0, 0, 1)[2])
-        Wally1 = Plane(Conv.Pl.Coord.par(0, 1, 0, 0)[0], Conv.Pl.Coord.par(0, 1, 0, 0)[1], Conv.Pl.Coord.par(0, 1, 0, 0)[2])
-        Wally2 = Plane(Conv.Pl.Coord.par(0, 1, 0, 1)[0], Conv.Pl.Coord.par(0, 1, 0, 1)[1], Conv.Pl.Coord.par(0, 1, 0, 1)[2])
-        Wallz1 = Plane(Conv.Pl.Coord.par(0, 0, 1, 0)[0], Conv.Pl.Coord.par(0, 0, 1, 0)[1], Conv.Pl.Coord.par(0, 0, 1, 0)[2])
-        Wallz2 = Plane(Conv.Pl.Coord.par(0, 0, 1, 1)[0], Conv.Pl.Coord.par(0, 0, 1, 1)[1], Conv.Pl.Coord.par(0, 0, 1, 1)[2])
-        lgs1 = LGS(Conv.LGS.Pl.mtx(aa, bb, Wallx1)[0], Conv.LGS.Pl.mtx(aa, bb, Wallx1)[1])
-        lgs2 = LGS(Conv.LGS.Pl.mtx(aa, bb, Wallx2)[0], Conv.LGS.Pl.mtx(aa, bb, Wallx2)[1])
-        lgs3 = LGS(Conv.LGS.Pl.mtx(aa, bb, Wally1)[0], Conv.LGS.Pl.mtx(aa, bb, Wally1)[1])
-        lgs4 = LGS(Conv.LGS.Pl.mtx(aa, bb, Wally2)[0], Conv.LGS.Pl.mtx(aa, bb, Wally2)[1])
-        lgs5 = LGS(Conv.LGS.Pl.mtx(aa, bb, Wallz1)[0], Conv.LGS.Pl.mtx(aa, bb, Wallz1)[1])
-        lgs6 = LGS(Conv.LGS.Pl.mtx(aa, bb, Wallz2)[0], Conv.LGS.Pl.mtx(aa, bb, Wallz2)[1])
-        if Basic.LGS.det(lgs1) != 0 and Basic.LGS.det(lgs2) != 0:
-            Out1 = Conv.vc2pt(Basic.LGS.solve(lgs1))
-            Out2 = Conv.vc2pt(Basic.LGS.solve(lgs2))
-            Output = Line(Conv.Ln.Pt.par(Out1,Out2)[0],Conv.Ln.Pt.par(Out1,Out2)[1])
-            return Output
-        elif Basic.LGS.det(lgs3) != 0 and Basic.LGS.det(lgs4) != 0:
-            Out1 = Conv.vc2pt(Basic.LGS.solve(lgs3))
-            Out2 = Conv.vc2pt(Basic.LGS.solve(lgs4))
-            Output = Line(Conv.Ln.Pt.par(Out1,Out2)[0],Conv.Ln.Pt.par(Out1,Out2)[1])
-            return Output
-        else:
-            Out1 = Conv.vc2pt(Basic.LGS.solve(lgs5))
-            Out2 = Conv.vc2pt(Basic.LGS.solve(lgs6))
-            Output = Line(Conv.Ln.Pt.par(Out1, Out2)[0], Conv.Ln.Pt.par(Out1, Out2)[1])
-            return Output
-def trackpoint_pl(pl):
-    x_axis = Line(Vector(0, 0, 0), Vector(1, 0, 0))
-    y_axis = Line(Vector(0, 0, 0), Vector(0, 1, 0))
-    z_axis = Line(Vector(0, 0, 0), Vector(0, 0, 1))
+def dis_point2(pt_a, pt_b):
+    return basic_vc_minus(pt_a.ov, pt_b.ov).length
+
+
+def dis_line2(ln_a, ln_b):
+    support = basic_vc_minus(ln_b.support, ln_a.support)
+    dire1 = basic_vc_scalar_multi(ln_a.dr, -1)
+    dire2 = ln_b.dr
+    if con_line2(ln_a, ln_b) == 1 or con_line2(ln_a, ln_b) == 3:
+        return 0
+    elif con_line2(ln_a, ln_b) == 2:
+        return abs(dis_point_line(ln_a.s_point, ln_b))
+    else:
+        help_pl = Plane(support, dire1, dire2)
+        return abs(dis_point_plane(zero, help_pl))
+
+
+def dis_plane2(pl_a, pl_b):
+    if con_plane2(pl_a, pl_b) == 1 or con_plane2(pl_a, pl_b) == 3:
+        return 0
+    else:
+        return abs(dis_point_plane(pl_a.s_point, pl_b))
+
+
+def dis_line_plane(ln, pl):
+    if type(ln) == Plane and type(pl) == Line:
+        temp = ln
+        ln = pl
+        pl = temp
+    if con_line_plane(ln, pl) == 1 or con_line_plane(ln, pl) == 3:
+        return 0
+    else:
+        return abs(dis_point_plane(ln.s_point, pl))
+
+
+def dis_point_plane(pt, pl):
+    if type(pt) == Plane and type(pl) == Point:
+        temp = pt
+        pt = pl
+        pl = temp
+    return abs(BasicMath.constant_round((pt.x * pl.a + pt.y * pl.b + pt.z * pl.c - pl.d), 8))
+
+
+def dis_point_line(pt, ln):
+    if type(pt) == Line and type(ln) == Point:
+        temp = pt
+        pt = ln
+        ln = temp
+    hh = conv_pl_norm_par(pt.ov, ln.dr)
+    help_pl = Plane(hh[0], hh[1], hh[2])
+    root = cross_line_plane(ln, help_pl)
+    return abs(dis_point2(pt, root))
+
+
+# Cross Area
+def cross_line2(ln_a, ln_b):
+    if con_line2(ln_a, ln_b) != 3:
+        sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen den beiden Geraden.")
+    help1 = LGS(conv_lgs_pl_mtx(ln_a.plane1, ln_a.plane2, ln_b.plane1)[0],
+                conv_lgs_pl_mtx(ln_a.plane1, ln_a.plane2, ln_b.plane1)[1])
+    help2 = LGS(conv_lgs_pl_mtx(ln_a.plane1, ln_a.plane2, ln_b.plane2)[0],
+                conv_lgs_pl_mtx(ln_a.plane1, ln_a.plane2, ln_b.plane2)[1])
+    if basic_lgs_det(help1.mtx) == 0:
+        help_lgs = help2
+    else:
+        help_lgs = help1
+    return vc2pt(basic_lgs_solve(help_lgs))
+
+
+def cross_line_plane(ln, pl):
+    if type(ln) == Plane and type(pl) == Line:
+        temp = ln
+        ln = pl
+        pl = temp
+    if con_line_plane(ln, pl) != 3:
+        sys.exit("Es gibt keinen eindeutigen Schnittpunkt zwischen der Gerade und der Ebene.")
+    help_lgs = LGS(conv_lgs_pl_mtx(ln.plane1, ln.plane2, pl)[0], conv_lgs_pl_mtx(ln.plane1, ln.plane2, pl)[1])
+    return vc2pt(basic_lgs_solve(help_lgs))
+
+
+def cross_plane2(pl_a, pl_b):
+    if con_plane2(pl_a, pl_b) != 3:
+        sys.exit("Die beiden Ebenen haben keine eindeutige Schnittgerade.")
+    lgs1 = LGS(conv_lgs_pl_mtx(pl_a, pl_b, wall_x1)[0], conv_lgs_pl_mtx(pl_a, pl_b, wall_x1)[1])
+    lgs2 = LGS(conv_lgs_pl_mtx(pl_a, pl_b, wall_x2)[0], conv_lgs_pl_mtx(pl_a, pl_b, wall_x2)[1])
+    lgs3 = LGS(conv_lgs_pl_mtx(pl_a, pl_b, wall_y1)[0], conv_lgs_pl_mtx(pl_a, pl_b, wall_y1)[1])
+    lgs4 = LGS(conv_lgs_pl_mtx(pl_a, pl_b, wall_y2)[0], conv_lgs_pl_mtx(pl_a, pl_b, wall_y2)[1])
+    lgs5 = LGS(conv_lgs_pl_mtx(pl_a, pl_b, wall_z1)[0], conv_lgs_pl_mtx(pl_a, pl_b, wall_z1)[1])
+    lgs6 = LGS(conv_lgs_pl_mtx(pl_a, pl_b, wall_z2)[0], conv_lgs_pl_mtx(pl_a, pl_b, wall_z2)[1])
+    if basic_lgs_det(lgs1) != 0 and basic_lgs_det(lgs2) != 0:
+        out_1 = vc2pt(basic_lgs_solve(lgs1))
+        out_2 = vc2pt(basic_lgs_solve(lgs2))
+        return Line(conv_ln_pt_par(out_1, out_2)[0], conv_ln_pt_par(out_1, out_2)[1])
+    elif basic_lgs_det(lgs3) != 0 and basic_lgs_det(lgs4) != 0:
+        out_1 = vc2pt(basic_lgs_solve(lgs3))
+        out_2 = vc2pt(basic_lgs_solve(lgs4))
+        return Line(conv_ln_pt_par(out_1, out_2)[0], conv_ln_pt_par(out_1, out_2)[1])
+    else:
+        out_1 = vc2pt(basic_lgs_solve(lgs5))
+        out_2 = vc2pt(basic_lgs_solve(lgs6))
+        return Line(conv_ln_pt_par(out_1, out_2)[0], conv_ln_pt_par(out_1, out_2)[1])
+
+
+def track_point_pl(pl):
     axes = [x_axis, y_axis, z_axis]
     points = []
     for axis in axes:
-        if Basic.Vc.sproduct(pl.normal, axis.dr) != 0:
-            cross_point = [Cross.lineplane(axis, pl), axes.index(axis)]
-            points.append(cross_point)
+        if basic_vc_scalar_product(pl.normal, axis.dr) != 0:
+            cross_point = [cross_line_plane(axis, pl), axes.index(axis)]
+            if not con_point2(cross_point[0], zero):
+                points.append(cross_point)
     return points

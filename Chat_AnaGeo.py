@@ -7,25 +7,24 @@ import BasicMath
 import Humanize
 import ChatMessage
 import TimeFunction
-'''
-Todo until V1.0:
-- complete custom_help
-'''
-'''
-Stages:
-0 == Introduction - Topic chosen
-1 == Objects asked - Objects chosen - task_list filled
-2 == for object in task_list: Chosen objects defined as Calc_AnaGeo.py-objects
-3 == for object in task_list: Chosen methods defined as Calc_AnaGeo.py-methods
-4 == for object in task_list: Solution calculated
-5 == for object in task_list: Calc_AnaGeo.py-solution defined into words
-6 == for object in task_list: Solution returned
-7 == Repeat or End
-'''
+
 # Meta Var
 program_id_list = [Humanize.Identity("Mathemann", 0),  # [Name, Humanize.sex]
-                   Humanize.Identity("Siri", 1),
-                   Humanize.Identity("Alexa", 1)]
+                   Humanize.Identity("Paul", 0),
+                   Humanize.Identity("Susanne", 1),
+                   Humanize.Identity("Thalia", 1),
+                   Humanize.Identity("Anna", 1),
+                   Humanize.Identity("Fabian", 0),
+                   Humanize.Identity("Ian", 0),
+                   Humanize.Identity("Cristine", 1),
+                   Humanize.Identity("Melanie", 1),
+                   Humanize.Identity("Ariane", 1),
+                   Humanize.Identity("Joanna", 1),
+                   Humanize.Identity("Oskar", 0),
+                   Humanize.Identity("Vivian", 1),
+                   Humanize.Identity("Jacky", 1),
+                   Humanize.Identity("Lisa", 1),
+                   Humanize.Identity("Viktor", 0)]
 program_id = program_id_list[random.randint(0, len(program_id_list) - 1)]
 program_name = program_id.name
 program_sex = program_id.sex
@@ -49,29 +48,32 @@ task_list = []
 
 help_hints = ["Halte deine Antworten kurz. Am besten reduzierst du dich auf ein paar Stichworte pro Antwort.",
               "Falls du bemerkt hast, dass du mehr Fragen hast als du angegeben hast, keine Sorge. "
-              "Am Ende der Konversation kannst du weitere Fragen stellen."]
+              "Am Ende der Konversation kannst du weitere Fragen stellen.",
+              "Kommazahlen am besten mit Punkt schreiben(23.4) und nicht mit Komma(23,4)."]
 
 misunderstand = ["Was meinst du damit?", "Das verstehe ich nicht.", "Das habe ich nicht verstanden.",
-                 "Wie meinst du das?", user.name + ", was soll das hier bedeuten?"]
+                 "Wie meinst du das?"]
 
 user_true = ["JA", "KLAR", "JUP", "JAP", "GENAU", "RICHTIG", "KORREKT", "PASST", "CHECK", "SURE", "YOS"]
 user_false = ["NEIN", "NE", "NICHT", "FALSCH", "UNGENAU", "NÖ", "NOPE"]
 user_boolean = [user_true, user_false]
 
-basic_plus = ["PLUS", "PLUSRECHNEN", "PLUS RECHNEN", "ADDITION", "ADDIEREN", "SUMME"]
-basic_minus = ["MINUS", "MINUSRECHNEN", "MINUS RECHNEN", "DIFFERENZ", "DIFFERENZIEREN"]
-basic_scalar_multi = ["SKALARMULTIPLIKATION", "SKALIEREN", "SKALIERUNG", "SKALIERT"]
-basic_scalar_product = ["SKALARPRODUKT"]
-basic_vector_product = ["VEKTORPRODUKT", "KREUZPRODUKT"]
-basic_spar_product = ["SPATPRODUKT", "SPAT"]
-basic_unit = ["EINHEITSVEKTOR", "BASISVEKTOR"]
-basic_ld = ["LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG"]
-basic_convert = ["UMWANDLUNG", "UMWANDELN", "UMFORMUNG", "UMFORMEN", "UMRECHNUNG", "UMRECHNEN"]
-basic_angle = ["WINKEL", "GRAD", "GRADZAHL", "RADIEN"]
+basic_plus = ["Addition von zwei Vektoren", "PLUS", "PLUSRECHNEN", "PLUS RECHNEN", "ADDITION", "ADDIEREN", "SUMME"]
+basic_minus = ["Subtraktion von zwei Vektoren", "MINUS", "MINUSRECHNEN", "MINUS RECHNEN", "DIFFERENZ", "DIFFERENZIEREN"]
+basic_scalar_multi = ["Skalarmultiplikation", "SKALARMULTIPLIKATION", "SKALAR MULTIPLIKATION", "SKALIEREN",
+                      "SKALIERUNG", "SKALIERT"]
+basic_scalar_product = ["Skalarprodukt", "SKALARPRODUKT"]
+basic_vector_product = ["Kreuzprodukt", "VEKTORPRODUKT", "KREUZPRODUKT"]
+basic_spar_product = ["Spatprodukt", "SPATPRODUKT", "SPAT"]
+basic_unit = ["Einheitsvektor berechnen", "EINHEITSVEKTOR", "BASISVEKTOR"]
+basic_ld = ["lineare Abhängigkeit/Unabhängigkeit beweisen", "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG"]
+basic_convert = ["Objekt mathematisch umformen", "UMWANDLUNG", "UMWANDELN", "UMFORMUNG", "UMFORMEN", "UMRECHNUNG",
+                 "UMRECHNEN"]
+basic_angle = ["Winkelberechnung", "WINKEL", "GRAD", "GRADZAHL", "RADIEN"]
 basic_method = [basic_plus, basic_minus, basic_scalar_multi, basic_scalar_product, basic_vector_product,
                 basic_spar_product, basic_unit, basic_ld, basic_convert, basic_angle]
 
-topic_basic = ["Grundrechnung", "GRUNDRECHNUNG", "GRUNDSACHEN", "SKALAR", "MAL"]
+topic_basic = []
 for basic_method_type in basic_method:
     for basic_method_keyword in basic_method_type:
         topic_basic.append(basic_method_keyword)
@@ -204,9 +206,7 @@ def name_input(username_input):  # Sort through any known name for a special gre
                                "Worum geht es denn in den Aufgaben von heute? Schnittmengen, "
                                "Abstände, Lagebeziehungen, Umformungen oder vielleicht doch was anderes?")
                 birthday = TimeFunction.date_check(ii[1])
-            elif common_names.index(ii) == 8:
-                birthday = TimeFunction.date_check(ii[1])
-            elif common_names.index(ii) == 9:
+            else:
                 birthday = TimeFunction.date_check(ii[1])
     if user_text.upper() == program_name.upper():
         greeting = str(str(user_text) + "? Wow wir haben den selben Namen! Du bist mir jetzt schon sympathisch."
@@ -259,24 +259,24 @@ def stage_2_line():
 
 
 def stage_2_pl_pt(pl_pt_aa, pl_pt_bb, pl_pt_cc):
-    output = Calc_AnaGeo.Plane(Calc_AnaGeo.Conv.Pl.Pt.par(pl_pt_aa, pl_pt_bb, pl_pt_cc)[0],
-                               Calc_AnaGeo.Conv.Pl.Pt.par(pl_pt_aa, pl_pt_bb, pl_pt_cc)[1],
-                               Calc_AnaGeo.Conv.Pl.Pt.par(pl_pt_aa, pl_pt_bb, pl_pt_cc)[2])
+    output = Calc_AnaGeo.Plane(Calc_AnaGeo.conv_pl_pt_par(pl_pt_aa, pl_pt_bb, pl_pt_cc)[0],
+                               Calc_AnaGeo.conv_pl_pt_par(pl_pt_aa, pl_pt_bb, pl_pt_cc)[1],
+                               Calc_AnaGeo.conv_pl_pt_par(pl_pt_aa, pl_pt_bb, pl_pt_cc)[2])
     return output
 
 
 def stage_2_pl_coord(a, b, c, d):
-    output = Calc_AnaGeo.Plane(Calc_AnaGeo.Conv.Pl.Coord.par(a, b, c, d)[0],
-                               Calc_AnaGeo.Conv.Pl.Coord.par(a, b, c, d)[1],
-                               Calc_AnaGeo.Conv.Pl.Coord.par(a, b, c, d)[2])
+    output = Calc_AnaGeo.Plane(Calc_AnaGeo.conv_pl_coord_par(a, b, c, d)[0],
+                               Calc_AnaGeo.conv_pl_coord_par(a, b, c, d)[1],
+                               Calc_AnaGeo.conv_pl_coord_par(a, b, c, d)[2])
     return output
 
 
 def stage_2_pl_norm(sp, normal):
-    if normal.fullzero:
+    if normal.full_zero:
         sys.exit("Ein Normalvektor ohne Richtung kann keine Ebene eindeutig beschreiben.")
-    output = Calc_AnaGeo.Plane(Calc_AnaGeo.Conv.Pl.Norm.par(sp, normal)[0], Calc_AnaGeo.Conv.Pl.Norm.par(sp, normal)[1],
-                               Calc_AnaGeo.Conv.Pl.Norm.par(sp, normal)[2])
+    output = Calc_AnaGeo.Plane(Calc_AnaGeo.conv_pl_norm_par(sp, normal)[0], Calc_AnaGeo.conv_pl_norm_par(sp, normal)[1],
+                               Calc_AnaGeo.conv_pl_norm_par(sp, normal)[2])
     return output
 
 
@@ -286,8 +286,8 @@ def stage_2_pl_par(sp, dr1, dr2):
 
 
 def stage_2_ln_pt(ln_pt_aa, ln_pt_bb):
-    output = Calc_AnaGeo.Line(Calc_AnaGeo.Conv.Ln.Pt.par(ln_pt_aa, ln_pt_bb)[0],
-                              Calc_AnaGeo.Conv.Ln.Pt.par(ln_pt_aa, ln_pt_bb)[1])
+    output = Calc_AnaGeo.Line(Calc_AnaGeo.conv_ln_pt_par(ln_pt_aa, ln_pt_bb)[0],
+                              Calc_AnaGeo.conv_ln_pt_par(ln_pt_aa, ln_pt_bb)[1])
     return output
 
 
@@ -379,7 +379,7 @@ def stage_2_def_vc():
         # vc_confirm
         print(ChatMessage.chat_msg(program_name, "Also ein Vektor mit diesen Koordinaten "
                                                  "(" + str(vc_x) + "|" + str(vc_y) + "|" + str(vc_z) + ")?"))
-        if Calc_AnaGeo.Vector(vc_x, vc_y, vc_z).fullzero:
+        if Calc_AnaGeo.Vector(vc_x, vc_y, vc_z).full_zero:
             TimeFunction.custom_delay(TimeFunction.short_delay)
             print(ChatMessage.chat_msg(program_name, "Achtung: Dieser Vektor hat eine Länge von 0 Längeneinheiten."))
         while not vc_confirm:
@@ -765,7 +765,7 @@ def stage_2_def_pl_par():
             while not pl_par_dr1_x_understand:
                 try:
                     pl_par_dr1_x = float(custom_input(ChatMessage.chat_msg(
-                        program_name, "Wie lautet dein erster Richtungsvektor(x-Koordinate): ")))
+                        program_name, "Wie lautet dein erster Spannvektor(x-Koordinate): ")))
                     pl_par_dr1_x_understand = True
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
@@ -774,7 +774,7 @@ def stage_2_def_pl_par():
             while not pl_par_dr1_y_understand:
                 try:
                     pl_par_dr1_y = float(custom_input(ChatMessage.chat_msg(
-                        program_name, "Wie lautet dein erster Richtungsvektor(y-Koordinate): ")))
+                        program_name, "Wie lautet dein erster Spannvektor(y-Koordinate): ")))
                     pl_par_dr1_y_understand = True
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
@@ -783,7 +783,7 @@ def stage_2_def_pl_par():
             while not pl_par_dr1_z_understand:
                 try:
                     pl_par_dr1_z = float(custom_input(ChatMessage.chat_msg(
-                        program_name, "Wie lautet dein erster Richtungsvektor(z-Koordinate): ")))
+                        program_name, "Wie lautet dein erster Spannvektor(z-Koordinate): ")))
                     pl_par_dr1_z_understand = True
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
@@ -815,7 +815,7 @@ def stage_2_def_pl_par():
             while not pl_par_dr2_x_understand:
                 try:
                     pl_par_dr2_x = float(custom_input(ChatMessage.chat_msg(
-                        program_name, "Wie lautet dein zweiter Richtungsvektor(x-Koordinate): ")))
+                        program_name, "Wie lautet dein zweiter Spannvektor(x-Koordinate): ")))
                     pl_par_dr2_x_understand = True
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
@@ -824,7 +824,7 @@ def stage_2_def_pl_par():
             while not pl_par_dr2_y_understand:
                 try:
                     pl_par_dr2_y = float(custom_input(ChatMessage.chat_msg(
-                        program_name, "Wie lautet dein zweiter Richtungsvektor(y-Koordinate): ")))
+                        program_name, "Wie lautet dein zweiter Spannvektor(y-Koordinate): ")))
                     pl_par_dr2_y_understand = True
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
@@ -833,7 +833,7 @@ def stage_2_def_pl_par():
             while not pl_par_dr2_z_understand:
                 try:
                     pl_par_dr2_z = float(custom_input(ChatMessage.chat_msg(
-                        program_name, "Wie lautet dein zweiter Richtungsvektor(z-Koordinate): ")))
+                        program_name, "Wie lautet dein zweiter Spannvektor(z-Koordinate): ")))
                     pl_par_dr2_z_understand = True
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
@@ -1037,7 +1037,7 @@ def stage_2_def_pl_coord():
                 except ValueError:
                     TimeFunction.custom_delay(TimeFunction.long_delay)
                     print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
-            if Calc_AnaGeo.Vector(pl_coord_a, pl_coord_b, pl_coord_c).fullzero:
+            if Calc_AnaGeo.Vector(pl_coord_a, pl_coord_b, pl_coord_c).full_zero:
                 TimeFunction.custom_delay(TimeFunction.long_delay)
                 print(ChatMessage.chat_msg(program_name, "Diese Gleichung beschreibt keine Ebene."
                                                          "\nVersuchen wir das nochmal."))
@@ -1352,7 +1352,7 @@ def obj_to_str(obj, rnd):  # Stage 5 Preparation
         pl_d_str = str(pl_d)
         # points
         axis_str = "-1"
-        track_point_list = Calc_AnaGeo.trackpoint_pl(obj)
+        track_point_list = Calc_AnaGeo.track_point_pl(obj)
         # a
         if pl_a == 0:
             pl_a_str = ""
@@ -1469,34 +1469,21 @@ class Task:
 
     # basic_define = Stage 2 & 3 for method == basic, else Stage 3(blank)
     def basic_define(self):  # Stage 3, return method as self.method_calc
-        if self.chosen_topic != 3:
+        if self.chosen_topic[0] != 3:
             self.method_calc.clear()
-            self.method_calc.append(self.chosen_topic)
+            self.method_calc.append(self.chosen_topic[0])
             self.method_calc.append(False)
-        if self.chosen_topic == 3:
+        else:
             # Stage 3
             self.method_calc.clear()
             print(ChatMessage.chat_msg(program_name, "\nOkay, zu " + self.task_name
-                                       + ", da ging es um Grundrechnungen.\nUm was genau ging es nochmal?"))
-            bm_type = 0.1
-            bm_understand = False
-            while not bm_understand:
-                user_bm_answer = custom_input("").upper()
-                for bm in basic_method:
-                    for method_answer in bm:
-                        if user_bm_answer == method_answer:
-                            bm_understand = True
-                            bm_type = basic_method.index(bm)
-                if not bm_understand:
-                    TimeFunction.custom_delay(TimeFunction.med_delay)
-                    print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
-            self.method_calc.append(bm_type)
+                                       + ", " + basic_method[self.chosen_topic[1]][0]))
+            self.method_calc.append(self.chosen_topic[1])
             self.method_calc.append(True)
             # Stage 2
             if self.method_calc[1]:
                 if self.method_calc[0] == 0:  # method plus
-                    print(ChatMessage.chat_msg(program_name, "Ah, Addition von zwei Vektoren, warum auch nicht?\n"
-                                                             "Der erste Vektor, Vektor a:"))
+                    print(ChatMessage.chat_msg(program_name, "Der erste Vektor, Vektor a:"))
                     bm_plus_vc1 = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Okay gut, zum zweiten Vektor, Vektor b:"))
@@ -1506,8 +1493,7 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_plus_vc2[0], bm_plus_vc2[1], bm_plus_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 1:  # method minus
-                    print(ChatMessage.chat_msg(program_name, "Also Subtraktion von zwei Vektoren, z.B. a - b? Gerne!\n"
-                                                             "Der erste Vektor, Vektor a:"))
+                    print(ChatMessage.chat_msg(program_name, "Der erste Vektor, Vektor a:"))
                     bm_minus_vc1 = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Verstehe, zum zweiten Vektor, Vektor b:"))
@@ -1517,7 +1503,6 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_minus_vc2[0], bm_minus_vc2[1], bm_minus_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 2:  # method scalar_multi
-                    print(ChatMessage.chat_msg(program_name, "Skalarmultiplikation eines Vektors? Bin dabei!\n"))
                     bm_scalar_multi_vc = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Okay gut."))
@@ -1528,8 +1513,7 @@ class Task:
                     self.obj_calc.append(bm_scalar_multi_c)
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 3:  # method scalar_product
-                    print(ChatMessage.chat_msg(program_name, "Du brauchst das Skalarprodukt von zwei Vektoren? "
-                                                             "Bin dabei!\nDer erste Vektor, Vektor a:"))
+                    print(ChatMessage.chat_msg(program_name, "Der erste Vektor, Vektor a:"))
                     bm_scalar_product_vc1 = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Okay, zum zweiten Vektor, Vektor b:"))
@@ -1541,8 +1525,6 @@ class Task:
                                                     bm_scalar_product_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 4:  # method vector_product
-                    print(ChatMessage.chat_msg(program_name, "Aha, du brauchst das Kreuzprodukt von zwei Vektoren?"
-                          " Für dich doch gerne, " + user.name + "."))
                     print(ChatMessage.chat_msg(program_name, "Der erste Vektor, Vektor a:"))
                     bm_vector_product_vc1 = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
@@ -1555,8 +1537,6 @@ class Task:
                                                     bm_vector_product_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 5:  # method spar_product
-                    print(ChatMessage.chat_msg(program_name, "Oh, du brauchst das Spatprodukt von drei Vektoren? "
-                          "Für dich doch gerne, " + user.name + "."))
                     # ask preferred type
                     print(ChatMessage.chat_msg(program_name, "In welcher Form kennst du das Spat?"))
                     bm_spar_product_type = -1
@@ -1617,23 +1597,20 @@ class Task:
                         bm_spar_product_p4 = stage_2_pt(bm_spar_product_p4_crd[0],
                                                         bm_spar_product_p4_crd[1], bm_spar_product_p4_crd[2])
                         # calc vector objects
-                        bm_spar_product_vc1 = Calc_AnaGeo.Basic.Vc.minus(bm_spar_product_p2.ov, bm_spar_product_p1.ov)
-                        bm_spar_product_vc2 = Calc_AnaGeo.Basic.Vc.minus(bm_spar_product_p3.ov, bm_spar_product_p1.ov)
-                        bm_spar_product_vc3 = Calc_AnaGeo.Basic.Vc.minus(bm_spar_product_p4.ov, bm_spar_product_p1.ov)
+                        bm_spar_product_vc1 = Calc_AnaGeo.basic_vc_minus(bm_spar_product_p2.ov, bm_spar_product_p1.ov)
+                        bm_spar_product_vc2 = Calc_AnaGeo.basic_vc_minus(bm_spar_product_p3.ov, bm_spar_product_p1.ov)
+                        bm_spar_product_vc3 = Calc_AnaGeo.basic_vc_minus(bm_spar_product_p4.ov, bm_spar_product_p1.ov)
                         self.obj_calc.append(bm_spar_product_vc1)
                         self.obj_calc.append(bm_spar_product_vc2)
                         self.obj_calc.append(bm_spar_product_vc3)
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 6:  # method unit
-                    print(ChatMessage.chat_msg(program_name, "Ein bestimmter Einheitsvektor ist gesucht? Gerne doch!"))
                     bm_unit_vc = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(stage_2_vc(bm_unit_vc[0], bm_unit_vc[1], bm_unit_vc[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 7:  # method ld
-                    print(ChatMessage.chat_msg(program_name, "Ich wusste es! Du wolltest also zwischen zwei Vektoren "
-                                                             "nach linearer Abhängigkeit prüfen? Schon dabei!\n"
-                                                             "Zuerst Vektor a:"))
+                    print(ChatMessage.chat_msg(program_name, "Zuerst Vektor a:"))
                     bm_ld_vc1 = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     print(ChatMessage.chat_msg(program_name, "Verstehe, zum zweiten Vektor, Vektor b:"))
@@ -1643,7 +1620,7 @@ class Task:
                     self.obj_calc.append(stage_2_vc(bm_ld_vc2[0], bm_ld_vc2[1], bm_ld_vc2[2]))
                     print(ChatMessage.chat_msg(program_name, "Verstanden"))
                 elif self.method_calc[0] == 8:  # method convert
-                    print(ChatMessage.chat_msg(program_name, "Verstehe. Welches Objekt soll ich näher beschreiben?"))
+                    print(ChatMessage.chat_msg(program_name, "Welches Objekt soll ich näher beschreiben?"))
                     bm_conv_understand = False
                     bm_conv_obj_index = -1
                     while not bm_conv_understand:
@@ -1708,7 +1685,6 @@ class Task:
                         bm_conv_obj = stage_2_def_vc()
                         self.obj_calc.append(stage_2_vc(bm_conv_obj[0], bm_conv_obj[1], bm_conv_obj[2]))
                 elif self.method_calc[0] == 9:  # method angle
-                    print(ChatMessage.chat_msg(program_name, "Winkelberechnung? Bin dabei!\n"))
                     for h in range(2):
                         # def meta var
                         bm_angle_obj_index = -1
@@ -1777,8 +1753,9 @@ class Task:
 
     # obj_define = Stage 2 for method != basic, else blank
     def obj_define(self):  # Stage 2
-        if self.chosen_topic != 3:
-            print(ChatMessage.chat_msg(program_name, "\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic][0]
+        if self.chosen_topic[0] != 3:
+            print(ChatMessage.chat_msg(program_name,
+                                       "\nOkay, zu " + self.task_name + "(" + topic[self.chosen_topic[0]][0]
                                        + " zwischen " + object_full_list[self.obj_types[0]][0] + " und "
                                        + object_full_list[self.obj_types[1]][0] + "):"))
             TimeFunction.custom_delay(TimeFunction.short_delay)
@@ -1853,73 +1830,73 @@ class Task:
         if self.method_calc[1]:
             sol_basic = -1
             if self.method_calc[0] == 0:  # Plus
-                sol_basic = Calc_AnaGeo.Basic.Vc.plus(self.obj_calc[0], self.obj_calc[1])
+                sol_basic = Calc_AnaGeo.basic_vc_plus(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 1:  # Minus
-                sol_basic = Calc_AnaGeo.Basic.Vc.minus(self.obj_calc[0], self.obj_calc[1])
+                sol_basic = Calc_AnaGeo.basic_vc_minus(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 2:  # scalar_multi
-                sol_basic = Calc_AnaGeo.Basic.Vc.smulti(self.obj_calc[0], self.obj_calc[1])
+                sol_basic = Calc_AnaGeo.basic_vc_scalar_multi(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 3:  # scalar_product
-                sol_basic = Calc_AnaGeo.Basic.Vc.sproduct(self.obj_calc[0], self.obj_calc[1])
+                sol_basic = Calc_AnaGeo.basic_vc_scalar_product(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 4:  # vector_product
-                sol_basic = Calc_AnaGeo.Basic.Vc.vproduct(self.obj_calc[0], self.obj_calc[1])
+                sol_basic = Calc_AnaGeo.basic_vc_vector_product(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 5:  # spar_product
-                sol_basic = Calc_AnaGeo.Basic.Vc.sparproduct(self.obj_calc[0], self.obj_calc[1], self.obj_calc[2])
+                sol_basic = Calc_AnaGeo.basic_vc_spar_product(self.obj_calc[0], self.obj_calc[1], self.obj_calc[2])
             elif self.method_calc[0] == 6:  # unit
-                sol_basic = Calc_AnaGeo.Basic.Vc.unit(self.obj_calc[0])
+                sol_basic = Calc_AnaGeo.basic_vc_unit(self.obj_calc[0])
             elif self.method_calc[0] == 7:  # ld
-                sol_basic = Calc_AnaGeo.Basic.Vc.lindep(self.obj_calc[0], self.obj_calc[1])
+                sol_basic = Calc_AnaGeo.basic_vc_lin_dep(self.obj_calc[0], self.obj_calc[1])
             elif self.method_calc[0] == 8:  # convert
                 sol_basic = self.obj_calc[0]
             elif self.method_calc[0] == 9:  # angle
-                sol_basic = abs(Calc_AnaGeo.Basic.angle(self.obj_calc[0], self.obj_calc[1]))
+                sol_basic = Calc_AnaGeo.basic_angle(self.obj_calc[0], self.obj_calc[1])
             self.sol.append(sol_basic)
         else:
             if self.method_calc[0] == 0:  # Distance
                 sol_dis = -1
                 if type(self.obj_calc[0]) == Calc_AnaGeo.Point:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_dis = Calc_AnaGeo.Dis.point2(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_point2(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_dis = Calc_AnaGeo.Dis.pointline(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_point_line(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_dis = Calc_AnaGeo.Dis.pointplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_point_plane(self.obj_calc[0], self.obj_calc[1])
                 elif type(self.obj_calc[0]) == Calc_AnaGeo.Line:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_dis = Calc_AnaGeo.Dis.pointline(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_point_line(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_dis = Calc_AnaGeo.Dis.line2(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_line2(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_dis = Calc_AnaGeo.Dis.lineplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_line_plane(self.obj_calc[0], self.obj_calc[1])
                 elif type(self.obj_calc[0]) == Calc_AnaGeo.Plane:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_dis = Calc_AnaGeo.Dis.pointplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_point_plane(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_dis = Calc_AnaGeo.Dis.lineplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_line_plane(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_dis = Calc_AnaGeo.Dis.plane2(self.obj_calc[0], self.obj_calc[1])
+                        sol_dis = Calc_AnaGeo.dis_plane2(self.obj_calc[0], self.obj_calc[1])
                 self.sol.append(sol_dis)
             if self.method_calc[0] == 1:  # Cross
                 sol_cross = -1
                 if type(self.obj_calc[0]) == Calc_AnaGeo.Line:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Line:
                         try:
-                            sol_cross = Calc_AnaGeo.Cross.line2(self.obj_calc[0], self.obj_calc[1])
+                            sol_cross = Calc_AnaGeo.cross_line2(self.obj_calc[0], self.obj_calc[1])
                         except SystemExit:
                             sol_cross = -1
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
                         try:
-                            sol_cross = Calc_AnaGeo.Cross.lineplane(self.obj_calc[0], self.obj_calc[1])
+                            sol_cross = Calc_AnaGeo.cross_line_plane(self.obj_calc[0], self.obj_calc[1])
                         except SystemExit:
                             sol_cross = -1
                 elif type(self.obj_calc[0]) == Calc_AnaGeo.Plane:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Line:
                         try:
-                            sol_cross = Calc_AnaGeo.Cross.lineplane(self.obj_calc[0], self.obj_calc[1])
+                            sol_cross = Calc_AnaGeo.cross_line_plane(self.obj_calc[0], self.obj_calc[1])
                         except SystemExit:
                             sol_cross = -1
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
                         try:
-                            sol_cross = Calc_AnaGeo.Cross.plane2(self.obj_calc[0], self.obj_calc[1])
+                            sol_cross = Calc_AnaGeo.cross_plane2(self.obj_calc[0], self.obj_calc[1])
                         except SystemExit:
                             sol_cross = -1
                 self.sol.append(sol_cross)
@@ -1928,45 +1905,45 @@ class Task:
                 # 0 = error, 1 = identical, 2 = parallel, 3 = cross point, 4 = skewed, 5 = outside
                 if type(self.obj_calc[0]) == Calc_AnaGeo.Point:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_con = Calc_AnaGeo.Con.point2(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_point2(self.obj_calc[0], self.obj_calc[1])
                         if sol_con:
                             sol_con = 1
                         elif not sol_con:
                             sol_con = 5
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_con = Calc_AnaGeo.Con.pointline(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_point_line(self.obj_calc[0], self.obj_calc[1])
                         if sol_con:
                             sol_con = 1
                         elif not sol_con:
                             sol_con = 5
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_con = Calc_AnaGeo.Con.pointplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_point_plane(self.obj_calc[0], self.obj_calc[1])
                         if sol_con:
                             sol_con = 1
                         elif not sol_con:
                             sol_con = 5
                 elif type(self.obj_calc[0]) == Calc_AnaGeo.Line:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_con = Calc_AnaGeo.Con.pointline(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_point_line(self.obj_calc[0], self.obj_calc[1])
                         if sol_con:
                             sol_con = 1
                         elif not sol_con:
                             sol_con = 5
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_con = Calc_AnaGeo.Con.line2(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_line2(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_con = Calc_AnaGeo.Con.lineplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_line_plane(self.obj_calc[0], self.obj_calc[1])
                 elif type(self.obj_calc[0]) == Calc_AnaGeo.Plane:
                     if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_con = Calc_AnaGeo.Con.pointplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_point_plane(self.obj_calc[0], self.obj_calc[1])
                         if sol_con:
                             sol_con = 1
                         elif not sol_con:
                             sol_con = 5
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_con = Calc_AnaGeo.Con.lineplane(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_line_plane(self.obj_calc[0], self.obj_calc[1])
                     elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_con = Calc_AnaGeo.Con.plane2(self.obj_calc[0], self.obj_calc[1])
+                        sol_con = Calc_AnaGeo.con_plane2(self.obj_calc[0], self.obj_calc[1])
                 self.sol.append(sol_con)
 
     # Stage 5 & 6
@@ -2027,23 +2004,27 @@ class Task:
                 if type(self.sol[0]) == Calc_AnaGeo.Point:
                     sol_text = (self.task_name + " ist fertig. Hier ist dein Punkt:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
-                                + str(BasicMath.constant_round(self.sol[0].ov.l, self.rnd[0]))
+                                + str(BasicMath.constant_round(self.sol[0].ov.length, self.rnd[0]))
                                 + " Längeneinheiten vom Ursprung entfernt.")
                 elif type(self.sol[0]) == Calc_AnaGeo.Line:
                     sol_text = (self.task_name + " ist fertig. Hier ist deine Gerade:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
                 elif type(self.sol[0]) == Calc_AnaGeo.Plane:
                     track_point_str = ""
-                    if len(obj_to_str(self.sol[0], self.rnd[0])) > 2:
+                    if len(obj_to_str(self.sol[0], self.rnd[0])) > 3:
+                        if len(obj_to_str(self.sol[0], self.rnd[0])) == 4:
+                            track_point_str += "\nZusätzlich gibt es folgenden Spurpunkt:\n"
+                        else:
+                            track_point_str += "\nZusätzlich gibt es folgende Spurpunkte:\n"
                         for i in range(3, len(obj_to_str(self.sol[0], self.rnd[0]))):
-                            track_point_str = track_point_str + obj_to_str(self.sol[0], self.rnd[0])[i] + "\n"
+                            track_point_str += obj_to_str(self.sol[0], self.rnd[0])[i] + "\n"
                     sol_text = (self.task_name + " ist fertig. Hier ist deine Ebene in Parameterform:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0]
                                 + "\nUnd hier in der Normalenform:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[1]
                                 + "\nUnd hier in der Koordinatenform:\n"
-                                + obj_to_str(self.sol[0], self.rnd[0])[2] + "."
-                                + "\nZusätzlich gibt es folgende Spurpunkte:\n" + track_point_str)
+                                + obj_to_str(self.sol[0], self.rnd[0])[2] + "." + track_point_str)
+
                 elif type(self.sol[0]) == Calc_AnaGeo.Vector:
                     sol_text = (self.task_name + " ist fertig. Hier ist dein Vektor:\n"
                                 + obj_to_str(self.sol[0], self.rnd[0])[0] + ".\nDer ist "
@@ -2228,8 +2209,8 @@ def stage_1_dis():
         if not user_object1_understand:
             TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
-
     print(ChatMessage.chat_msg(program_name, "Okay verstehe."))
+
     TimeFunction.custom_delay(TimeFunction.short_delay)
     user_object2_understand = False
     while not user_object2_understand:
@@ -2244,6 +2225,7 @@ def stage_1_dis():
         if not user_object2_understand:
             TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
+    print(ChatMessage.chat_msg(program_name, "Gut."))
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -2266,8 +2248,8 @@ def stage_1_cross():
         if not user_object1_understand:
             TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
-
     print(ChatMessage.chat_msg(program_name, "Okay gut."))
+
     TimeFunction.custom_delay(TimeFunction.short_delay)
     user_object2_understand = False
     while not user_object2_understand:
@@ -2281,6 +2263,7 @@ def stage_1_cross():
         if not user_object2_understand:
             TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
+    print(ChatMessage.chat_msg(program_name, "Verstanden."))
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -2304,8 +2287,8 @@ def stage_1_contain():
         if not user_object1_understand:
             TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
-
     print(ChatMessage.chat_msg(program_name, "Passt."))
+
     TimeFunction.custom_delay(TimeFunction.short_delay)
     user_object2_understand = False
     while not user_object2_understand:
@@ -2320,6 +2303,7 @@ def stage_1_contain():
         if not user_object2_understand:
             TimeFunction.custom_delay(TimeFunction.med_delay)
             print(ChatMessage.chat_msg(program_name, misunderstand[random.randint(0, len(misunderstand) - 1)]))
+    print(ChatMessage.chat_msg(program_name, "Gut."))
 
     chosen_objects = [chosen_object1, chosen_object2]
     return chosen_objects
@@ -2332,12 +2316,18 @@ def stage_0(iteration):
         user_topic = custom_input(ChatMessage.chat_msg(
             program_name, "Zu was hast du denn deine " + str(iteration) + ". Frage?\n")).upper()
     chosen_topic = 0
+    bm_chosen_topic = 0
     user_topic_understand = False
     for answer_list in topic:
         for answer in answer_list:
             if user_topic == answer:
                 user_topic_understand = True
                 chosen_topic = topic.index(answer_list)
+                if chosen_topic == 3:
+                    for keyword_list in basic_method:
+                        for keyword in keyword_list:
+                            if user_topic == keyword:
+                                bm_chosen_topic = basic_method.index(keyword_list)
 
     while not user_topic_understand:
         TimeFunction.custom_delay(TimeFunction.med_delay)
@@ -2353,29 +2343,34 @@ def stage_0(iteration):
                 if user_topic == answer:
                     user_topic_understand = True
                     chosen_topic = topic.index(answer_list)
-    return chosen_topic
+                    if chosen_topic == 3:
+                        for keyword_list in basic_method:
+                            for keyword in keyword_list:
+                                if user_topic == keyword:
+                                    bm_chosen_topic = basic_method.index(keyword_list)
+    return [chosen_topic, bm_chosen_topic]
 
 
 def stage_1(chosen_topic, task_name):
-    if chosen_topic == 0:
+    if chosen_topic[0] == 0:
         stage1 = stage_1_dis()
         chosen_task = Task(task_name, chosen_topic)
         chosen_task.obj_types.append(stage1[0])
         chosen_task.obj_types.append(stage1[1])
         task_list.append(chosen_task)
-    elif chosen_topic == 1:
+    elif chosen_topic[0] == 1:
         stage1 = stage_1_cross()
         chosen_task = Task(task_name, chosen_topic)
         chosen_task.obj_types.append(stage1[0])
         chosen_task.obj_types.append(stage1[1])
         task_list.append(chosen_task)
-    elif chosen_topic == 2:
+    elif chosen_topic[0] == 2:
         stage1 = stage_1_contain()
         chosen_task = Task(task_name, chosen_topic)
         chosen_task.obj_types.append(stage1[0])
         chosen_task.obj_types.append(stage1[1])
         task_list.append(chosen_task)
-    elif chosen_topic == 3:
+    elif chosen_topic[0] == 3:
         print(ChatMessage.chat_msg(program_name, "Verstehe."))
         chosen_task = Task(task_name, chosen_topic)
         task_list.append(chosen_task)

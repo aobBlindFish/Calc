@@ -1,6 +1,6 @@
 # pronoun_m = [Nominativ, Genitiv, Dativ, Akkusativ]
-pronoun_m = ["Er", "Seiner", "Ihm", "Ihn"]
-pronoun_w = ["Sie", "Ihrer", "Ihr", "Sie"]
+pronoun_m = ["Er", "Seiner", "Ihm", "Ihn", "Der"]
+pronoun_w = ["Sie", "Ihrer", "Ihr", "Sie", "Die"]
 pronoun_list = [pronoun_m, pronoun_w]
 
 
