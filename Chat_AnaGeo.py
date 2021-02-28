@@ -63,11 +63,11 @@ basic_minus = ["Subtraktion von zwei Vektoren", "MINUS", "MINUSRECHNEN", "MINUS 
 basic_scalar_multi = ["Skalarmultiplikation", "SKALARMULTIPLIKATION", "SKALAR MULTIPLIKATION", "SKALIEREN",
                       "SKALIERUNG", "SKALIERT"]
 basic_scalar_product = ["Skalarprodukt", "SKALARPRODUKT"]
-basic_vector_product = ["Kreuzprodukt", "VEKTORPRODUKT", "KREUZPRODUKT"]
+basic_vector_product = ["Kreuzprodukt", "VEKTORPRODUKT", "KREUZPRODUKT", "NORMALE", "NORMALVEKTOR"]
 basic_spar_product = ["Spatprodukt", "SPATPRODUKT", "SPAT"]
-basic_unit = ["Einheitsvektor berechnen", "EINHEITSVEKTOR", "BASISVEKTOR"]
+basic_unit = ["einen Einheitsvektor berechnen", "EINHEITSVEKTOR", "BASISVEKTOR"]
 basic_ld = ["lineare Abhängigkeit/Unabhängigkeit beweisen", "LINEARE ABHÄNGIGKEIT", "ABHÄNGIGKEIT", "LINEAR ABHÄNGIG"]
-basic_convert = ["Objekt mathematisch umformen", "UMWANDLUNG", "UMWANDELN", "UMFORMUNG", "UMFORMEN", "UMRECHNUNG",
+basic_convert = ["ein Objekt mathematisch umformen", "UMWANDLUNG", "UMWANDELN", "UMFORMUNG", "UMFORMEN", "UMRECHNUNG",
                  "UMRECHNEN"]
 basic_angle = ["Winkelberechnung", "WINKEL", "GRAD", "GRADZAHL", "RADIEN"]
 basic_method = [basic_plus, basic_minus, basic_scalar_multi, basic_scalar_product, basic_vector_product,
@@ -1480,6 +1480,7 @@ class Task:
                                        + ", " + basic_method[self.chosen_topic[1]][0]) + ".")
             self.method_calc.append(self.chosen_topic[1])
             self.method_calc.append(True)
+            TimeFunction.custom_delay(TimeFunction.med_delay)
             # Stage 2
             if self.method_calc[1]:
                 if self.method_calc[0] == 0:  # method plus
@@ -1962,7 +1963,7 @@ class Task:
             elif self.method_calc[0] == 1:  # Minus
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
-                            + " minus dem" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " minus dem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                             + " ist der " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
             elif self.method_calc[0] == 2:  # scalar_multi
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDer "
@@ -1977,7 +1978,7 @@ class Task:
             elif self.method_calc[0] == 4:  # vector_product
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis des Kreuzproduktes:\nDer "
                             + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
-                            + " mal dem" + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                            + " mal dem " + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                             + " ist der " + obj_to_str(self.sol[0], self.rnd[0])[0] + ".")
             elif self.method_calc[0] == 5:  # spar_product
                 sol_text = (self.task_name + " ist fertig. Das Ergebnis:\nDas Spatprodukt vom "
@@ -2311,7 +2312,7 @@ def stage_1_contain():
 
 def stage_0(iteration):
     if iteration == 1:
-        user_topic = custom_input(ChatMessage.chat_msg(program_name, "Zu was hast du denn deine Frage?\n")).upper()
+        user_topic = custom_input(ChatMessage.chat_msg(program_name, "Zu was hast du denn eine Frage?\n")).upper()
     else:
         user_topic = custom_input(ChatMessage.chat_msg(
             program_name, "Zu was hast du denn deine " + str(iteration) + ". Frage?\n")).upper()
@@ -2392,9 +2393,10 @@ def stage_1(chosen_topic, task_name):
             print(ChatMessage.chat_msg(program_name, "Du willst also zwischen zwei Vektoren "
                                                      "nach linearer Abhängigkeit prüfen? Gleich dabei!"))
         elif chosen_topic[1] == 8:
-            print(ChatMessage.chat_msg(program_name, "Verstehe."))
+            print(ChatMessage.chat_msg(program_name, "Ein Objekt mathematisch umformen? Sicher doch."))
         elif chosen_topic[1] == 9:
             print(ChatMessage.chat_msg(program_name, "Winkelberechnung? Bin gleich dabei!"))
+        TimeFunction.custom_delay(TimeFunction.med_delay)
         chosen_task = Task(task_name, chosen_topic)
         task_list.append(chosen_task)
 
