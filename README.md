@@ -15,9 +15,9 @@ aobBlindFish/Calc
 ```
 5. Klicke auf "Import from GitHub"
 
-Nachdem das Programm installiert wurde, gehe links unter den Dateien auf ".replit"
+Nachdem das Programm installiert wurde, gehe links unter den Dateien auf [.replit](.replit)
 
-6. Überschreibe die Datei mit folgendem Text:
+6. Stelle sicher, dass die Datei folgenden Text hat:
 ```
 language = "python3"
 run = "python3 ChatLobby.py"
@@ -30,13 +30,13 @@ Jetzt is das Programm vollständig benutzbar. [repl.it](https://repl.it/) erlaub
 Alle änderungen seit Version 1.0 sind zusammengefasst in [Versions.md](Versions.md).
 
 ### Repl.it
-Um auf repl.it die neuste Version runterzuladen muss man:
-1. Ganz links auf "Version Control" (Falls dort die Informationen kaum lesbar sind einfach das Fenster vergrößern)
+Um auf [repl.it](https://repl.it/) die neuste Version runterzuladen muss man:
+1. Ganz links auf "Version Control" gehen(Falls dort die Informationen kaum lesbar sind einfach das Fenster vergrößern)
 2. Den Knopf "Pull" in Orange drücken
 
 Sobald der Knopf verschwindet oder der Knopf nicht da ist:
 
-3. Sicherstellen, dass in der Datei ".replit" ausschließlich und genau folgendes steht:
+3. Sicherstellen, dass in der Datei [.replit](.replit) ausschließlich und genau folgendes steht:
 ```
 language = "python3"
 run = "python3 ChatLobby.py"
