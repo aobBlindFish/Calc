@@ -1477,7 +1477,7 @@ class Task:
             # Stage 3
             self.method_calc.clear()
             print(ChatMessage.chat_msg(program_name, "\nOkay, zu " + self.task_name
-                                       + ", " + basic_method[self.chosen_topic[1]][0]))
+                                       + ", " + basic_method[self.chosen_topic[1]][0]) + ".")
             self.method_calc.append(self.chosen_topic[1])
             self.method_calc.append(True)
             # Stage 2
@@ -2371,7 +2371,30 @@ def stage_1(chosen_topic, task_name):
         chosen_task.obj_types.append(stage1[1])
         task_list.append(chosen_task)
     elif chosen_topic[0] == 3:
-        print(ChatMessage.chat_msg(program_name, "Verstehe."))
+        if chosen_topic[1] == 0:
+            print(ChatMessage.chat_msg(program_name, "Ah, Addition von zwei Vektoren, warum auch nicht?"))
+        elif chosen_topic[1] == 1:
+            print(ChatMessage.chat_msg(program_name, "Also Subtraktion von zwei Vektoren? Gerne!"))
+        elif chosen_topic[1] == 2:
+            print(ChatMessage.chat_msg(program_name, "Skalarmultiplikation eines Vektors? Bin gleich dabei!"))
+        elif chosen_topic[1] == 3:
+            print(ChatMessage.chat_msg(program_name, "Du brauchst das Skalarprodukt von zwei Vektoren?"
+                                                     " Bin gleich dabei!"))
+        elif chosen_topic[1] == 4:
+            print(ChatMessage.chat_msg(program_name, "Aha, du brauchst das Kreuzprodukt von zwei Vektoren?"
+                                                     " Für dich doch gerne, " + user.name + "."))
+        elif chosen_topic[1] == 5:
+            print(ChatMessage.chat_msg(program_name, "Oh, du brauchst das Spatprodukt von drei Vektoren? "
+                                                     "Für dich doch gerne, " + user.name + "."))
+        elif chosen_topic[1] == 6:
+            print(ChatMessage.chat_msg(program_name, "Ein bestimmter Einheitsvektor ist gesucht? Gerne doch!"))
+        elif chosen_topic[1] == 7:
+            print(ChatMessage.chat_msg(program_name, "Du willst also zwischen zwei Vektoren "
+                                                     "nach linearer Abhängigkeit prüfen? Gleich dabei!"))
+        elif chosen_topic[1] == 8:
+            print(ChatMessage.chat_msg(program_name, "Verstehe."))
+        elif chosen_topic[1] == 9:
+            print(ChatMessage.chat_msg(program_name, "Winkelberechnung? Bin gleich dabei!"))
         chosen_task = Task(task_name, chosen_topic)
         task_list.append(chosen_task)
 
