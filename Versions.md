@@ -9,6 +9,11 @@ Hier eine Übersicht zu allen Updates seit Version 1.0:
     - Bug Fixes
         - identische / ineinander liegende Objekte wurden als parallel bezeichnet
         - bei Fehlermeldungen wurde der/die Benutzer*in "Max" genannt
+- Version 1.2
+    - Antworten zum Thema Lagebeziehungen beinhalten automatisch, falls möglich, eine Schnittmenge
+    - Antworten zum Thema Abstand beinhalten automatisch die Lagebeziehung wenn der Abstand gleich 0 ist
+    - Bug Fixes
+        - Fehlermeldungen kamen auf wenn/weil die Nachkommastelle für Rundungen nicht direkt vom Benutzer*in definiert wurde
 ## Autor
 
 - Blind Fish - Adrian Oppong-Boateng

@@ -19,3 +19,19 @@ def chat_inv_kick(user1, user2):
     enter_str = "\n--- " + str(user1) + " hat " + str(user2) + " hinzugefügt ---\n"
     exit_str = "\n--- " + str(user1) + " hat " + str(user2) + " entfernt ---\n"
     return [enter_str, exit_str]
+
+
+def str_trim(text, index_str):
+    index = int(index_str)
+    output = ""
+    if float(index) < 0:
+        for i in range(len(text) - abs(index)):
+            output += text[i]
+
+    elif float(index) > 0:
+        for i in range(len(text) - index):
+            output += text[i + index]
+
+    else:
+        output = text
+    return output

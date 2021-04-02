@@ -1,14 +1,14 @@
 from math import *
 import sys
-import BasicMath
+import BasicMath as Bm
 
 
 class Bernoulli:  # kumulierte P(X) fehlen
-    def __init__(self, n, k, p):
+    def __init__(self, n, k, p, rounder=2):
         # error messages
-        n = int(BasicMath.constant_round(n, 0))
-        k = int(BasicMath.constant_round(k, 0))
-        if not BasicMath.custom_range(1, p, 0, -1):
+        n = int(Bm.constant_round(n, 0))
+        k = int(Bm.constant_round(k, 0))
+        if not Bm.custom_range(1, p, 0, -1):
             if not (p == 0 or p == 1):
                 sys.exit("Bernoulli: p muss zwischen 0 und 1 sein")
         if not (n > k or n == k):
@@ -19,28 +19,25 @@ class Bernoulli:  # kumulierte P(X) fehlen
         self.n = n
         self.k = k
         self.p = p
+        self.rounder = rounder
 
     def prob(self):
-        return comb(self.n, self.k)*pow(self.p, self.k)*pow(1-self.p, self.n-self.k)
+        return Bm.constant_round(comb(self.n, self.k)*pow(self.p, self.k)*pow(1-self.p, self.n-self.k), self.rounder)
     
     def exp_value(self):
-        return self.n * self.k
+        return Bm.constant_round(self.n * self.k, self.rounder)
 
     def standard_dev(self):
-        return sqrt(self.n * self.p * (1-self.p))
+        return Bm.constant_round(sqrt(self.n * self.p * (1-self.p)), self.rounder)
 
 
 class Discreet:
     def __init__(self, uppercase, lowercase):
         if len(uppercase) != len(lowercase):
-            sys.exit("Lotto: Listen sind ungleich lang")
-        for category in uppercase:
-            category_nmb = uppercase.index(category)
-            if uppercase[category_nmb] < lowercase[category_nmb]:
-                sys.exit("Lotto: A < a")
+            sys.exit("Listen sind ungleich lang")
 
 
-def lotto(uppercase, lowercase):
+def lotto(uppercase, lowercase, rounder=2):
     # error messages
     if len(uppercase) != len(lowercase):
         sys.exit("Lotto: Listen sind ungleich lang")
@@ -59,4 +56,4 @@ def lotto(uppercase, lowercase):
     for category in uppercase:
         category_nmb = uppercase.index(category)
         output = output*comb(uppercase[category_nmb], lowercase[category_nmb])
-    return BasicMath.constant_round(output, 8)
+    return Bm.constant_round(output, rounder)

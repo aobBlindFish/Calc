@@ -1,4 +1,4 @@
-# Hausaufgabenhilfe – Version 1.1
+# Hausaufgabenhilfe – Version 1.2
 
 Das Programm hilft dem Benutzer bei Hausaufgaben im Fachbereich Mathematik(analytische Geometrie).
 
@@ -15,7 +15,7 @@ aobBlindFish/Calc
 ```
 5. Klicke auf "Import from GitHub"
 
-Nachdem das Programm installiert wurde, gehe links unter den Dateien auf ".replit"
+Nachdem der Code installiert wurde, gehe links unter den Dateien auf ".replit"
 
 6. Stelle sicher, dass die Datei folgenden Text hat:
 ```
