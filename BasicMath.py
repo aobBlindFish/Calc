@@ -3,12 +3,19 @@ from math import *
 
 # Round
 def constant_round(constant, rounder=2):
-    if abs(rounder) > 9:
-        rounder = 9
+    if abs(rounder) > 19:
+        rounder = 19
     else:
         rounder = abs(rounder)
     rounder = round(rounder)
     return round(pow(10, floor(abs(rounder))) * constant) / pow(10, floor(abs(rounder)))
+
+
+# Comparison
+def custom_comp(num_1, num_2, rnd=8):
+    a = constant_round(num_1, rnd)
+    b = constant_round(num_2, rnd)
+    return a == b
 
 
 # Range

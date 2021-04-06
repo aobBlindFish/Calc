@@ -1,6 +1,14 @@
+# Import
+import os, sys, inspect
+
+# imports from parent folder
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 from math import *
-import sys
 import BasicMath as Bm
+
+# Import
 
 
 class Bernoulli:  # kumulierte P(X) fehlen
@@ -22,13 +30,18 @@ class Bernoulli:  # kumulierte P(X) fehlen
         self.rounder = rounder
 
     def prob(self):
-        return Bm.constant_round(comb(self.n, self.k)*pow(self.p, self.k)*pow(1-self.p, self.n-self.k), self.rounder)
-    
+        return Bm.constant_round(
+            comb(self.n, self.k)
+            * pow(self.p, self.k)
+            * pow(1 - self.p, self.n - self.k),
+            self.rounder,
+        )
+
     def exp_value(self):
         return Bm.constant_round(self.n * self.k, self.rounder)
 
     def standard_dev(self):
-        return Bm.constant_round(sqrt(self.n * self.p * (1-self.p)), self.rounder)
+        return Bm.constant_round(sqrt(self.n * self.p * (1 - self.p)), self.rounder)
 
 
 class Discreet:
@@ -52,8 +65,8 @@ def lotto(uppercase, lowercase, rounder=2):
         main_n += category
     for category in lowercase:
         sub_n += category
-    output = 1/comb(main_n, sub_n)
+    output = 1 / comb(main_n, sub_n)
     for category in uppercase:
         category_nmb = uppercase.index(category)
-        output = output*comb(uppercase[category_nmb], lowercase[category_nmb])
+        output = output * comb(uppercase[category_nmb], lowercase[category_nmb])
     return Bm.constant_round(output, rounder)

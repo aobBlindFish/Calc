@@ -1,7 +1,15 @@
+# Import
+import os, sys, inspect
+
+# imports from parent folder
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 import math
 import BasicMath
 import StringPreset
-import sys
+
+# Import
 
 
 class FuncX:  # ax^(b)
@@ -164,8 +172,12 @@ class Product:
                 for i in range(1, len(self.product_list), 2):
                     pair_list.append([self.product_list[i], self.product_list[i + 1]])
         else:
-            return Sum([Product([self.product_list[0], self.product_list[1].derivative()]),
-                        Product([self.product_list[1], self.product_list[0].derivative()])])
+            return Sum(
+                [
+                    Product([self.product_list[0], self.product_list[1].derivative()]),
+                    Product([self.product_list[1], self.product_list[0].derivative()]),
+                ]
+            )
 
 
 def sum_sort(function):
@@ -177,7 +189,9 @@ def sum_sort(function):
         for i in function.sum_list:
             if type(i) == FuncX:
                 input_list.append([i.a, i.b])
-        sorted_list = sorted(input_list, key=lambda list_item: list_item[1], reverse=True)
+        sorted_list = sorted(
+            input_list, key=lambda list_item: list_item[1], reverse=True
+        )
         for i in sorted_list:
             item_a = i[0]
             item_b = i[1]
@@ -194,6 +208,16 @@ def sum_sort(function):
 
 
 bb = Expo(-0.9, Sum([FuncX(1, 2), FuncX(-1, 1)]))
-aa = Sum([FuncX(0.25, 3), FuncX(-3, 2), FuncX(9, 1), FuncX(2, 2), FuncX(-4, 1), FuncX(6, 0), bb])
+aa = Sum(
+    [
+        FuncX(0.25, 3),
+        FuncX(-3, 2),
+        FuncX(9, 1),
+        FuncX(2, 2),
+        FuncX(-4, 1),
+        FuncX(6, 0),
+        bb,
+    ]
+)
 cc = Product([FuncX(1, 1), Expo(1, FuncX(1, 1))])
 print(cc.display())

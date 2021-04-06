@@ -1,7 +1,14 @@
+# Import
+import os, sys, inspect
+
+# imports from parent folder
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 from math import *
 import BasicMath
-import sys
 
+# Import
 
 # Converter Plane
 def conv_pl_par_norm(support, dr1, dr2):

@@ -1,0 +1,32 @@
+Chatbot Stages:
+0 == Introduction - Topic chosen
+1 == Objects asked - Objects chosen - task_list filled
+2 == for object in task_list: Chosen objects defined as Calc_AnaGeo.py-objects
+3 == for object in task_list: Chosen methods defined as Calc_AnaGeo.py-methods
+4 == for object in task_list: Solution calculated
+5 == for object in task_list: Calc_AnaGeo.py-solution defined into words
+6 == for object in task_list: Solution returned
+7 == Repeat or End
+
+
+
+Todo until V1.3:
+- Point Projection
+- Line Projection
+Todo until V1.4:
+- Shadow
+Todo until V1.5:
+- Discord
+Todo until V1.6:
+- Point Mirroring
+- Line Mirroring
+Todo until V1.7:
+- center object between objects
+- class Plane(point, line)
+Todo until V1.8:
+- Objects(triangle, trapezoid)
+- def Area
+Todo until V1.9:
+- Objects(sphere, pyramid)
+- def Volume
+Todo until V2.0:
