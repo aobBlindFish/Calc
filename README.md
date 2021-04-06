@@ -27,7 +27,7 @@ Jetzt is das Programm vollständig benutzbar. [repl.it](https://repl.it/) erlaub
 ## Updates
 
 ### Versionen
-Alle änderungen seit Version 1.0 sind zusammengefasst in "Versions.md".
+Alle Änderungen seit Version 1.0 sind zusammengefasst in "Versions.md".
 
 ### Repl.it
 Um auf [repl.it](https://repl.it/) die neuste Version runterzuladen muss man:
