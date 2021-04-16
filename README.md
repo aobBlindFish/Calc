@@ -1,4 +1,4 @@
-# Hausaufgabenhilfe – Version 1.2
+# Hausaufgabenhilfe – Version 1.3
 
 Das Programm hilft dem Benutzer bei Hausaufgaben im Fachbereich Mathematik(analytische Geometrie).
 

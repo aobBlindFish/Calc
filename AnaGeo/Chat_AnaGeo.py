@@ -8,14 +8,13 @@ sys.path.insert(0, parent_dir)
 from math import *
 import random
 import datetime
-import AnaGeo.Calc_AnaGeo
+import AnaGeo.Calc_AnaGeo as Calc_AnaGeo
 import BasicMath
 import Humanize
 import StringPreset
 import TimeFunction
 
 # Import
-
 
 # Meta Var
 program_id_list = [
@@ -141,6 +140,8 @@ basic_convert = [
     "BESCHREIBEN",
 ]
 basic_angle = ["Winkelberechnung", "WINKEL", "GRAD", "GRADZAHL", "RADIEN"]
+basic_projection = ["Projektion", "PROJEKTION", "PUNKTPROJEKTION", "GERADENPROJEKTION"]
+
 basic_method = [
     basic_plus,
     basic_minus,
@@ -152,6 +153,7 @@ basic_method = [
     basic_ld,
     basic_convert,
     basic_angle,
+    basic_projection,
 ]
 
 topic_basic = []
@@ -365,6 +367,11 @@ def custom_input(prompt):
                 )
             )
             TimeFunction.custom_delay(TimeFunction.med_delay)
+        if output.upper() == "/BACK":
+            normalcy = False
+            print("shutting down..")
+            TimeFunction.custom_delay(random.uniform(1.5, 4))
+            sys.exit()
     return output
 
 
@@ -2525,13 +2532,14 @@ def obj_to_str(obj, rnd=2):  # Stage 5 Preparation
     return output_str
 
 
-def user_rnd():
+def user_rnd(promt=""):
     rnd_choice = 0
     rnd_understand = False
     print(
         StringPreset.chat_msg(
             program_name,
-            "Auf welche Nachkommastelle hättest du gerne deine Zahlen gerundet?",
+            promt
+            + "Auf welche Nachkommastelle hättest du gerne deine Zahlen gerundet?",
         )
     )
     while not rnd_understand:
@@ -2569,11 +2577,12 @@ def rnd_preference():
                 if user_boolean.index(ii) == 0:
                     rnd_confirm = True
                     print(StringPreset.chat_msg(program_name, "Mhm."))
-                    rnd_prf = [user_rnd(), True]
+                    rnd_prf = [user_rnd("Okay. "), True]
                 elif user_boolean.index(ii) == 1:
                     rnd_confirm_no = True
                     print(StringPreset.chat_msg(program_name, "Okay verstanden."))
                     rnd_prf = [0, False]
+                    TimeFunction.custom_delay(TimeFunction.med_delay)
         if not (rnd_confirm_no or rnd_confirm):
             TimeFunction.custom_delay(TimeFunction.short_delay)
             print(
@@ -2648,7 +2657,7 @@ class Task:
                     self.obj_calc.append(
                         stage_2_vc(bm_plus_vc2[0], bm_plus_vc2[1], bm_plus_vc2[2])
                     )
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 1:  # method minus
                     print(
                         StringPreset.chat_msg(
@@ -2670,7 +2679,7 @@ class Task:
                     self.obj_calc.append(
                         stage_2_vc(bm_minus_vc2[0], bm_minus_vc2[1], bm_minus_vc2[2])
                     )
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 2:  # method scalar_multi
                     bm_scalar_multi_vc = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
@@ -2685,7 +2694,7 @@ class Task:
                         )
                     )
                     self.obj_calc.append(bm_scalar_multi_c)
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 3:  # method scalar_product
                     print(
                         StringPreset.chat_msg(
@@ -2715,7 +2724,7 @@ class Task:
                             bm_scalar_product_vc2[2],
                         )
                     )
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 4:  # method vector_product
                     print(
                         StringPreset.chat_msg(
@@ -2745,7 +2754,7 @@ class Task:
                             bm_vector_product_vc2[2],
                         )
                     )
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 5:  # method spar_product
                     # ask preferred type
                     print(
@@ -2887,14 +2896,14 @@ class Task:
                         self.obj_calc.append(bm_spar_product_vc1)
                         self.obj_calc.append(bm_spar_product_vc2)
                         self.obj_calc.append(bm_spar_product_vc3)
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 6:  # method unit
                     bm_unit_vc = stage_2_def_vc()
                     TimeFunction.custom_delay(TimeFunction.short_delay)
                     self.obj_calc.append(
                         stage_2_vc(bm_unit_vc[0], bm_unit_vc[1], bm_unit_vc[2])
                     )
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
                 elif self.method_calc[0] == 7:  # method ld
                     print(StringPreset.chat_msg(program_name, "Zuerst Vektor a:"))
                     bm_ld_vc1 = stage_2_def_vc()
@@ -3174,7 +3183,132 @@ class Task:
                             )
                         # append obj
                         self.obj_calc.append(bm_angle_obj)
-                    print(StringPreset.chat_msg(program_name, "Verstanden"))
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
+                elif self.method_calc[0] == 10:  # projection
+
+                    # object
+
+                    print(
+                        StringPreset.chat_msg(
+                            program_name,
+                            "Zuerst zum projiziertem Objekt, welches soll es sein?",
+                        )
+                    )
+                    bm_proj_obj_understand = False
+                    bm_proj_obj_index = -1
+                    while not bm_proj_obj_understand:
+                        bm_proj_input = custom_input("").upper()
+                        for object_type_array in object_full_list:
+                            for object_word in object_type_array:
+                                if (
+                                    bm_proj_input == object_word
+                                    and object_full_list.index(object_type_array)
+                                    in [0, 1, 2, 3]
+                                ):
+                                    bm_proj_obj_understand = True
+                                    bm_proj_obj_index = object_full_list.index(
+                                        object_type_array
+                                    )
+                        if not bm_proj_obj_understand:
+                            TimeFunction.custom_delay(TimeFunction.long_delay)
+                            print(
+                                StringPreset.chat_msg(
+                                    program_name,
+                                    misunderstand[
+                                        random.randint(0, len(misunderstand) - 1)
+                                    ]
+                                    + "\nWelches Objekt soll projiziert werden?",
+                                )
+                            )
+                    print(StringPreset.chat_msg(program_name, "Gut."))
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
+
+                    bm_proj_obj = None
+                    if bm_proj_obj_index == 0:  # Point
+                        aa = stage_2_def_pt()
+                        bm_proj_obj = stage_2_pt(aa[0], aa[1], aa[2])
+                    elif bm_proj_obj_index == 1:  # Line
+                        bm_proj_obj_type = stage_2_line()
+                        if bm_proj_obj_type == 0:
+                            aa = stage_2_def_ln_par()
+                            bm_proj_obj = stage_2_ln_par(
+                                Calc_AnaGeo.Vector(aa[0], aa[1], aa[2]),
+                                Calc_AnaGeo.Vector(aa[3], aa[4], aa[5]),
+                            )
+                        elif bm_proj_obj_type == 1:
+                            aa = stage_2_def_ln_pt()
+                            bm_proj_obj = stage_2_ln_pt(
+                                Calc_AnaGeo.Point(aa[0], aa[1], aa[2]),
+                                Calc_AnaGeo.Point(aa[3], aa[4], aa[5]),
+                            )
+                    elif bm_proj_obj_index == 2:  # Plane
+                        bm_proj_obj_type = stage_2_plane()
+                        if bm_proj_obj_type == 0:
+                            aa = stage_2_def_pl_par()
+                            bm_proj_obj = stage_2_pl_par(
+                                Calc_AnaGeo.Vector(aa[0], aa[1], aa[2]),
+                                Calc_AnaGeo.Vector(aa[3], aa[4], aa[5]),
+                                Calc_AnaGeo.Vector(aa[6], aa[7], aa[8]),
+                            )
+                        elif bm_proj_obj_type == 1:
+                            aa = stage_2_def_pl_norm()
+                            bm_proj_obj = stage_2_pl_norm(
+                                Calc_AnaGeo.Vector(aa[0], aa[1], aa[2]),
+                                Calc_AnaGeo.Vector(aa[3], aa[4], aa[5]),
+                            )
+                        elif bm_proj_obj_type == 2:
+                            aa = stage_2_def_pl_coord()
+                            bm_proj_obj = stage_2_pl_coord(aa[0], aa[1], aa[2], aa[3])
+                        elif bm_proj_obj_type == 3:
+                            aa = stage_2_def_pl_pt()
+                            bm_proj_obj = stage_2_pl_pt(
+                                Calc_AnaGeo.Point(aa[0], aa[1], aa[2]),
+                                Calc_AnaGeo.Point(aa[3], aa[4], aa[5]),
+                                Calc_AnaGeo.Point(aa[6], aa[7], aa[8]),
+                            )
+                    elif bm_proj_obj_index == 3:  # Vector
+                        aa = stage_2_def_vc()
+                        bm_proj_obj = stage_2_vc(aa[0], aa[1], aa[2])
+
+                    # domain
+
+                    print(
+                        StringPreset.chat_msg(
+                            program_name,
+                            "Dann zur Fläche, auf die abgebildet werden soll.",
+                        )
+                    )
+                    bm_proj_domain = None
+                    bm_proj_domain_type = stage_2_plane()  # Will be a choice soon
+                    if bm_proj_domain_type == 0:
+                        aa = stage_2_def_pl_par()
+                        bm_proj_domain = stage_2_pl_par(
+                            Calc_AnaGeo.Vector(aa[0], aa[1], aa[2]),
+                            Calc_AnaGeo.Vector(aa[3], aa[4], aa[5]),
+                            Calc_AnaGeo.Vector(aa[6], aa[7], aa[8]),
+                        )
+                    elif bm_proj_domain_type == 1:
+                        aa = stage_2_def_pl_norm()
+                        bm_proj_domain = stage_2_pl_norm(
+                            Calc_AnaGeo.Vector(aa[0], aa[1], aa[2]),
+                            Calc_AnaGeo.Vector(aa[3], aa[4], aa[5]),
+                        )
+                    elif bm_proj_domain_type == 2:
+                        aa = stage_2_def_pl_coord()
+                        bm_proj_domain = stage_2_pl_coord(aa[0], aa[1], aa[2], aa[3])
+                    elif bm_proj_domain_type == 3:
+                        aa = stage_2_def_pl_pt()
+                        bm_proj_domain = stage_2_pl_pt(
+                            Calc_AnaGeo.Point(aa[0], aa[1], aa[2]),
+                            Calc_AnaGeo.Point(aa[3], aa[4], aa[5]),
+                            Calc_AnaGeo.Point(aa[6], aa[7], aa[8]),
+                        )
+                    print(StringPreset.chat_msg(program_name, "Gut."))
+
+                    TimeFunction.custom_delay(TimeFunction.short_delay)
+                    self.obj_calc.append(bm_proj_obj)
+                    self.obj_calc.append(bm_proj_domain)
+                    print(StringPreset.chat_msg(program_name, "Verstanden."))
 
     # obj_define = Stage 2 for method != basic, else blank
     def obj_define(self):  # Stage 2
@@ -3324,158 +3458,38 @@ class Task:
                 sol_basic = self.obj_calc[0]
             elif self.method_calc[0] == 9:  # angle
                 sol_basic = Calc_AnaGeo.basic_angle(self.obj_calc[0], self.obj_calc[1])
+            elif self.method_calc[0] == 10:  # projection
+                sol_basic = Calc_AnaGeo.projection(self.obj_calc[0], self.obj_calc[1])
             self.sol.append(sol_basic)
         else:
             if self.method_calc[0] == 0:  # Distance
-                sol_dis = -1
-                if type(self.obj_calc[0]) == Calc_AnaGeo.Point:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_dis = Calc_AnaGeo.dis_point2(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_dis = Calc_AnaGeo.dis_point_line(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_dis = Calc_AnaGeo.dis_point_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                elif type(self.obj_calc[0]) == Calc_AnaGeo.Line:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_dis = Calc_AnaGeo.dis_point_line(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_dis = Calc_AnaGeo.dis_line2(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_dis = Calc_AnaGeo.dis_line_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                elif type(self.obj_calc[0]) == Calc_AnaGeo.Plane:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_dis = Calc_AnaGeo.dis_point_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_dis = Calc_AnaGeo.dis_line_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_dis = Calc_AnaGeo.dis_plane2(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
+                sol_dis = Calc_AnaGeo.distance(self.obj_calc[0], self.obj_calc[1])
                 self.sol.append(sol_dis)
             if self.method_calc[0] == 1:  # Cross
                 sol_cross = -1
-                if type(self.obj_calc[0]) == Calc_AnaGeo.Line:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        try:
-                            sol_cross = Calc_AnaGeo.cross_line2(
-                                self.obj_calc[0], self.obj_calc[1]
-                            )
-                        except SystemExit:
-                            sol_cross = -1
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        try:
-                            sol_cross = Calc_AnaGeo.cross_line_plane(
-                                self.obj_calc[0], self.obj_calc[1]
-                            )
-                        except SystemExit:
-                            sol_cross = -1
-                elif type(self.obj_calc[0]) == Calc_AnaGeo.Plane:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        try:
-                            sol_cross = Calc_AnaGeo.cross_line_plane(
-                                self.obj_calc[0], self.obj_calc[1]
-                            )
-                        except SystemExit:
-                            sol_cross = -1
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        try:
-                            sol_cross = Calc_AnaGeo.cross_plane2(
-                                self.obj_calc[0], self.obj_calc[1]
-                            )
-                        except SystemExit:
-                            sol_cross = -1
+                try:
+                    sol_cross = Calc_AnaGeo.cross_area(
+                        self.obj_calc[0], self.obj_calc[1]
+                    )
+                except SystemExit:
+                    sol_cross = -1
                 self.sol.append(sol_cross)
             if self.method_calc[0] == 2:  # Contain
-                sol_con = -1
                 # 0 = error, 1 = identical, 2 = parallel, 3 = cross point, 4 = skewed, 5 = outside
-                if type(self.obj_calc[0]) == Calc_AnaGeo.Point:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_con = Calc_AnaGeo.con_point2(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                        if sol_con:
-                            sol_con = 1
-                        elif not sol_con:
-                            sol_con = 5
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_con = Calc_AnaGeo.con_point_line(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                        if sol_con:
-                            sol_con = 1
-                        elif not sol_con:
-                            sol_con = 5
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_con = Calc_AnaGeo.con_point_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                        if sol_con:
-                            sol_con = 1
-                        elif not sol_con:
-                            sol_con = 5
-                elif type(self.obj_calc[0]) == Calc_AnaGeo.Line:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_con = Calc_AnaGeo.con_point_line(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                        if sol_con:
-                            sol_con = 1
-                        elif not sol_con:
-                            sol_con = 5
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_con = Calc_AnaGeo.con_line2(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_con = Calc_AnaGeo.con_line_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                elif type(self.obj_calc[0]) == Calc_AnaGeo.Plane:
-                    if type(self.obj_calc[1]) == Calc_AnaGeo.Point:
-                        sol_con = Calc_AnaGeo.con_point_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                        if sol_con:
-                            sol_con = 1
-                        elif not sol_con:
-                            sol_con = 5
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Line:
-                        sol_con = Calc_AnaGeo.con_line_plane(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
-                    elif type(self.obj_calc[1]) == Calc_AnaGeo.Plane:
-                        sol_con = Calc_AnaGeo.con_plane2(
-                            self.obj_calc[0], self.obj_calc[1]
-                        )
+                sol_con = Calc_AnaGeo.containment(self.obj_calc[0], self.obj_calc[1])
+                if sol_con == False:
+                    sol_con = 5
+                elif sol_con == True:
+                    sol_con = 1
                 self.sol.append(sol_con)
 
     # Stage 5 & 6
     def def_solution(self):
         TimeFunction.custom_delay(TimeFunction.short_delay)
-        sol_text = (
-            self.task_name
-            + ", gerundet auf "
-            + str(self.rnd[0])
-            + " Nachkommastellen, ist fertig."
-        )
-        if not self.rnd[1]:
-            self.rnd[0] = user_rnd()
+        sol_rnd_str = str(self.rnd[0]) + " Nachkommastellen"
+        if self.rnd[0] == 1:
+            "eine Nachkommastelle"
+        sol_text = self.task_name + ", gerundet auf " + sol_rnd_str + ", ist fertig."
         print("")
         if self.method_calc[1]:
             if self.method_calc[0] == 0:  # Plus
@@ -3623,6 +3637,17 @@ class Task:
                     + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
                     + ","
                     + "\nbeträgt "
+                    + obj_to_str(self.sol[0], self.rnd[0])[0]
+                    + "."
+                )
+            elif self.method_calc[0] == 10:  # projection
+                sol_text += (
+                    " Das Ergebnis:\nDas erste Objekt,\n"
+                    + obj_to_str(self.obj_calc[0], self.rnd[0])[0]
+                    + ",\nprojiziert auf dem zweiten Objekt,\n"
+                    + obj_to_str(self.obj_calc[1], self.rnd[0])[0]
+                    + ","
+                    + "\nist darstellbar durch folgendes Objekt:\n"
                     + obj_to_str(self.sol[0], self.rnd[0])[0]
                     + "."
                 )
@@ -4247,6 +4272,13 @@ def stage_1(chosen_topic, task_name):
                     program_name, "Winkelberechnung? Bin gleich dabei!"
                 )
             )
+        elif chosen_topic[1] == 10:
+            print(
+                StringPreset.chat_msg(
+                    program_name,
+                    "Also willst du ein Objekt auf eine Fläche projizieren? Verstehe.",
+                )
+            )
         TimeFunction.custom_delay(TimeFunction.med_delay)
         chosen_task = Task(task_name, chosen_topic)
         task_list.append(chosen_task)
@@ -4298,13 +4330,20 @@ def early_game(iteration=0):
 
 
 def mid_game():
-    rnd_main = rnd_preference()
+    task_len = 0  # Amount of tasks left
+    for task in task_list:
+        if not task.complete:
+            task_len += 1
+    if task_len == 1:
+        rnd_main = [user_rnd(), True]
+    else:
+        rnd_main = rnd_preference()
     for task in task_list:
         if not task.complete:
             if rnd_main[1]:
                 task.rnd = rnd_main
             else:
-                task.rnd = [user_rnd(), True]
+                task.rnd = [user_rnd("\nFür die " + task.task_name + ": "), True]
             task.get_solution()
             print(StringPreset.chat_msg(program_name, task.solution))
 

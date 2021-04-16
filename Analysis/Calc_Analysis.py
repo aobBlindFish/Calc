@@ -10,6 +10,7 @@ import BasicMath
 import StringPreset
 
 # Import
+# Newtons Method for roots
 
 
 class FuncX:  # ax^(b)
