@@ -260,8 +260,8 @@ object_type_pl = [
     object_type_pl_pt,
 ]
 
-object_type_angle_deg = ["GRAD", "GRADZAHL"]
-object_type_angle_rad = ["RADIEN"]
+object_type_angle_deg = ["GRAD", "GRADZAHL", "°"]
+object_type_angle_rad = ["RADIEN", "RAD", "RADIUS"]
 object_type_angle = [object_type_angle_deg, object_type_angle_rad]
 
 object_type_full_list = [object_type_pt, object_type_ln, object_type_pl, object_type_vc]
@@ -558,6 +558,98 @@ def stage_2_vc(x, y, z):
 def stage_2_pt(x, y, z):
     output = Calc_AnaGeo.Point(x, y, z)
     return output
+
+
+def stage_2_ang(angle, angle_type="deg"):
+    if angle_type == 0:
+        angle_type = "deg"
+    elif angle_type == 1:
+        angle_type = "rad"
+    output = Calc_AnaGeo.Angle(angle, angle_type)
+    return output
+
+
+def stage_2_def_ang():
+    ang_type = None
+    ang_type_understand = False
+    print(
+        StringPreset.chat_msg(program_name, "Auf welcher Art kennst du diesen Winkel?")
+    )
+    ang_type = 0
+    while not ang_type_understand:
+        user_ang_type = custom_input("").upper()
+        for ii in object_type_angle:
+            for jj in ii:
+                if user_ang_type == jj:
+                    ang_type_understand = True
+                    ang_type = object_type_angle.index(ii)
+        if not ang_type_understand:
+            TimeFunction.custom_delay(TimeFunction.long_delay)
+            print(
+                StringPreset.chat_msg(
+                    program_name,
+                    misunderstand[random.randint(0, len(misunderstand) - 1)]
+                    + "\nAuf welcher Art kennst du diesen Winkel, als Gradzahl oder als Radien?",
+                )
+            )
+
+    ang = 0
+    ang_confirm = False
+    while not ang_confirm:
+        ang_confirm_no = False
+        ang_understand = False
+        while not ang_understand:
+            ang_understand = False
+            try:
+                ang = float(
+                    custom_input(
+                        StringPreset.chat_msg(
+                            program_name, "Und was beträgt der Winkel: "
+                        )
+                    )
+                )
+                ang_understand = True
+            except ValueError:
+                TimeFunction.custom_delay(TimeFunction.med_delay)
+                print(
+                    StringPreset.chat_msg(
+                        program_name,
+                        misunderstand[random.randint(0, len(misunderstand) - 1)],
+                    )
+                )
+        TimeFunction.custom_delay(TimeFunction.short_delay)
+        print(
+            StringPreset.chat_msg(
+                program_name, 'Habe ich "' + str(ang) + '" richtig verstanden?'
+            )
+        )
+        while not ang_confirm:
+            user_ang_confirm = custom_input("").upper()
+            for ii in user_boolean:
+                if user_ang_confirm in ii:
+                    if user_boolean.index(ii) == 0:
+                        ang_confirm = True
+                    elif user_boolean.index(ii) == 1:
+                        ang_confirm_no = True
+                        TimeFunction.custom_delay(TimeFunction.short_delay)
+                        print(
+                            StringPreset.chat_msg(
+                                program_name, "Okay, versuchen wir das nochmal."
+                            )
+                        )
+            if not (ang_confirm_no or ang_confirm):
+                TimeFunction.custom_delay(TimeFunction.short_delay)
+                print(
+                    StringPreset.chat_msg(
+                        program_name,
+                        misunderstand[random.randint(0, len(misunderstand) - 1)],
+                    )
+                )
+            if ang_confirm_no:
+                break
+    print(StringPreset.chat_msg(program_name, "Gut."))
+    TimeFunction.custom_delay(TimeFunction.med_delay)
+    return stage_2_ang(ang, ang_type)
 
 
 def stage_2_def_c():
@@ -3041,6 +3133,9 @@ class Task:
                         self.obj_calc.append(
                             stage_2_vc(bm_conv_obj[0], bm_conv_obj[1], bm_conv_obj[2])
                         )
+                    elif bm_conv_obj_index == 4:
+                        bm_conv_obj = stage_2_def_ang()
+                        self.obj_calc.append(bm_conv_obj)
                 elif self.method_calc[0] == 9:  # method angle
                     for h in range(2):
                         # def meta var
@@ -3628,6 +3723,18 @@ class Task:
                         + ".\nDer ist "
                         + str(BasicMath.constant_round(self.sol[0].l, self.rnd[0]))
                         + " Längeneinheiten lang.\n"
+                    )
+                elif type(self.sol[0]) == Calc_AnaGeo.Angle:
+                    sol_text += (
+                        " Hier ist dein Winkel: "
+                        + obj_to_str(self.sol[0], self.rnd[0])[0]
+                        + ".\nDas sind "
+                        + str(
+                            BasicMath.constant_round(
+                                self.sol[0].ang_radian, self.rnd[0]
+                            )
+                        )
+                        + " Radien.\n"
                     )
             elif self.method_calc[0] == 9:  # angle
                 sol_text += (
